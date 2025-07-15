@@ -1,6 +1,6 @@
-# Контроллер для управления вопросами
+# Controller for managing questions
 class QuestionsController < ApplicationController
-  before_action :set_question, only: [:show]
+  before_action :set_question, only: [ :show ]
 
   # GET /questions
   def index
@@ -18,7 +18,7 @@ class QuestionsController < ApplicationController
 
     respond_to do |format|
       if @question.save
-        format.html { redirect_to @question, notice: 'Вопрос успешно создан' }
+        format.html { redirect_to @question, notice: "Question was successfully created" }
         format.json { render :show, status: :created, location: @question }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -35,20 +35,20 @@ class QuestionsController < ApplicationController
 
   private
 
-  # Устанавливает вопрос из параметров
+  # Sets question from parameters
   def set_question
     @question = Question.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     respond_to do |format|
       format.html do
-        flash[:alert] = 'Вопрос не найден'
+        flash[:alert] = "Question not found"
         redirect_to questions_path
       end
-      format.json { render json: { error: 'Вопрос не найден' }, status: :not_found }
+      format.json { render json: { error: "Question not found" }, status: :not_found }
     end
   end
 
-  # Разрешенные параметры
+  # Permitted parameters
   def question_params
     params.require(:question).permit(:title, :body)
   end

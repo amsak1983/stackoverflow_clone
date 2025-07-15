@@ -1,4 +1,4 @@
-<h1>Новый вопрос</h1>
+<h1>New Question</h1>
 
 <%= form_with model: @question, local: true do |f| %>
   <% if @question.errors.any? %>
@@ -13,18 +13,18 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :title, 'Заголовок' %><br>
+    <%= f.label :title, 'Title' %><br>
     <%= f.text_field :title %>
   </div>
 
   <div class="field">
-    <%= f.label :body, 'Содержание' %><br>
+    <%= f.label :body, 'Content' %><br>
     <%= f.text_area :body, rows: 10 %>
   </div>
 
   <div class="actions">
-    <%= f.submit 'Создать вопрос' %>
+    <%= f.submit 'Create Question' %>
   </div>
 <% end %>
 
-<%= link_to 'Назад', questions_path %>
+<%= link_to 'Back', questions_path %>

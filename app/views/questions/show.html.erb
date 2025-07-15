@@ -4,7 +4,7 @@
   <%= @question.body %>
 </div>
 
-<h2>Ответы</h2>
+<h2>Answers</h2>
 <div id="answers">
   <% if @question.answers.any? %>
     <% @question.answers.each do |answer| %>
@@ -13,13 +13,15 @@
       </div>
     <% end %>
   <% else %>
-    <p>Пока нет ответов на этот вопрос.</p>
+    <p>There are no answers to this question yet.</p>
   <% end %>
 </div>
 
-<h3>Добавить ответ</h3>
+<h3>Add Answer</h3>
 <div id="new-answer">
-  <%= form_with model: [@question, Answer.new], local: true do |f| %>
+  <%= form_with(model: [@question, Answer.new], url: question_answers_path(@question), method: :post, data: { turbo: false }, local: true) do |f| %>
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+    
     <% if @answer && @answer.errors.any? %>
       <div id="error_explanation">
         <h2><%= pluralize(@answer.errors.count, "error") %> prohibited this answer from being saved:</h2>
@@ -32,14 +34,14 @@
     <% end %>
 
     <div class="field">
-      <%= f.label :body, 'Ваш ответ' %><br>
+      <%= f.label :body, 'Your Answer' %><br>
       <%= f.text_area :body, rows: 5 %>
     </div>
 
     <div class="actions">
-      <%= f.submit 'Отправить ответ' %>
+      <%= f.submit 'Submit Answer', class: 'btn btn-primary' %>
     </div>
   <% end %>
 </div>
 
-<%= link_to 'Назад', questions_path %>
+<%= link_to 'Back', questions_path %>
