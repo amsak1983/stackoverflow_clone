@@ -21,7 +21,15 @@ module StackoverflowClone
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
+    # Set default locale to English
+    config.i18n.default_locale = :en
+    config.i18n.available_locales = [ :en ]
+
+    # Set time zone
+    config.time_zone = "UTC"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Allow requests from different origins (for development)
+    config.action_controller.forgery_protection_origin_check = false
   end
 end

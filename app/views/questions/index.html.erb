@@ -1,0 +1,32 @@
+<h1>Questions</h1>
+
+<div class="mb-4">
+  <%= link_to 'Ask Question', new_question_path, class: 'btn btn-primary' %>
+</div>
+
+<% if @questions.any? %>
+  <div class="questions-list">
+    <% @questions.each do |question| %>
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">
+            <%= link_to question.title, question_path(question) %>
+          </h5>
+          <p class="card-text text-truncate"><%= question.preview %></p>
+          <div class="d-flex justify-content-between">
+            <small class="text-muted">
+              <%= pluralize(question.answers.count, 'answer') %>
+            </small>
+            <small class="text-muted">
+              Created <%= time_ago_in_words(question.created_at) %> ago
+            </small>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <div class="alert alert-info">
+    There are no questions yet. Be the first to ask a question!
+  </div>
+<% end %>
