@@ -28,8 +28,5 @@ module StackoverflowClone
     # Set time zone
     config.time_zone = "UTC"
     # config.eager_load_paths << Rails.root.join("extras")
-
-    # Allow requests from different origins (for development)
-    config.action_controller.forgery_protection_origin_check = false
   end
 end

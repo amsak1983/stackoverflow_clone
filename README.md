@@ -1,24 +1,55 @@
-# README
+# StackOverflow Clone
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A functional clone of StackOverflow built with Ruby on Rails 8. This application allows users to ask questions, provide answers, vote on content, and earn reputation points.
 
-Things you may want to cover:
+## Features
 
-* Ruby version
+* User authentication and profiles
+* Question asking and answering
+* Voting system for questions and answers
+* Comment functionality
+* Tags and categories
+* User reputation system
+* Search functionality
 
-* System dependencies
+## Technical Stack
 
-* Configuration
+* Ruby on Rails 8
+* Ruby version: 3.x
+* Database: PostgreSQL
+* Frontend: ERB templates, JavaScript, CSS
 
-* Database creation
+## Setup and Installation
 
-* Database initialization
+### Prerequisites
 
-* How to run the test suite
+* Ruby 3.x
+* Rails 8
+* PostgreSQL
 
-* Services (job queues, cache servers, search engines, etc.)
+### Installation Steps
 
-* Deployment instructions
+```bash
+# Clone the repository
+git clone https://github.com/amsak1983/stackoverflow_clone
+cd stackoverflow_clone
 
-* ...
+# Install dependencies
+bundle install
+
+# Setup database
+rails db:create
+rails db:migrate
+rails db:seed # Optional: adds sample data
+
+# Start the server
+rails server
+```
+
+Visit `http://localhost:3000` in your browser to access the application.
+
+## Testing
+
+```bash
+rails test
+```
