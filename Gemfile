@@ -49,6 +49,15 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+  
+  # RSpec for Rails
+  gem "rspec-rails", "~> 6.1.0"
+  
+  # Factory Bot for test data
+  gem "factory_bot_rails"
+  
+  # Shoulda Matchers for elegant test syntax
+  gem "shoulda-matchers"
 end
 
 group :development do
@@ -60,4 +69,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  
+  # Для поддержки assigns и assert_template в тестах контроллеров
+  gem "rails-controller-testing"
 end

@@ -1,0 +1,45 @@
+<h1><%= @question.title %></h1>
+
+<div class="question-body">
+  <%= @question.body %>
+</div>
+
+<h2>Ответы</h2>
+<div id="answers">
+  <% if @question.answers.any? %>
+    <% @question.answers.each do |answer| %>
+      <div class="answer">
+        <p><%= answer.body %></p>
+      </div>
+    <% end %>
+  <% else %>
+    <p>Пока нет ответов на этот вопрос.</p>
+  <% end %>
+</div>
+
+<h3>Добавить ответ</h3>
+<div id="new-answer">
+  <%= form_with model: [@question, Answer.new], local: true do |f| %>
+    <% if @answer && @answer.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@answer.errors.count, "error") %> prohibited this answer from being saved:</h2>
+        <ul>
+          <% @answer.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :body, 'Ваш ответ' %><br>
+      <%= f.text_area :body, rows: 5 %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit 'Отправить ответ' %>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to 'Назад', questions_path %>

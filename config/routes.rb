@@ -11,4 +11,8 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  
+  resources :questions, only: [:new, :create, :show] do
+    resources :answers, only: [:create], shallow: true
+  end
 end
