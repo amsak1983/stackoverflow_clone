@@ -16,17 +16,21 @@ class QuestionsController < ApplicationController
   def create
     @question = Question.new(question_params)
 
-    if @question.save
-      flash[:notice] = 'Вопрос успешно создан'
-      redirect_to @question
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @question.save
+        format.html { redirect_to @question, notice: 'Вопрос успешно создан' }
+        format.json { render :show, status: :created, location: @question }
+      else
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @question.errors, status: :unprocessable_entity }
+      end
     end
   end
 
   # GET /questions/:id
   def show
-    @answer = @question.answers.new
+    @answer = Answer.new
+    @answers = @question.answers.newest_first
   end
 
   private
@@ -35,8 +39,13 @@ class QuestionsController < ApplicationController
   def set_question
     @question = Question.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    flash[:alert] = 'Вопрос не найден'
-    redirect_to questions_path
+    respond_to do |format|
+      format.html do
+        flash[:alert] = 'Вопрос не найден'
+        redirect_to questions_path
+      end
+      format.json { render json: { error: 'Вопрос не найден' }, status: :not_found }
+    end
   end
 
   # Разрешенные параметры
