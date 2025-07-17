@@ -1,6 +1,6 @@
-# Controller for managing questions
 class QuestionsController < ApplicationController
-  before_action :set_question, only: [ :show ]
+  include ErrorHandling
+  before_action :set_question, only: [:show]
 
   # GET /questions
   def index
@@ -39,13 +39,7 @@ class QuestionsController < ApplicationController
   def set_question
     @question = Question.find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    respond_to do |format|
-      format.html do
-        flash[:alert] = "Question not found"
-        redirect_to questions_path
-      end
-      format.json { render json: { error: "Question not found" }, status: :not_found }
-    end
+    handle_record_not_found("Question")
   end
 
   # Permitted parameters

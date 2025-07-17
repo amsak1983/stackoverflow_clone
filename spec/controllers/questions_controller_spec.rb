@@ -29,7 +29,7 @@ RSpec.describe QuestionsController, type: :controller do
           expect(response).to redirect_to question_path(assigns(:question))
         end
 
-        include_examples 'sets flash message', :notice, 'Вопрос успешно создан'
+        include_examples 'sets flash message', :notice, 'Question was successfully created'
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe QuestionsController, type: :controller do
       before { get :show, params: { id: 999 } }
 
       include_examples 'redirects to', :questions_path
-      include_examples 'sets flash message', :alert, 'Вопрос не найден'
+      include_examples 'sets flash message', :alert, 'Question not found'
     end
   end
 end
