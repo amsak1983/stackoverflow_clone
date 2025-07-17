@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
   include ErrorHandling
-  before_action :set_question, only: [:show]
+  before_action :set_question, only: [ :show ]
 
   # GET /questions
   def index
