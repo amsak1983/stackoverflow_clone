@@ -1,15 +1,48 @@
-<h1><%= @question.title %></h1>
+<div class="flex justify-between items-center">
+  <h1><%= @question.title %></h1>
+  <% if user_signed_in? && @question.user == current_user %>
+    <%= button_to 'Delete Question', question_path(@question), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+  <% end %>
+</div>
 
 <div class="question-body">
   <%= @question.body %>
+</div>
+
+<div class="question-meta mt-4 text-sm text-gray-500">
+  <% if @question.user %>
+    <p>Posted by: <%= @question.user.email %></p>
+  <% else %>
+    <p>Posted by: Unknown</p>
+  <% end %>
+  <p>Created: <%= time_ago_in_words(@question.created_at) %> ago</p>
 </div>
 
 <h2>Answers</h2>
 <div id="answers">
   <% if @question.answers.any? %>
     <% @question.answers.each do |answer| %>
-      <div class="answer">
+      <div class="answer border-l-4 border-gray-300 pl-4 py-2 mb-4">
         <p><%= answer.body %></p>
+        
+        <div class="answer-meta mt-2 text-sm text-gray-500">
+          <% if answer.user %>
+            <p>Posted by: <%= answer.user.email %></p>
+          <% else %>
+            <p>Posted by: Unknown</p>
+          <% end %>
+          <% if answer.created_at.present? %>
+            <p>Created: <%= time_ago_in_words(answer.created_at) %> ago</p>
+          <% else %>
+            <p>Created: Unknown time</p>
+          <% end %>
+        </div>
+        
+        <% if user_signed_in? && answer.user == current_user && answer.persisted? %>
+          <div class="mt-2">
+            <%= button_to 'Delete Answer', answer_path(answer), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: 'text-sm text-red-600' %>
+          </div>
+        <% end %>
       </div>
     <% end %>
   <% else %>
@@ -34,12 +67,12 @@
     <% end %>
 
     <div class="field">
-      <%= f.label :body, 'Your Answer' %><br>
+      <%= f.label :body, 'Body' %><br>
       <%= f.text_area :body, rows: 5 %>
     </div>
 
     <div class="actions">
-      <%= f.submit 'Submit Answer', class: 'btn btn-primary' %>
+      <%= f.submit 'Post Answer', class: 'btn btn-primary' %>
     </div>
   <% end %>
 </div>

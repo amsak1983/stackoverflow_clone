@@ -23,6 +23,38 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header class="bg-gray-100 py-4 mb-8">
+      <div class="container mx-auto px-4 flex justify-between items-center">
+        <div>
+          <h1 class="text-xl font-bold"><%= link_to "Stackoverflow Clone", root_path %></h1>
+        </div>
+        <nav>
+          <ul class="flex space-x-4">
+            <li><%= link_to "Questions", questions_path, class: "hover:text-blue-600" %></li>
+            <% if user_signed_in? %>
+              <li><%= link_to "Sign out", destroy_user_session_path, data: { turbo_method: :delete }, class: "hover:text-blue-600" %></li>
+            <% else %>
+              <li><%= link_to "Sign up", new_user_registration_path, class: "hover:text-blue-600" %></li>
+              <li><%= link_to "Log in", new_user_session_path, class: "hover:text-blue-600" %></li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <div class="container mx-auto px-4">
+      <% if notice %>
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
+          <p><%= notice %></p>
+        </div>
+      <% end %>
+      <% if alert %>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+          <p><%= alert %></p>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </div>
   </body>
 </html>

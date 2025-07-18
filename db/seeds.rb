@@ -3,7 +3,23 @@
 
 # Clear existing data to avoid duplicates
 puts "Cleaning database..."
-Question.destroy_all
+User.destroy_all
+
+# Create test users
+puts "Creating test users..."
+test_user = User.create!(
+  email: "test@example.com",
+  password: "password123",
+  password_confirmation: "password123"
+)
+puts "Created test user: #{test_user.email} with password: password123"
+
+second_user = User.create!(
+  email: "user2@example.com",
+  password: "password123",
+  password_confirmation: "password123"
+)
+puts "Created second user: #{second_user.email} with password: password123"
 
 # Create sample questions
 puts "Creating questions..."
@@ -33,22 +49,28 @@ questions = [
 # Create questions and answers
 created_questions = []
 questions.each do |question_data|
+  random_user = [test_user, second_user].sample
+  
   question = Question.create!(
     title: question_data[:title],
     body: question_data[:body],
+    user: random_user,
     created_at: rand(1..30).days.ago
   )
   created_questions << question
-  puts "Created question: #{question.title}"
+  puts "Created question: #{question.title} by #{random_user.email}"
 
   # Create 1-3 answers for each question
   rand(1..3).times do |i|
+    answer_user = [test_user, second_user].sample
+    
     answer = question.answers.create!(
       body: "Answer #{i+1} to the question about #{question.title.downcase}. This contains a detailed explanation with code examples and recommendations.",
+      user: answer_user,
       created_at: rand(1..question.created_at.to_i).seconds.ago
     )
-    puts "  - Created answer #{i+1} for question: #{question.title}"
-  end
+    puts "  - Created answer #{i+1} by #{answer_user.email} for question: #{question.title}"
+1  end
 end
 
 puts "Seed data created successfully!"

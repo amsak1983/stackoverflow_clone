@@ -1,6 +1,7 @@
 class Answer < ApplicationRecord
   # Associations
   belongs_to :question
+  belongs_to :user, optional: true
 
   # Validations
   validates :body, presence: true

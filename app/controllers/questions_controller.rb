@@ -1,6 +1,8 @@
 class QuestionsController < ApplicationController
   include ErrorHandling
-  before_action :set_question, only: [ :show ]
+  before_action :authenticate_user!, except: [ :index, :show ]
+  before_action :set_question, only: [ :show, :destroy ]
+  before_action :check_author, only: [ :destroy ]
 
   # GET /questions
   def index
@@ -14,7 +16,7 @@ class QuestionsController < ApplicationController
 
   # POST /questions
   def create
-    @question = Question.new(question_params)
+    @question = current_user.questions.new(question_params)
 
     respond_to do |format|
       if @question.save
@@ -33,6 +35,12 @@ class QuestionsController < ApplicationController
     @answers = @question.answers.newest_first
   end
 
+  # DELETE /questions/:id
+  def destroy
+    @question.destroy
+    redirect_to questions_path, notice: "Question was successfully deleted"
+  end
+
   private
 
   # Sets question from parameters
@@ -45,5 +53,12 @@ class QuestionsController < ApplicationController
   # Permitted parameters
   def question_params
     params.require(:question).permit(:title, :body)
+  end
+
+  # Check if current user is the author of the question
+  def check_author
+    unless current_user && current_user == @question.user
+      redirect_to questions_path, alert: "You do not have permission to delete this question"
+    end
   end
 end
