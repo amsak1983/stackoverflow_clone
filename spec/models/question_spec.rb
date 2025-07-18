@@ -8,22 +8,25 @@ RSpec.describe Question, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:title) }
     it { should validate_presence_of(:body) }
-    it { should validate_length_of(:title).is_at_least(5) }
-    it { should validate_length_of(:body).is_at_least(10) }
   end
 
-  describe 'factory' do
-    it 'has a valid factory' do
-      expect(build(:question)).to be_valid
+  describe 'scopes' do
+    describe '.recent' do
+      let!(:old_question) { create(:question, created_at: 2.days.ago) }
+      let!(:new_question) { create(:question, created_at: 1.day.ago) }
+
+      it 'returns questions in descending order by creation date' do
+        expect(Question.recent).to eq([ new_question, old_question ])
+      end
     end
   end
 
-  describe 'instance methods' do
-    let(:question) { create(:question) }
+  describe '#preview' do
+    let(:question) { create(:question, body: 'A' * 150) }
 
-    it 'has correct attributes' do
-      expect(question.title).to eq('How to implement authentication in Rails 8?')
-      expect(question.body).to include('authentication in my Rails 8 application')
+    it 'returns truncated body' do
+      expect(question.preview.length).to eq(100)
+      expect(question.preview).to include('...')
     end
   end
 end

@@ -1,8 +1,15 @@
-# frozen_string_literal: true
-
 class Answer < ApplicationRecord
+  # Associations
   belongs_to :question
-  belongs_to :user
 
-  validates :body, presence: true, length: { minimum: 10 }
+  # Validations
+  validates :body, presence: true
+
+  # Scopes
+  scope :newest_first, -> { order(created_at: :desc) }
+
+  # Returns a truncated version of the body for preview purposes
+  def preview
+    body.truncate(50) if body
+  end
 end
