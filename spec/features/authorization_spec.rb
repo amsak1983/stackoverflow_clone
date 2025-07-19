@@ -48,7 +48,7 @@ feature 'User authorization', %q(
 
     scenario 'can add an answer to a question' do
       visit question_path(other_question)
-      fill_in 'Body', with: 'Test answer'
+      fill_in 'answer[body]', with: 'Test answer'
       click_on 'Post Answer'
 
       expect(page).to have_content 'Answer was successfully created'
@@ -97,7 +97,7 @@ feature 'User authorization', %q(
 
     scenario 'cannot add an answer to a question' do
       visit question_path(question)
-      fill_in 'Body', with: 'Test answer'
+      fill_in 'answer[body]', with: 'Test answer'
       click_on 'Post Answer'
 
       expect(page).to have_content 'You need to sign in or sign up before continuing'

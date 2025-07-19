@@ -9,7 +9,7 @@ RSpec.describe 'Authentication', type: :feature do
       fill_in 'Password', with: 'password123'
       fill_in 'Password confirmation', with: 'password123'
 
-      expect { click_button 'Sign up' }.to change(User, :count).by(1)
+      expect { click_button 'Sign Up' }.to change(User, :count).by(1)
 
       expect(page).to have_content('Welcome! You have signed up successfully')
       expect(page).to have_content('Sign out')
@@ -18,7 +18,7 @@ RSpec.describe 'Authentication', type: :feature do
     scenario 'User cannot register with invalid data' do
       visit new_user_registration_path
 
-      click_button 'Sign up'
+      click_button 'Sign Up'
 
       expect(page).to have_content("Email can't be blank")
       expect(page).to have_content("Password can't be blank")
@@ -35,7 +35,7 @@ RSpec.describe 'Authentication', type: :feature do
       fill_in 'Email', with: 'user@example.com'
       fill_in 'Password', with: 'password123'
 
-      click_button 'Log in'
+      click_button 'Sign in'
 
       expect(page).to have_content('Signed in successfully')
       expect(page).to have_content('Sign out')
@@ -47,7 +47,7 @@ RSpec.describe 'Authentication', type: :feature do
       fill_in 'Email', with: 'user@example.com'
       fill_in 'Password', with: 'wrongpassword'
 
-      click_button 'Log in'
+      click_button 'Sign in'
 
       expect(page).to have_content('Invalid Email or password')
       expect(page).not_to have_content('Sign out')
