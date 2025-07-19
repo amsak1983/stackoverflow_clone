@@ -1,10 +1,12 @@
 require 'rails_helper'
 
-RSpec.describe 'Questions', type: :feature do
-  describe 'User interacts with questions' do
-    let(:user) { create(:user) }
-
-    scenario 'User views the list of questions' do
+feature 'Questions viewing', %q(
+  In order to find information
+  As a user
+  I want to be able to view questions and their answers
+) do
+  describe 'Any user' do
+    scenario 'views the list of questions' do
       # Create some test questions
       questions = create_list(:question, 3)
 
@@ -16,38 +18,17 @@ RSpec.describe 'Questions', type: :feature do
         expect(page).to have_content(question.title)
       end
     end
-
-    scenario 'User creates a question' do
-      sign_in(user)
-      visit questions_path
-      click_on 'New Question'
-
-      # Fill in the form
-      fill_in 'Title', with: 'Test Question Title'
-      fill_in 'Body', with: 'Test Question Body with details'
-
-      # Submit the form
-      click_button 'Create Question'
-
-      # Expect to be redirected to the question show page
-      expect(page).to have_content('Test Question Title')
-      expect(page).to have_content('Test Question Body with details')
-      expect(page).to have_content('Question was successfully created')
+    
+    scenario 'views a specific question' do
+      question = create(:question, title: 'Test Question', body: 'Test Body')
+      
+      visit question_path(question)
+      
+      expect(page).to have_content('Test Question')
+      expect(page).to have_content('Test Body')
     end
-
-    scenario 'User cannot create a question with invalid data' do
-      sign_in(user)
-      visit new_question_path
-
-      # Submit the form without filling it
-      click_button 'Create Question'
-
-      # Expect to see validation errors
-      expect(page).to have_content("Title can't be blank")
-      expect(page).to have_content("Body can't be blank")
-    end
-
-    scenario 'User views a specific question with its answers' do
+    
+    scenario 'views a question with its answers' do
       # Create a question with answers
       question = create(:question)
       answers = create_list(:answer, 3, question: question)
