@@ -33,14 +33,12 @@ class AnswersController < ApplicationController
 
   # Sets question from parameters
   def set_question
-    @question = Question.find_by(id: params[:question_id])
-    handle_record_not_found("Question") unless @question
+    @question = Question.find(params[:question_id])
   end
 
   # Sets answer from parameters
   def set_answer
-    @answer = Answer.find_by(id: params[:id])
-    handle_record_not_found("Answer") unless @answer
+    @answer = Answer.find(params[:id])
   end
 
   # Permitted parameters
