@@ -45,9 +45,8 @@ class QuestionsController < ApplicationController
 
   # Sets question from parameters
   def set_question
-    @question = Question.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    handle_record_not_found("Question")
+    @question = Question.find_by(id: params[:id])
+    handle_record_not_found("Question") unless @question
   end
 
   # Permitted parameters
