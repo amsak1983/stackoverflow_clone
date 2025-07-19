@@ -17,12 +17,11 @@ feature 'Answers deletion', %q(
 
     scenario 'can delete own answer' do
       within "#answers" do
-        expect(page).to have_content answer.body
-        expect(page).to have_button 'Delete Answer', count: 1
         click_on 'Delete Answer'
       end
 
       expect(page).to have_content 'Answer was successfully deleted'
+      expect(page).not_to have_content answer.body
     end
   end
 end
