@@ -1,30 +1,38 @@
-<h1>New Question</h1>
+<h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">New Question</h1>
 
-<%= form_with model: @question, local: true do |f| %>
-  <% if @question.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@question.errors.count, "error") %> prohibited this question from being saved:</h2>
-      <ul>
-        <% @question.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+<div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+  <%= form_with model: @question, local: true, class: "space-y-6" do |f| %>
+    <% if @question.errors.any? %>
+      <div id="error_explanation" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
+        <h2 class="text-base font-semibold"><%= pluralize(@question.errors.count, "error") %> prohibited this question from being saved:</h2>
+        <ul class="mt-1.5 list-disc list-inside">
+          <% @question.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= f.label :title, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_field :title, class: "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder: "Enter question title" %>
+    </div>
+
+    <div>
+      <%= f.label :body, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.text_area :body, rows: 10, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder: "Describe your question in detail..." %>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <%= f.submit 'Create Question', class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800' %>
+      <%= link_to 'Cancel', questions_path, class: 'py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700' %>
     </div>
   <% end %>
+</div>
 
-  <div class="field">
-    <%= f.label :title, 'Title' %><br>
-    <%= f.text_field :title %>
-  </div>
-
-  <div class="field">
-    <%= f.label :body, 'Content' %><br>
-    <%= f.text_area :body, rows: 10 %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit 'Create Question' %>
-  </div>
-<% end %>
-
-<%= link_to 'Back', questions_path %>
+<div class="mt-6">
+  <%= link_to questions_path, class: "inline-flex items-center text-blue-600 hover:underline dark:text-blue-500" do %>
+    <svg class="w-5 h-5 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+    Back to Questions
+  <% end %>
+</div>

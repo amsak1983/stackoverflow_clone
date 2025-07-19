@@ -1,6 +1,11 @@
 FactoryBot.define do
   factory :answer do
-    body { "Sample answer with detailed content" }
+    body { 'This is a sample answer.' }
     association :question
+    association :user
+
+    trait :invalid do
+      body { nil }
+    end
   end
 end
