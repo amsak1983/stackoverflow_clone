@@ -1,6 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe 'Authentication', type: :feature do
+feature 'Authentication', %q(
+  In order to access the system
+  As a user
+  I want to be able to sign up, sign in and sign out
+) do
   describe 'User registration' do
     scenario 'User can register with valid data' do
       visit new_user_registration_path
