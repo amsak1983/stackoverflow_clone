@@ -16,7 +16,7 @@ feature 'Questions deletion', %q(
 
     scenario 'can delete own question' do
       click_on 'Delete Question'
-      
+
       expect(page).to have_content 'Question was successfully deleted'
       expect(page).not_to have_content question.title
     end
