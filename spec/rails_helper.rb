@@ -50,7 +50,7 @@ RSpec.configure do |config|
   # Включаем Devise test helpers для контроллеров
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
-  
+
   # Включаем helpers для request specs
   config.include RequestHelpers, type: :request
 

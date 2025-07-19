@@ -18,16 +18,16 @@ feature 'Questions viewing', %q(
         expect(page).to have_content(question.title)
       end
     end
-    
+
     scenario 'views a specific question' do
       question = create(:question, title: 'Test Question', body: 'Test Body')
-      
+
       visit question_path(question)
-      
+
       expect(page).to have_content('Test Question')
       expect(page).to have_content('Test Body')
     end
-    
+
     scenario 'views a question with its answers' do
       # Create a question with answers
       question = create(:question)
