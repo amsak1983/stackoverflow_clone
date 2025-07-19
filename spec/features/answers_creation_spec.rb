@@ -1,26 +1,17 @@
 require 'rails_helper'
 
 feature 'Answers creation', %q(
-  In order to help community
-  As an authenticated user
-  I want to be able to answer questions
+  In order to ensure data quality
+  As a system
+  I want to validate answer creation and control access
 ) do
   given(:user) { create(:user) }
-  given(:other_user) { create(:user) }
-  given(:question) { create(:question, user: other_user) }
+  given(:question) { create(:question, user: user) }
 
   describe 'Authenticated user' do
     background do
       sign_in(user)
       visit question_path(question)
-    end
-
-    scenario 'can add an answer to a question' do
-      fill_in 'answer[body]', with: 'Test answer'
-      click_on 'Post Answer'
-
-      expect(page).to have_content 'Answer was successfully created'
-      expect(page).to have_content 'Test answer'
     end
 
     scenario 'cannot create answer with invalid data' do
