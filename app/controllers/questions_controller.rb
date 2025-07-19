@@ -56,7 +56,7 @@ class QuestionsController < ApplicationController
 
   # Check if current user is the author of the question
   def check_author
-    unless current_user && current_user == @question.user
+    unless current_user&.author_of?(@question)
       redirect_to questions_path, alert: "You do not have permission to delete this question"
     end
   end
