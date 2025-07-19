@@ -50,7 +50,7 @@ class AnswersController < ApplicationController
 
   # Check if current user is the author of the answer
   def check_author
-    unless current_user && current_user == @answer.user
+    unless current_user&.author_of?(@answer)
       redirect_to question_path(@answer.question), alert: "You do not have permission to delete this answer"
     end
   end
