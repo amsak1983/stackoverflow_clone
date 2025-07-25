@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   include ErrorHandling
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_question, only: [ :show ]
 
   # GET /questions
@@ -15,6 +16,7 @@ class QuestionsController < ApplicationController
   # POST /questions
   def create
     @question = Question.new(question_params)
+    @question.user = current_user
 
     respond_to do |format|
       if @question.save

@@ -1,10 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe QuestionsController, type: :controller do
-  let(:question) { create(:question) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
 
   describe 'GET #new' do
-    before { get :new }
+    before do
+      login(user)
+      get :new
+    end
 
     include_examples 'request status', :success
     include_examples 'renders template', :new
@@ -15,6 +19,8 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    before { login(user) }
+    
     context 'with valid attributes' do
       let(:valid_params) { { question: attributes_for(:question) } }
 

@@ -1,9 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
-  let(:question) { create(:question) }
+  let(:user) { create(:user) }
+  let(:question) { create(:question, user: user) }
 
   describe 'POST #create' do
+    before { login(user) }
+    
     context 'with valid attributes' do
       let(:valid_params) { { question_id: question, answer: attributes_for(:answer) } }
 
@@ -48,7 +51,10 @@ RSpec.describe AnswersController, type: :controller do
 
   describe 'error handling' do
     context 'when question not found' do
-      before { post :create, params: { question_id: 999, answer: attributes_for(:answer) } }
+      before do 
+        login(user)
+        post :create, params: { question_id: 999, answer: attributes_for(:answer) }
+      end
 
       include_examples 'redirects to', :questions_path
       include_examples 'sets flash message', :alert, 'Question not found'
