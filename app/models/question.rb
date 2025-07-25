@@ -1,5 +1,6 @@
 class Question < ApplicationRecord
   # Associations
+  belongs_to :user
   has_many :answers, dependent: :destroy
 
   # Validations

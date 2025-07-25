@@ -73,3 +73,5 @@ group :test do
   # Для поддержки assigns и assert_template в тестах контроллеров
   gem "rails-controller-testing"
 end
+
+gem "devise", "~> 4.9"
