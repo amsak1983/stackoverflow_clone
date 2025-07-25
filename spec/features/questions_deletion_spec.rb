@@ -25,7 +25,7 @@ feature 'Questions deletion', %q(
 
     scenario 'cannot see delete button for other user question' do
       visit question_path(other_question)
-      
+
       expect(page).not_to have_button 'Delete Question'
     end
   end
