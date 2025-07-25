@@ -8,7 +8,7 @@ RSpec.describe 'Answers', type: :request do
 
   describe 'POST /questions/:question_id/answers' do
     context 'when user is signed in' do
-      before { sign_in user }
+      before { sign_in_user user }
 
       context 'with valid parameters' do
         let(:valid_params) { { answer: { body: 'This is a valid answer' } } }
@@ -52,7 +52,7 @@ RSpec.describe 'Answers', type: :request do
 
   describe 'PATCH /answers/:id' do
     context 'when user is the author' do
-      before { sign_in user }
+      before { sign_in_user user }
 
       it 'updates the answer' do
         patch answer_path(answer), params: { answer: { body: 'Updated answer' } }, as: :turbo_stream
@@ -78,7 +78,7 @@ RSpec.describe 'Answers', type: :request do
 
   describe 'DELETE /answers/:id' do
     context 'when user is the author' do
-      before { sign_in user }
+      before { sign_in_user user }
 
       it 'deletes the answer' do
         answer # create the answer
@@ -106,7 +106,7 @@ RSpec.describe 'Answers', type: :request do
 
   describe 'PATCH /answers/:id/mark_as_best' do
     context 'when user is the question author' do
-      before { sign_in user }
+      before { sign_in_user user }
 
       it 'marks the answer as best' do
         patch mark_as_best_answer_path(answer), as: :turbo_stream
@@ -139,7 +139,7 @@ RSpec.describe 'Answers', type: :request do
 
   describe 'GET /answers/:id/edit' do
     context 'when user is the author' do
-      before { sign_in user }
+      before { sign_in_user user }
 
       it 'returns turbo stream with edit form' do
         get edit_answer_path(answer), as: :turbo_stream
@@ -150,10 +150,10 @@ RSpec.describe 'Answers', type: :request do
     context 'when user is not the author' do
       before { sign_in other_user }
 
-      it 'redirects with alert' do
+      it 'redirects to the question and sets flash alert' do
         get edit_answer_path(answer)
-        expect(response).to redirect_to(answer.question)
-        expect(flash[:alert]).to eq('You can only edit your own answers')
+        expect(response).to redirect_to(question_path(answer.question))
+        expect(session['flash']['flashes']['alert']).to eq('You can only edit your own answers')
       end
     end
   end

@@ -23,6 +23,16 @@
   </head>
 
   <body>
-    <%= yield %>
+    <div id="flash-messages" class="fixed top-4 right-4 z-50 w-96 space-y-2">
+      <% flash.each do |type, message| %>
+        <div class="<%= flash_class(type) %> p-4 rounded-lg shadow-lg transition-opacity duration-300" data-controller="flash" data-action="animationend->flash#remove">
+          <%= message %>
+        </div>
+      <% end %>
+    </div>
+    
+    <div class="min-h-screen">
+      <%= yield %>
+    </div>
   </body>
 </html>
