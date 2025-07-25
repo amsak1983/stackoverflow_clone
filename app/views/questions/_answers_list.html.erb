@@ -1,0 +1,19 @@
+<div id="answers" class="space-y-4">
+  <% if answers.any? %>
+    <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+      <%= pluralize(answers.count, 'Answer') %>
+    </h2>
+    
+    <% answers.each do |answer| %>
+      <%= render 'questions/answer', answer: answer %>
+    <% end %>
+  <% else %>
+    <div class="text-center py-8">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-2.172-.266l-5.244 1.466A1.002 1.002 0 015.036 19.7l1.466-5.244A8.955 8.955 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8z" />
+      </svg>
+      <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">No answers yet</h3>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Be the first to answer this question!</p>
+    </div>
+  <% end %>
+</div>

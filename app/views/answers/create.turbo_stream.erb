@@ -1,0 +1,7 @@
+<%= turbo_stream.append "answers" do %>
+  <%= render "questions/answer", answer: @answer %>
+<% end %>
+
+<%= turbo_stream.replace "new_answer_form" do %>
+  <%= render "questions/answer_form", question: @question, answer: Answer.new %>
+<% end %>

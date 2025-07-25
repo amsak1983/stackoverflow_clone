@@ -1,32 +1,22 @@
 class Answer < ApplicationRecord
   # Associations
   belongs_to :question
-  belongs_to :user, optional: true
-
-  # Callbacks
-  before_validation :sanitize_content
+  belongs_to :user
 
   # Validations
   validates :body, presence: true
-  validate :no_dangerous_content
 
   # Scopes
   scope :newest_first, -> { order(created_at: :desc) }
+  scope :sorted_by_best, -> { order(best: :desc, created_at: :asc) }
 
   # Returns a truncated version of the body for preview purposes
   def preview
     body.truncate(50) if body
   end
 
-  private
-
-  def sanitize_content
-    self.body = ActionController::Base.helpers.sanitize(body) if body.present?
-  end
-
-  def no_dangerous_content
-    if body.present? && (body.include?("<script>") || body.include?("javascript:"))
-      errors.add(:body, "contains potentially dangerous code")
-    end
+  # Check if this answer is marked as best
+  def best?
+    best
   end
 end

@@ -5,8 +5,9 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
-require 'rails-controller-testing'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'rails-controller-testing'
+require 'devise'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -44,15 +45,37 @@ RSpec.configure do |config|
   # Include FactoryBot syntax methods
   config.include FactoryBot::Syntax::Methods
 
-  # Включаем вспомогательные методы для feature-тестов
-  config.include FeatureHelpers, type: :feature
-
-  # Включаем Devise test helpers для контроллеров
+  # Configure Devise test helpers for different spec types
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
 
-  # Включаем helpers для request specs
-  config.include RequestHelpers, type: :request
+  # Configure Warden test helpers
+  config.include Warden::Test::Helpers
+
+  config.before(:suite) do
+    Warden.test_mode!
+  end
+
+  config.after(:each) do
+    Warden.test_reset!
+  end
+
+  # Set up Devise test mode for controller specs
+  config.before(:each, type: :controller) do
+    @request.env['devise.mapping'] = Devise.mappings[:user]
+  end
+
+  # Devise mapping for request specs is handled by Warden::Test::Helpers
+  # No need to set @request.env in request specs
+
+  # For controller testing
+  [ :controller, :view, :request ].each do |type|
+    config.include ::Rails::Controller::Testing::TestProcess, type: type
+    config.include ::Rails::Controller::Testing::TemplateAssertions, type: type
+    config.include ::Rails::Controller::Testing::Integration, type: type
+  end
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
