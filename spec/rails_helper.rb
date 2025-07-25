@@ -44,34 +44,34 @@ RSpec.configure do |config|
 
   # Include FactoryBot syntax methods
   config.include FactoryBot::Syntax::Methods
-  
+
   # Configure Devise test helpers for different spec types
   config.include Devise::Test::IntegrationHelpers, type: :request
   config.include Devise::Test::IntegrationHelpers, type: :feature
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view
-  
+
   # Configure Warden test helpers
   config.include Warden::Test::Helpers
-  
+
   config.before(:suite) do
     Warden.test_mode!
   end
-  
+
   config.after(:each) do
     Warden.test_reset!
   end
-  
+
   # Set up Devise test mode for controller specs
   config.before(:each, type: :controller) do
     @request.env['devise.mapping'] = Devise.mappings[:user]
   end
-  
+
   # Devise mapping for request specs is handled by Warden::Test::Helpers
   # No need to set @request.env in request specs
-  
+
   # For controller testing
-  [:controller, :view, :request].each do |type|
+  [ :controller, :view, :request ].each do |type|
     config.include ::Rails::Controller::Testing::TestProcess, type: type
     config.include ::Rails::Controller::Testing::TemplateAssertions, type: type
     config.include ::Rails::Controller::Testing::Integration, type: type

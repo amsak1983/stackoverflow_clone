@@ -6,7 +6,7 @@ class AddDeviseToUsers < ActiveRecord::Migration[8.0]
     unless index_exists?(:users, :email)
       add_index :users, :email, unique: true
     end
-    
+
     unless index_exists?(:users, :reset_password_token)
       add_index :users, :reset_password_token, unique: true
     end

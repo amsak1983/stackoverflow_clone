@@ -11,6 +11,6 @@ Rails.application.routes.draw do
       end
     end
   end
-  
+
   resources :answers, only: [ :edit, :update, :destroy ]
 end
