@@ -1,0 +1,50 @@
+<%= turbo_frame_tag "answer_#{answer.id}" do %>
+  <div class="answer <%= 'best-answer' if answer.best? %> bg-white dark:bg-gray-800 rounded-lg shadow-sm border <%= answer.best? ? 'border-green-300 dark:border-green-600' : 'border-gray-200 dark:border-gray-700' %> p-6 mb-4 <%= 'ring-2 ring-green-200 dark:ring-green-800' if answer.best? %>" id="answer_<%= answer.id %>">
+    <% if answer.best? %>
+      <div class="flex items-center mb-4 text-green-600 dark:text-green-400">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+        </svg>
+        <span class="text-sm font-medium">Best Answer</span>
+      </div>
+    <% end %>
+    
+    <div class="prose dark:prose-invert max-w-none">
+      <%= simple_format(answer.body) %>
+    </div>
+    
+    <div class="flex items-center justify-between mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+      <div class="text-sm text-gray-500 dark:text-gray-400">
+        Answered <%= time_ago_in_words(answer.created_at) %> ago
+        <% if answer.user %>
+          by <span class="font-medium text-gray-700 dark:text-gray-300"><%= answer.user.email %></span>
+        <% end %>
+      </div>
+      
+      <% if user_signed_in? %>
+        <div class="flex space-x-2">
+          <% if current_user == answer.user %>
+            <%= link_to "Edit", edit_answer_path(answer), 
+                        class: "text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm font-medium",
+                        data: { turbo_stream: true } %>
+            <%= link_to "Delete", answer_path(answer), 
+                        method: :delete,
+                        class: "text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium",
+                        data: { 
+                          turbo_method: :delete,
+                          turbo_confirm: "Are you sure you want to delete this answer?",
+                          turbo_stream: true
+                        } %>
+          <% end %>
+          
+          <% if current_user == answer.question.user && !answer.best? %>
+            <%= link_to "Mark as Best", mark_as_best_answer_path(answer),
+                        method: :patch,
+                        class: "text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-300 text-sm font-medium",
+                        data: { turbo_stream: true } %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

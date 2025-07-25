@@ -1,0 +1,3 @@
+<%= turbo_stream.replace "answers" do %>
+  <%= render "questions/answers_list", answers: @answer.question.answers.sorted_by_best %>
+<% end %>
