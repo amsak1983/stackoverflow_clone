@@ -1,10 +1,14 @@
 class AnswersController < ApplicationController
   include ErrorHandling
-  before_action :set_question
+  before_action :authenticate_user!
+  before_action :set_question, only: [ :create ]
+  before_action :set_answer, only: [ :destroy ]
+  before_action :check_author, only: [ :destroy ]
 
   # POST /questions/:question_id/answers
   def create
     @answer = @question.answers.new(answer_params)
+    @answer.user = current_user
 
     respond_to do |format|
       if @answer.save
@@ -18,17 +22,34 @@ class AnswersController < ApplicationController
     end
   end
 
+  # DELETE /answers/:id
+  def destroy
+    question = @answer.question
+    @answer.destroy
+    redirect_to question_path(question), notice: "Answer was successfully deleted"
+  end
+
   private
 
   # Sets question from parameters
   def set_question
     @question = Question.find(params[:question_id])
-  rescue ActiveRecord::RecordNotFound
-    handle_record_not_found("Question")
+  end
+
+  # Sets answer from parameters
+  def set_answer
+    @answer = Answer.find(params[:id])
   end
 
   # Permitted parameters
   def answer_params
     params.require(:answer).permit(:body)
+  end
+
+  # Check if current user is the author of the answer
+  def check_author
+    unless current_user&.author_of?(@answer)
+      redirect_to question_path(@answer.question), alert: "You do not have permission to delete this answer"
+    end
   end
 end

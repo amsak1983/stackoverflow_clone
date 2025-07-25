@@ -5,6 +5,7 @@ require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'rails-controller-testing'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -42,6 +43,16 @@ RSpec.configure do |config|
 
   # Include FactoryBot syntax methods
   config.include FactoryBot::Syntax::Methods
+
+  # Включаем вспомогательные методы для feature-тестов
+  config.include FeatureHelpers, type: :feature
+
+  # Включаем Devise test helpers для контроллеров
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include ControllerHelpers, type: :controller
+
+  # Включаем helpers для request specs
+  config.include RequestHelpers, type: :request
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
