@@ -6,7 +6,9 @@ feature 'Questions deletion', %q(
   I want to be able to delete my own questions
 ) do
   given(:user) { create(:user) }
+  given(:other_user) { create(:user) }
   given(:question) { create(:question, user: user) }
+  given(:other_question) { create(:question, user: other_user) }
 
   describe 'Authenticated user' do
     background do
@@ -19,6 +21,12 @@ feature 'Questions deletion', %q(
 
       expect(page).to have_content 'Question was successfully deleted'
       expect(page).not_to have_content question.title
+    end
+
+    scenario 'cannot see delete button for other user question' do
+      visit question_path(other_question)
+      
+      expect(page).not_to have_button 'Delete Question'
     end
   end
 end

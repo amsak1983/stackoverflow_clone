@@ -33,7 +33,7 @@
 <div id="answers" class="space-y-6 mb-8">
   <% if @question.answers.any? %>
     <% @question.answers.each do |answer| %>
-      <div class="answer p-5 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <div id="answer-<%= answer.id %>" class="answer p-5 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <div class="whitespace-pre-wrap text-gray-700 dark:text-gray-300 mb-4"><%= sanitize answer.body %></div>
         
         <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
