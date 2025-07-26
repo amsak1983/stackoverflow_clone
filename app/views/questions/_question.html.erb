@@ -1,0 +1,18 @@
+<div id="<%= dom_id(question) %>" class="p-6 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+  <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+    <%= link_to question.title, question_path(question), class: "hover:text-blue-600 dark:hover:text-blue-400" %>
+  </h2>
+  <p class="text-gray-600 dark:text-gray-300 mb-4"><%= question.preview %></p>
+  
+  <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+    <div>
+      <span>Asked by <%= question.user&.name || "Unknown" %></span>
+      <span class="ml-2"><%= time_ago_in_words(question.created_at) %> ago</span>
+    </div>
+    <div>
+      <span class="px-2 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full dark:bg-gray-700 dark:text-gray-300">
+        <%= pluralize(question.answers.count, "answer") %>
+      </span>
+    </div>
+  </div>
+</div>

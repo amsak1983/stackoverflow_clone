@@ -17,17 +17,19 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Подключение Tailwind CSS через гем tailwindcss-rails %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    
+    <%# Подключение скомпилированных стилей приложения %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    
     <%= javascript_importmap_tags %>
     
     <!-- Flowbite CDN для поддержки turbo -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.turbo.min.js"></script>
-    <!-- Flowbite CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
   </head>
 
-  <body class="bg-gray-50 dark:bg-gray-900">
+  <body class="bg-gray-50 dark:bg-gray-900 flex flex-col min-h-screen">
     <header>
       <nav class="bg-white border-gray-200 px-4 lg:px-6 py-4 dark:bg-gray-800 shadow-md mb-8">
         <div class="container mx-auto flex flex-wrap justify-between items-center">
@@ -60,7 +62,7 @@
       </nav>
     </header>
 
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto px-4 flex-grow pb-20">
       <% if notice %>
         <div id="alert-border-3" class="flex items-center p-4 mb-4 text-green-800 border-t-4 border-green-300 bg-green-50 dark:text-green-400 dark:bg-gray-800 dark:border-green-800" role="alert">
           <svg class="flex-shrink-0 w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -95,7 +97,7 @@
       </div>
     </div>
     
-    <footer class="bg-white dark:bg-gray-800 shadow-inner mt-8 py-6">
+    <footer class="bg-white dark:bg-gray-800 shadow-inner py-6 fixed bottom-0 left-0 w-full">
       <div class="container mx-auto px-4">
         <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
           <p>© <%= Date.today.year %> Stackoverflow Clone. Все права защищены.</p>

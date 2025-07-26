@@ -4,13 +4,19 @@ module.exports = {
     './app/views/**/*.{html,html.erb,erb}',
     './app/helpers/**/*.rb',
     './app/javascript/**/*.js',
+    './app/assets/stylesheets/**/*.css',
     './node_modules/flowbite/**/*.js'
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+    },
   },
   plugins: [
-    require('flowbite/plugin')
+    require('flowbite/plugin'),
+    require('@tailwindcss/typography')
   ],
   darkMode: 'class'
 }
