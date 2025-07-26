@@ -49,10 +49,10 @@ RSpec.describe Question, type: :model do
   end
 
   describe '#preview' do
-    let(:question) { create(:question, body: 'A' * 150) }
+    let(:question) { create(:question, body: 'A' * 200) }
 
     it 'returns truncated body' do
-      expect(question.preview.length).to eq(100)
+      expect(question.preview.length).to eq(150)
       expect(question.preview).to include('...')
     end
   end

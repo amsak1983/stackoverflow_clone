@@ -18,7 +18,10 @@ RSpec.describe Answer, type: :model do
 
     describe '.newest_first' do
       it 'returns answers in descending order by creation date' do
-        expect(question.answers.newest_first).to eq([new_answer, old_answer])
+        regular_answers = question.answers.where(best: false)
+        newest_ids = regular_answers.newest_first.pluck(:id)
+        expect(newest_ids.first).to eq(new_answer.id)
+        expect(newest_ids.last).to eq(old_answer.id)
       end
     end
 

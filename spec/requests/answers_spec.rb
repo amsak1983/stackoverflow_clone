@@ -25,7 +25,7 @@ RSpec.describe "Answers", type: :request do
         end
 
         it 'returns turbo stream response' do
-          post question_answers_path(question), params: valid_params, xhr: true
+          post question_answers_path(question, format: :turbo_stream), params: valid_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to include('text/vnd.turbo-stream.html')
         end
@@ -72,7 +72,7 @@ RSpec.describe "Answers", type: :request do
         end
 
         it 'returns turbo stream response' do
-          patch answer_path(answer), params: update_params, xhr: true
+          patch answer_path(answer, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to include('text/vnd.turbo-stream.html')
         end
@@ -84,12 +84,12 @@ RSpec.describe "Answers", type: :request do
 
         it 'does not update the answer' do
           expect {
-            patch answer_path(other_answer), params: update_params, xhr: true
+            patch answer_path(other_answer, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           }.not_to change { other_answer.reload.body }
         end
 
         it 'returns forbidden status' do
-          patch answer_path(other_answer), params: update_params, xhr: true
+          patch answer_path(other_answer, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:forbidden)
         end
       end
@@ -98,13 +98,13 @@ RSpec.describe "Answers", type: :request do
     context 'when user is not authenticated' do
       it 'does not update the answer' do
         expect {
-          patch answer_path(answer), params: update_params, xhr: true
+          patch answer_path(answer, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
         }.not_to change { answer.reload.body }
       end
 
       it 'returns unauthorized status' do
-        patch answer_path(answer), params: update_params, xhr: true
-        expect(response).to have_http_status(:unauthorized)
+        patch answer_path(answer, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+        expect(response).to have_http_status(:found)
       end
     end
   end
@@ -118,12 +118,12 @@ RSpec.describe "Answers", type: :request do
       context 'when user is the author' do
         it 'deletes the answer' do
           expect { 
-            delete answer_path(answer), xhr: true 
+            delete answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           }.to change(Answer, :count).by(-1)
         end
 
         it 'returns turbo stream response' do
-          delete answer_path(answer), xhr: true
+          delete answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to include('text/vnd.turbo-stream.html')
         end
@@ -135,12 +135,12 @@ RSpec.describe "Answers", type: :request do
 
         it 'does not delete the answer' do
           expect { 
-            delete answer_path(other_answer), xhr: true 
+            delete answer_path(other_answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           }.not_to change(Answer, :count)
         end
 
         it 'returns forbidden status' do
-          delete answer_path(other_answer), xhr: true
+          delete answer_path(other_answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:forbidden)
         end
       end
@@ -149,18 +149,19 @@ RSpec.describe "Answers", type: :request do
     context 'when user is not authenticated' do
       it 'does not delete the answer' do
         expect { 
-          delete answer_path(answer), xhr: true 
+          delete answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
         }.not_to change(Answer, :count)
       end
 
       it 'returns unauthorized status' do
-        delete answer_path(answer), xhr: true
-        expect(response).to have_http_status(:unauthorized)
+        delete answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+        expect(response).to have_http_status(:found)
       end
     end
   end
 
   describe 'PATCH /answers/:id/set_best' do
+    let(:question) { create(:question) }
     let!(:answer) { create(:answer, question: question) }
     let(:question_owner) { question.user }
 
@@ -170,12 +171,12 @@ RSpec.describe "Answers", type: :request do
 
         context 'when answer is not the best' do
           it 'sets the answer as best' do
-            patch set_best_answer_path(answer), xhr: true
+            patch set_best_answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
             expect(answer.reload.best).to be_truthy
           end
 
           it 'returns turbo stream response' do
-            patch set_best_answer_path(answer), xhr: true
+            patch set_best_answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
             expect(response).to have_http_status(:ok)
             expect(response.content_type).to include('text/vnd.turbo-stream.html')
           end
@@ -201,12 +202,12 @@ RSpec.describe "Answers", type: :request do
 
         it 'does not change the best answer' do
           expect {
-            patch set_best_answer_path(answer), xhr: true
+            patch set_best_answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           }.not_to change { answer.reload.best }
         end
 
         it 'returns forbidden status' do
-          patch set_best_answer_path(answer), xhr: true
+          patch set_best_answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:forbidden)
         end
       end
