@@ -19,7 +19,7 @@ feature 'Answers deletion', %q(
 
     scenario 'can delete own answer' do
       within "#answer_#{answer.id}" do
-        click_on 'Delete'
+        find('button[data-turbo-method="delete"]').click
       end
 
       expect(page).to have_content 'Answer was successfully deleted'
