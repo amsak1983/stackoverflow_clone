@@ -4,7 +4,11 @@ Rails.application.routes.draw do
 
   root "questions#index"
 
-  resources :questions, only: [ :index, :new, :create, :show, :destroy ] do
-    resources :answers, only: [ :create, :destroy ], shallow: true
+  resources :questions, only: [ :index, :new, :create, :show, :update, :destroy ] do
+    resources :answers, only: [ :create, :update, :destroy ], shallow: true do
+      member do
+        patch :set_best
+      end
+    end
   end
 end

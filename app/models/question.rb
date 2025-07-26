@@ -1,7 +1,8 @@
 class Question < ApplicationRecord
   # Associations
-  belongs_to :user, optional: true
+  belongs_to :user
   has_many :answers, dependent: :destroy
+  has_one :best_answer, -> { where(best: true) }, class_name: 'Answer'
 
   # Callbacks
   before_validation :sanitize_content
@@ -16,7 +17,11 @@ class Question < ApplicationRecord
 
   # Returns a truncated version of the body for preview purposes
   def preview
-    body.truncate(100) if body
+    body.truncate(150) if body
+  end
+
+  def has_best_answer?
+    answers.where(best: true).exists?
   end
 
   private

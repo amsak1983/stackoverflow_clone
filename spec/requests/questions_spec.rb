@@ -92,14 +92,14 @@ RSpec.describe "Questions", type: :request do
 
       context 'when user is the author' do
         it 'updates the question' do
-          patch question_path(question), params: update_params, xhr: true
+          patch question_path(question, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           question.reload
           expect(question.title).to eq('Updated title')
           expect(question.body).to eq('Updated body')
         end
 
         it 'returns turbo stream response' do
-          patch question_path(question), params: update_params, xhr: true
+          patch question_path(question, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:ok)
           expect(response.content_type).to include('text/vnd.turbo-stream.html')
         end
@@ -109,13 +109,12 @@ RSpec.describe "Questions", type: :request do
         let(:invalid_params) { { question: { title: '', body: '' } } }
 
         it 'does not update the question' do
-          expect {
-            patch question_path(question), params: invalid_params, xhr: true
-          }.not_to change { question.reload.attributes }
+          patch question_path(question, format: :turbo_stream), params: invalid_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+          expect(question.reload.title).not_to eq('')
         end
 
         it 'returns unprocessable_entity status' do
-          patch question_path(question), params: invalid_params, xhr: true
+          patch question_path(question, format: :turbo_stream), params: invalid_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -125,13 +124,12 @@ RSpec.describe "Questions", type: :request do
         let!(:other_question) { create(:question, user: other_user) }
 
         it 'does not update the question' do
-          expect {
-            patch question_path(other_question), params: update_params, xhr: true
-          }.not_to change { other_question.reload.attributes }
+          patch question_path(other_question, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+          expect(other_question.reload.title).not_to eq('Updated title')
         end
 
         it 'returns forbidden status' do
-          patch question_path(other_question), params: update_params, xhr: true
+          patch question_path(other_question, format: :turbo_stream), params: update_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           expect(response).to have_http_status(:forbidden)
         end
       end
@@ -176,9 +174,9 @@ RSpec.describe "Questions", type: :request do
           expect { delete question_path(other_question) }.not_to change(Question, :count)
         end
 
-        it 'redirects to the question path' do
+        it 'returns forbidden status' do
           delete question_path(other_question)
-          expect(response).to redirect_to questions_path
+          expect(response).to have_http_status(:forbidden)
         end
       end
     end

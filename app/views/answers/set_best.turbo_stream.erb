@@ -1,0 +1,1 @@
+<%= turbo_stream.replace "answers", partial: "questions/answers", locals: { answers: @answer.question.answers.best_first } %>

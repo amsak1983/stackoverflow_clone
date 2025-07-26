@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
   include ErrorHandling
   before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :set_question, only: [ :show, :destroy ]
-  before_action :check_author, only: [ :destroy ]
+  before_action :set_question, only: [ :show, :update, :destroy ]
+  before_action :check_author, only: [ :update, :destroy ]
 
   # GET /questions
   def index
@@ -32,7 +32,20 @@ class QuestionsController < ApplicationController
   # GET /questions/:id
   def show
     @answer = Answer.new
-    @answers = @question.answers.newest_first
+    @answers = @question.answers.best_first
+  end
+
+  # PATCH/PUT /questions/:id
+  def update
+    respond_to do |format|
+      if @question.update(question_params)
+        format.html { redirect_to @question, notice: "Question was successfully updated" }
+        format.turbo_stream { render :update, status: :ok }
+      else
+        format.html { render "questions/show", status: :unprocessable_entity }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@question, partial: "questions/form", locals: { question: @question }), status: :unprocessable_entity }
+      end
+    end
   end
 
   # DELETE /questions/:id
@@ -56,8 +69,13 @@ class QuestionsController < ApplicationController
 
   # Check if current user is the author of the question
   def check_author
-    unless current_user&.author_of?(@question)
-      redirect_to questions_path, alert: "You do not have permission to delete this question"
+    return if current_user&.author_of?(@question)
+    
+    respond_to do |format|
+      format.html { redirect_to questions_path, alert: "You do not have permission to modify this question" }
+      format.json { head :forbidden }
+      format.turbo_stream { head :forbidden }
     end
+    head :forbidden and return
   end
 end

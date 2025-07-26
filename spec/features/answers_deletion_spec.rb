@@ -18,17 +18,17 @@ feature 'Answers deletion', %q(
     end
 
     scenario 'can delete own answer' do
-      within "#answer-#{answer.id}" do
-        click_on 'Delete Answer'
+      within "#answer_#{answer.id}" do
+        click_on 'Delete'
       end
 
       expect(page).to have_content 'Answer was successfully deleted'
-      expect(page).not_to have_css("#answer-#{answer.id}")
+      expect(page).not_to have_css("#answer_#{answer.id}")
     end
 
     scenario 'cannot see delete button for other user answer' do
-      within "#answer-#{other_answer.id}" do
-        expect(page).not_to have_button 'Delete Answer'
+      within "#answer_#{other_answer.id}" do
+        expect(page).not_to have_button 'Delete'
       end
     end
   end
