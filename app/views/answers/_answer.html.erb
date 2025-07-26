@@ -64,7 +64,9 @@
     <% end %>
   </div>
 
-  <%= turbo_frame_tag dom_id(answer, :edit) do %>
-    <%= render "answers/form", answer: answer %>
+  <% if user_signed_in? && current_user.author_of?(answer) %>
+    <%= turbo_frame_tag dom_id(answer, :edit) do %>
+      <%= render "answers/form", answer: answer %>
+    <% end %>
   <% end %>
 </div>

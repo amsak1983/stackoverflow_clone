@@ -1,4 +1,4 @@
-<% if answer.persisted? %>
+<% if answer.persisted? && current_user&.author_of?(answer) %>
   <%= form_with model: answer, local: false, class: "mt-4" do |form| %>
     <% if answer.errors.any? %>
       <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-r-lg dark:bg-red-900/20 dark:border-red-700">
