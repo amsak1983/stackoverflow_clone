@@ -14,11 +14,6 @@ class QuestionsController < ApplicationController
     @question = Question.new
   end
 
-  # GET /questions/:id/edit
-  def edit
-    # @question уже установлен через before_action :set_question
-  end
-
   # POST /questions
   def create
     @question = current_user.questions.new(question_params)
@@ -38,6 +33,10 @@ class QuestionsController < ApplicationController
   def show
     @answer = Answer.new
     @answers = @question.answers.best_first
+  end
+  
+  # GET /questions/:id/edit
+  def edit
   end
 
   # PATCH/PUT /questions/:id
@@ -81,6 +80,6 @@ class QuestionsController < ApplicationController
       format.json { head :forbidden }
       format.turbo_stream { head :forbidden }
     end
-    return
+    head :forbidden and return
   end
 end
