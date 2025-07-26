@@ -84,6 +84,73 @@ RSpec.describe "Questions", type: :request do
     end
   end
 
+  describe 'PATCH /questions/:id' do
+    let(:update_params) { { question: { title: 'Updated title', body: 'Updated body' } } }
+
+    context 'when user is authenticated' do
+      before { sign_in user }
+
+      context 'when user is the author' do
+        it 'updates the question' do
+          patch question_path(question), params: update_params, xhr: true
+          question.reload
+          expect(question.title).to eq('Updated title')
+          expect(question.body).to eq('Updated body')
+        end
+
+        it 'returns turbo stream response' do
+          patch question_path(question), params: update_params, xhr: true
+          expect(response).to have_http_status(:ok)
+          expect(response.content_type).to include('text/vnd.turbo-stream.html')
+        end
+      end
+
+      context 'with invalid attributes' do
+        let(:invalid_params) { { question: { title: '', body: '' } } }
+
+        it 'does not update the question' do
+          expect {
+            patch question_path(question), params: invalid_params, xhr: true
+          }.not_to change { question.reload.attributes }
+        end
+
+        it 'returns unprocessable_entity status' do
+          patch question_path(question), params: invalid_params, xhr: true
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+
+      context 'when user is not the author' do
+        let(:other_user) { create(:user) }
+        let!(:other_question) { create(:question, user: other_user) }
+
+        it 'does not update the question' do
+          expect {
+            patch question_path(other_question), params: update_params, xhr: true
+          }.not_to change { other_question.reload.attributes }
+        end
+
+        it 'returns forbidden status' do
+          patch question_path(other_question), params: update_params, xhr: true
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+    end
+
+    context 'when user is not authenticated' do
+      it 'does not update the question' do
+        expect {
+          patch question_path(question), params: update_params, xhr: true
+        }.not_to change { question.reload.attributes }
+      end
+
+      it 'returns unauthorized status' do
+        patch question_path(question), params: update_params, xhr: true
+        expect(response).to have_http_status(:unauthorized)
+      end
+    end
+  end
+
   describe 'DELETE /questions/:id' do
     let!(:question_to_delete) { create(:question, user: user) }
 

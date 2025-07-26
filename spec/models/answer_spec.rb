@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Answer, type: :model do
   describe 'associations' do
     it { should belong_to(:question) }
+    it { should belong_to(:user) }
   end
 
   describe 'validations' do
@@ -10,14 +11,37 @@ RSpec.describe Answer, type: :model do
   end
 
   describe 'scopes' do
-    describe '.newest_first' do
-      let!(:question) { create(:question) }
-      let!(:old_answer) { create(:answer, question: question, created_at: 2.days.ago) }
-      let!(:new_answer) { create(:answer, question: question, created_at: 1.day.ago) }
+    let!(:question) { create(:question) }
+    let!(:old_answer) { create(:answer, question: question, created_at: 2.days.ago) }
+    let!(:new_answer) { create(:answer, question: question, created_at: 1.day.ago) }
+    let!(:best_answer) { create(:answer, question: question, best: true) }
 
+    describe '.newest_first' do
       it 'returns answers in descending order by creation date' do
-        expect(question.answers.newest_first).to eq([ new_answer, old_answer ])
+        expect(question.answers.newest_first).to eq([new_answer, old_answer])
       end
+    end
+
+    describe '.best_first' do
+      it 'returns best answer first, then newest first' do
+        expect(question.answers.best_first).to eq([best_answer, new_answer, old_answer])
+      end
+    end
+  end
+
+  describe '#make_best!' do
+    let(:question) { create(:question) }
+    let!(:answer1) { create(:answer, question: question, best: true) }
+    let(:answer2) { create(:answer, question: question) }
+
+    it 'sets the answer as best' do
+      answer2.make_best!
+      expect(answer2.reload.best).to be_truthy
+    end
+
+    it 'unsets previous best answer' do
+      answer2.make_best!
+      expect(answer1.reload.best).to be_falsey
     end
   end
 
