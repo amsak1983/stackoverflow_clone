@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
   include ErrorHandling
   before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :set_question, only: [ :show, :update, :destroy ]
-  before_action :check_author, only: [ :update, :destroy ]
+  before_action :set_question, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_author, only: [ :edit, :update, :destroy ]
 
   # GET /questions
   def index
@@ -12,6 +12,11 @@ class QuestionsController < ApplicationController
   # GET /questions/new
   def new
     @question = Question.new
+  end
+
+  # GET /questions/:id/edit
+  def edit
+    # @question уже установлен через before_action :set_question
   end
 
   # POST /questions
@@ -76,6 +81,6 @@ class QuestionsController < ApplicationController
       format.json { head :forbidden }
       format.turbo_stream { head :forbidden }
     end
-    head :forbidden and return
+    return
   end
 end
