@@ -27,7 +27,7 @@ RSpec.describe Answer, type: :model do
 
     describe '.best_first' do
       it 'returns best answer first, then newest first' do
-        expect(question.answers.best_first).to eq([best_answer, new_answer, old_answer])
+        expect(question.answers.best_first).to eq([ best_answer, new_answer, old_answer ])
       end
     end
   end

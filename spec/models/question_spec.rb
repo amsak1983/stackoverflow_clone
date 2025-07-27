@@ -18,7 +18,7 @@ RSpec.describe Question, type: :model do
       let!(:new_question) { create(:question, created_at: 1.day.ago) }
 
       it 'returns questions in descending order by creation date' do
-        expect(Question.recent).to eq([new_question, old_question])
+        expect(Question.recent).to eq([ new_question, old_question ])
       end
     end
   end

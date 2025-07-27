@@ -34,7 +34,7 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answers = @question.answers.best_first
   end
-  
+
   # GET /questions/:id/edit
   def edit
   end
@@ -74,7 +74,7 @@ class QuestionsController < ApplicationController
   # Check if current user is the author of the question
   def check_author
     return if current_user&.author_of?(@question)
-    
+
     respond_to do |format|
       format.html { redirect_to questions_path, alert: "You do not have permission to modify this question" }
       format.json { head :forbidden }

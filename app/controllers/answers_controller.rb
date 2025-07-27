@@ -78,7 +78,7 @@ class AnswersController < ApplicationController
   # Check if current user is the author of the answer
   def check_author
     return if current_user&.author_of?(@answer)
-    
+
     respond_to do |format|
       format.html { redirect_to question_path(@answer.question), alert: "You do not have permission to modify this answer" }
       format.json { head :forbidden }
@@ -90,7 +90,7 @@ class AnswersController < ApplicationController
   # Check if current user is the author of the question
   def check_question_author
     return if current_user&.author_of?(@answer.question)
-    
+
     respond_to do |format|
       format.html { redirect_to question_path(@answer.question), alert: "Only the question author can select the best answer" }
       format.json { head :forbidden }

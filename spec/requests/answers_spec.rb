@@ -14,8 +14,8 @@ RSpec.describe "Answers", type: :request do
 
       context 'with valid attributes' do
         it 'saves a new answer in the database' do
-          expect { 
-            post question_answers_path(question), params: valid_params, xhr: true 
+          expect {
+            post question_answers_path(question), params: valid_params, xhr: true
           }.to change(Answer, :count).by(1)
         end
 
@@ -33,8 +33,8 @@ RSpec.describe "Answers", type: :request do
 
       context 'with invalid attributes' do
         it 'does not save the answer' do
-          expect { 
-            post question_answers_path(question), params: invalid_params, xhr: true 
+          expect {
+            post question_answers_path(question), params: invalid_params, xhr: true
           }.not_to change(Answer, :count)
         end
 
@@ -117,7 +117,7 @@ RSpec.describe "Answers", type: :request do
 
       context 'when user is the author' do
         it 'deletes the answer' do
-          expect { 
+          expect {
             delete answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           }.to change(Answer, :count).by(-1)
         end
@@ -134,7 +134,7 @@ RSpec.describe "Answers", type: :request do
         let!(:other_answer) { create(:answer, question: question, user: other_user) }
 
         it 'does not delete the answer' do
-          expect { 
+          expect {
             delete answer_path(other_answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
           }.not_to change(Answer, :count)
         end
@@ -148,7 +148,7 @@ RSpec.describe "Answers", type: :request do
 
     context 'when user is not authenticated' do
       it 'does not delete the answer' do
-        expect { 
+        expect {
           delete answer_path(answer, format: :turbo_stream), headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
         }.not_to change(Answer, :count)
       end

@@ -8,7 +8,7 @@ class User < ApplicationRecord
   has_many :answers, dependent: :destroy
 
   def name
-    email.split('@').first&.capitalize || "User"
+    email.split("@").first&.capitalize || "User"
   end
 
   def author_of?(record)
