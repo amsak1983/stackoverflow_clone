@@ -1,0 +1,4 @@
+/* Styles to fix issues in test environment */
+.selenium-webdriver footer {
+  display: none !important;
+}

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-feature 'Пользователь может прикреплять файлы к ответу', %q{
-  Для предоставления дополнительной информации
-  Как автор ответа
-  Я хочу иметь возможность прикреплять файлы к ответу
+feature 'User can attach files to answer', %q{
+  In order to provide additional information
+  As an author of answer
+  I want to be able to attach files to answer
 } do
 
   given(:user) { create(:user) }
@@ -16,60 +16,60 @@ feature 'Пользователь может прикреплять файлы �
     visit question_path(question)
   end
 
-  scenario 'Пользователь может прикрепить файлы при создании ответа', js: true do
+  scenario 'User can attach files when creating an answer', js: true do
     within('#new_answer') do
-      fill_in 'answer[body]', with: 'Ответ с прикрепленными файлами'
+      fill_in 'answer[body]', with: 'Answer with attached files'
       attach_file 'Files', [pdf_file, txt_file]
       click_on 'Post Answer'
     end
     
-    expect(page).to have_content 'Ответ с прикрепленными файлами'
+    expect(page).to have_content 'Answer with attached files'
     expect(page).to have_content 'test.pdf'
     expect(page).to have_content 'test.txt'
   end
 
-  scenario 'Пользователь может прикрепить файлы при редактировании своего ответа', js: true do
-    # Создаем ответ без файлов
+  scenario 'User can attach files when editing their answer', js: true do
+    # Create answer without files
     answer = create(:answer, question: question, user: user)
     visit question_path(question)
     
-    # Редактируем ответ
+    # Edit the answer
     within("#answer_#{answer.id}") do
       click_on 'Edit'
       attach_file 'Files', pdf_file
       click_on 'Update Answer'
     end
     
-    # Проверяем что файл прикреплен
+    # Check that file is attached
     expect(page).to have_content 'test.pdf'
   end
   
-  scenario 'Автор может удалить прикрепленный к ответу файл', js: true do
-    # Создаем ответ с файлом
+  scenario 'Author can delete attached file from answer', js: true do
+    # Create answer with file
     answer = create(:answer, question: question, user: user)
     answer.files.attach(io: File.open(pdf_file), filename: 'test.pdf')
     
     visit question_path(question)
     expect(page).to have_content 'test.pdf'
     
-    # Удаляем файл
-    within("#attachment_#{answer.files.first.id}") do
+    # Delete file
+    within("#answer_attachment_#{answer.files.first.id}") do
       click_on '✕'
     end
     
-    # Проверяем, что файла больше нет
+    # Check that file no longer exists
     expect(page).not_to have_content 'test.pdf'
   end
   
-  scenario 'Не автор не видит кнопку удаления файла в ответе', js: true do
-    # Создаем ответ другого пользователя
+  scenario 'Non-author cannot see delete button for answer attachments', js: true do
+    # Create answer by another user
     other_user = create(:user)
     answer = create(:answer, question: question, user: other_user)
     answer.files.attach(io: File.open(pdf_file), filename: 'test.pdf')
     
     visit question_path(question)
     
-    # Проверяем, что файл есть, но кнопки удаления нет
+    # Check that file exists but delete button is not visible
     expect(page).to have_content 'test.pdf'
     expect(page).not_to have_link '✕'
   end

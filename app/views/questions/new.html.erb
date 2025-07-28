@@ -1,7 +1,7 @@
 <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">New Question</h1>
 
 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-card">
-  <%= form_with model: @question, local: true, class: "space-y-6" do |f| %>
+  <%= form_with model: @question, local: true, class: "space-y-6", multipart: true do |f| %>
     <% if @question.errors.any? %>
       <div id="error_explanation" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400">
         <h2 class="text-base font-semibold"><%= pluralize(@question.errors.count, "error") %> prohibited this question from being saved:</h2>
@@ -21,6 +21,14 @@
     <div>
       <%= f.label :body, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
       <%= f.text_area :body, rows: 10, class: "block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 focus-ring dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500", placeholder: "Describe your question in detail..." %>
+    </div>
+
+    <div>
+      <%= f.label :files, class: "block mb-2 text-sm font-medium text-gray-900 dark:text-white" %>
+      <%= f.file_field :files, multiple: true, direct_upload: true, class: "block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" %>
+      <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+        Supported formats: images, PDFs, text files and office documents (up to 10MB).
+      </p>
     </div>
 
     <div class="flex items-center space-x-4">

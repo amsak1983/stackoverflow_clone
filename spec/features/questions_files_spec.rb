@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-feature 'Пользователь может прикреплять файлы к вопросу', %q{
-  Для предоставления дополнительной информации
-  Как автор вопроса
-  Я хочу иметь возможность прикреплять файлы к вопросу
+feature 'User can attach files to question', %q{
+  In order to provide additional information
+  As an author of question
+  I want to be able to attach files to question
 } do
 
   given(:user) { create(:user) }
@@ -15,7 +15,7 @@ feature 'Пользователь может прикреплять файлы �
     visit new_question_path
   end
 
-  scenario 'Пользователь может прикрепить файлы при создании вопроса', js: true do
+  scenario 'User can attach files when creating a question' do
     fill_in 'Title', with: 'Test question with files'
     fill_in 'Body', with: 'Test question with multiple file attachments'
     attach_file 'Files', [pdf_file, txt_file]
@@ -28,48 +28,51 @@ feature 'Пользователь может прикреплять файлы �
     expect(page).to have_content 'test.txt'
   end
 
-  scenario 'Пользователь может прикрепить файлы при редактировании вопроса', js: true do
-    # Создаем вопрос без файлов
+  scenario 'User can attach files when editing a question' do
+    # Create question without files
     question = create(:question, user: user)
     visit question_path(question)
     
-    # Кликаем на редактировать
-    within("#question_#{question.id}") do
-      click_on 'Edit'
-      attach_file 'Files', pdf_file
-      click_on 'Update Question'
-    end
+    # Click on edit outside the within block
+    click_on 'Edit'
     
-    # Проверяем что файл прикреплен
+    # Ждем появления поля загрузки файлов
+    expect(page).to have_field('Files')
+    
+    # Загружаем файл и обновляем вопрос
+    attach_file 'Files', pdf_file
+    click_on 'Update Question'
+    
+    # Check that file is attached
     expect(page).to have_content 'test.pdf'
   end
   
-  scenario 'Автор может удалить прикрепленный файл', js: true do
-    # Создаем вопрос с файлом
+  scenario 'Author can delete attached file' do
+    # Create question with file
     question = create(:question, user: user)
     question.files.attach(io: File.open(pdf_file), filename: 'test.pdf')
     
     visit question_path(question)
     expect(page).to have_content 'test.pdf'
     
-    # Удаляем файл
+    # Delete file
     within("#attachment_#{question.files.first.id}") do
       click_on '✕'
     end
     
-    # Проверяем, что файла больше нет
+    # Check that file no longer exists
     expect(page).not_to have_content 'test.pdf'
   end
   
-  scenario 'Не автор не видит кнопку удаления файла', js: true do
-    # Создаем вопрос другого пользователя
+  scenario 'Non-author cannot see delete button' do
+    # Create question by another user
     other_user = create(:user)
     question = create(:question, user: other_user)
     question.files.attach(io: File.open(pdf_file), filename: 'test.pdf')
     
     visit question_path(question)
     
-    # Проверяем, что файл есть, но кнопки удаления нет
+    # Check that file exists but delete button is not visible
     expect(page).to have_content 'test.pdf'
     expect(page).not_to have_link '✕'
   end

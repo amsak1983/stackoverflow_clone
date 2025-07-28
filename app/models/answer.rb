@@ -45,16 +45,30 @@ class Answer < ApplicationRecord
   def validate_file_type_and_size
     return unless files.attached?
     
+    allowed_types = %w[
+      image/jpeg image/png image/gif 
+      application/pdf 
+      text/plain 
+      application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document 
+      application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+    ]
+    max_size = 10.megabytes
+    
     files.each do |file|
-      unless file.content_type.in?(%w[image/jpeg image/png image/gif application/pdf text/plain application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet])
-        file.purge
-        errors.add(:files, 'должны быть изображениями, PDF, текстом или офисными документами')
-      end
-      
-      if file.blob.byte_size > 10.megabytes
-        file.purge
-        errors.add(:files, 'не должны превышать 10MB')
-      end
+      validate_file_type(file, allowed_types)
+      validate_file_size(file, max_size)
     end
+  end
+  
+  def validate_file_type(file, allowed_types)
+    return if file.content_type.in?(allowed_types)
+    file.purge
+    errors.add(:files, 'must be images, PDFs, text or office documents')
+  end
+  
+  def validate_file_size(file, max_size)
+    return if file.blob.byte_size <= max_size
+    file.purge
+    errors.add(:files, 'must not exceed 10MB')
   end
 end
