@@ -31,13 +31,13 @@ RSpec.describe Question, type: :model do
     it 'проверяет тип файла' do
       question.files.attach(invalid_file)
       expect(question).not_to be_valid
-      expect(question.errors[:files]).to include('должны быть изображениями, PDF, текстом или офисными документами')
+      expect(question.errors[:files]).to include('must be images, PDFs, text or office documents')
     end
 
     it 'проверяет размер файла' do
       question.files.attach(large_file)
       expect(question).not_to be_valid
-      expect(question.errors[:files]).to include('не должны превышать 10MB')
+      expect(question.errors[:files]).to include('must not exceed 10MB')
     end
   end
 end

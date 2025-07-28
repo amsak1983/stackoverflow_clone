@@ -16,7 +16,7 @@ feature 'User can attach files to answer', %q{
     visit question_path(question)
   end
 
-  scenario 'User can attach files when creating an answer', js: true do
+  scenario 'User can attach files when creating an answer' do
     within('#new_answer') do
       fill_in 'answer[body]', with: 'Answer with attached files'
       attach_file 'Files', [pdf_file, txt_file]
@@ -28,7 +28,7 @@ feature 'User can attach files to answer', %q{
     expect(page).to have_content 'test.txt'
   end
 
-  scenario 'User can attach files when editing their answer', js: true do
+  scenario 'User can attach files when editing their answer' do
     # Create answer without files
     answer = create(:answer, question: question, user: user)
     visit question_path(question)
@@ -44,7 +44,7 @@ feature 'User can attach files to answer', %q{
     expect(page).to have_content 'test.pdf'
   end
   
-  scenario 'Author can delete attached file from answer', js: true do
+  scenario 'Author can delete attached file from answer' do
     # Create answer with file
     answer = create(:answer, question: question, user: user)
     answer.files.attach(io: File.open(pdf_file), filename: 'test.pdf')
@@ -61,7 +61,7 @@ feature 'User can attach files to answer', %q{
     expect(page).not_to have_content 'test.pdf'
   end
   
-  scenario 'Non-author cannot see delete button for answer attachments', js: true do
+  scenario 'Non-author cannot see delete button for answer attachments' do
     # Create answer by another user
     other_user = create(:user)
     answer = create(:answer, question: question, user: other_user)
