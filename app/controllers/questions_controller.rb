@@ -62,7 +62,7 @@ class QuestionsController < ApplicationController
   def remove_attachment
     attachment = @question.files.find(params[:attachment_id])
     attachment.purge
-    
+
     respond_to do |format|
       format.html { redirect_to @question }
       format.turbo_stream { render turbo_stream: turbo_stream.remove("attachment_#{params[:attachment_id]}") }
