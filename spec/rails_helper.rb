@@ -6,6 +6,7 @@ require_relative '../config/environment'
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 require 'rails-controller-testing'
+require 'capybara/rspec'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -35,6 +36,11 @@ RSpec.configure do |config|
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')
   ]
+  
+  # Добавляем класс selenium-webdriver к body в тестах с JavaScript
+  config.after(:each, js: true) do
+    page.execute_script("document.body.classList.add('selenium-webdriver')")
+  end
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -85,3 +91,11 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
+
+# Конфигурация Capybara для тестов с JavaScript
+Capybara.register_driver :selenium_chrome do |app|
+  options = Selenium::WebDriver::Chrome::Options.new(args: ['--headless', '--disable-gpu'])
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
+end
+
+Capybara.javascript_driver = :selenium_chrome

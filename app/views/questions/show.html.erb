@@ -5,13 +5,34 @@
     </div>
   <% end %>
 
-  <div class="mb-6">
+  <div class="mb-6" id="question_<%= @question.id %>">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-4"><%= @question.title %></h1>
     
     <div class="p-6 bg-white border border-gray-200 rounded-lg shadow-card dark:bg-gray-800 dark:border-gray-700 mb-6">
       <div class="prose prose-lg max-w-none text-gray-700 dark:prose-invert">
         <%= simple_format(@question.body) %>
       </div>
+      
+      <% if @question.files.attached? %>
+      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-base font-medium mb-3 text-gray-900 dark:text-white">Attached Files:</h3>
+        <ul class="space-y-2">
+          <% @question.files.each do |file| %>
+            <li id="attachment_<%= file.id %>" class="flex items-center justify-between p-2 border border-gray-200 rounded-lg dark:border-gray-700">
+              <div class="flex items-center">
+                <span class="text-sm text-gray-700 dark:text-gray-300"><%= file.filename %></span>
+              </div>
+              <% if current_user&.author_of?(@question) %>
+                <%= link_to '✕', attachment_question_path(@question, file), 
+                    method: :delete, 
+                    data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
+                    class: "text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400" %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
     </div>
     
     <div class="flex flex-wrap items-center justify-between mb-6">

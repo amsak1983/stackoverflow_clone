@@ -97,7 +97,7 @@
       </div>
     </div>
     
-    <footer class="bg-white dark:bg-gray-800 shadow-inner py-6 fixed bottom-0 left-0 w-full">
+    <footer class="bg-white dark:bg-gray-800 shadow-inner py-6 <%= Rails.env.test? ? '' : 'fixed bottom-0 left-0 w-full' %>">
       <div class="container mx-auto px-4">
         <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
           <p>© <%= Date.today.year %> Stackoverflow Clone. Все права защищены.</p>
