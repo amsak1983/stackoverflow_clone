@@ -36,7 +36,7 @@ RSpec.configure do |config|
   config.fixture_paths = [
     Rails.root.join('spec/fixtures')
   ]
-  
+
   # Добавляем класс selenium-webdriver к body в тестах с JavaScript
   config.after(:each, js: true) do
     page.execute_script("document.body.classList.add('selenium-webdriver')")
@@ -94,7 +94,7 @@ end
 
 # Конфигурация Capybara для тестов с JavaScript
 Capybara.register_driver :selenium_chrome do |app|
-  options = Selenium::WebDriver::Chrome::Options.new(args: ['--headless', '--disable-gpu'])
+  options = Selenium::WebDriver::Chrome::Options.new(args: [ '--headless', '--disable-gpu' ])
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
