@@ -3,6 +3,7 @@ class Question < ApplicationRecord
   belongs_to :user
   has_many :answers, dependent: :destroy
   has_one :best_answer, -> { where(best: true) }, class_name: "Answer"
+  has_many_attached :files
 
   # Callbacks
   before_validation :sanitize_content
@@ -11,6 +12,7 @@ class Question < ApplicationRecord
   validates :title, presence: true, length: { maximum: 255 }
   validates :body, presence: true
   validate :no_dangerous_content
+  validate :validate_file_type_and_size
 
   # Scopes
   scope :recent, -> { order(created_at: :desc) }
@@ -38,6 +40,22 @@ class Question < ApplicationRecord
 
     if body.present? && (body.include?("<script>") || body.include?("javascript:"))
       errors.add(:body, "contains potentially dangerous code")
+    end
+  end
+  
+  def validate_file_type_and_size
+    return unless files.attached?
+    
+    files.each do |file|
+      unless file.content_type.in?(%w[image/jpeg image/png image/gif application/pdf text/plain application/msword application/vnd.openxmlformats-officedocument.wordprocessingml.document application/vnd.ms-excel application/vnd.openxmlformats-officedocument.spreadsheetml.sheet])
+        file.purge
+        errors.add(:files, 'must be images, PDFs, text or office documents')
+      end
+      
+      if file.blob.byte_size > 10.megabytes
+        file.purge
+        errors.add(:files, 'must not exceed 10MB')
+      end
     end
   end
 end

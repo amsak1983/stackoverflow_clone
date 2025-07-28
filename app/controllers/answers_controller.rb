@@ -2,8 +2,8 @@ class AnswersController < ApplicationController
   include ErrorHandling
   before_action :authenticate_user!
   before_action :set_question, only: [ :create ]
-  before_action :set_answer, only: [ :update, :destroy, :set_best ]
-  before_action :check_author, only: [ :update, :destroy ]
+  before_action :set_answer, only: [ :update, :destroy, :set_best, :remove_attachment ]
+  before_action :check_author, only: [ :update, :destroy, :remove_attachment ]
   before_action :check_question_author, only: [ :set_best ]
 
   # POST /questions/:question_id/answers
@@ -58,6 +58,17 @@ class AnswersController < ApplicationController
     end
   end
 
+  # DELETE /answers/:id/attachments/:attachment_id
+  def remove_attachment
+    attachment = @answer.files.find(params[:attachment_id])
+    attachment.purge
+    
+    respond_to do |format|
+      format.html { redirect_to @answer.question }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("attachment_#{params[:attachment_id]}") }
+    end
+  end
+
   private
 
   # Sets question from parameters
@@ -72,7 +83,7 @@ class AnswersController < ApplicationController
 
   # Permitted parameters
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 
   # Check if current user is the author of the answer
