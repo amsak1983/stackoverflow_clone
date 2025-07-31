@@ -42,6 +42,4 @@ class Question < ApplicationRecord
       errors.add(:body, "contains potentially dangerous code")
     end
   end
-
-
 end

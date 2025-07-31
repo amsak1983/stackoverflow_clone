@@ -41,6 +41,4 @@ class Answer < ApplicationRecord
       errors.add(:body, "contains potentially dangerous code")
     end
   end
-
-
 end
