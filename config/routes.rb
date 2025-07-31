@@ -4,15 +4,12 @@ Rails.application.routes.draw do
 
   root "questions#index"
 
-  resources :questions, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
-    member do
-      delete "attachments/:attachment_id", to: "questions#remove_attachment", as: "attachment"
-    end
+  resources :attachments, only: :destroy
 
+  resources :questions, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
     resources :answers, only: [ :create, :update, :destroy ], shallow: true do
       member do
         patch :set_best
-        delete "attachments/:attachment_id", to: "answers#remove_attachment", as: "attachment"
       end
     end
   end

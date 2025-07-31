@@ -1,8 +1,8 @@
 class QuestionsController < ApplicationController
   include ErrorHandling
   before_action :authenticate_user!, except: [ :index, :show ]
-  before_action :set_question, only: [ :show, :edit, :update, :destroy, :remove_attachment ]
-  before_action :check_author, only: [ :edit, :update, :destroy, :remove_attachment ]
+  before_action :set_question, only: [ :show, :edit, :update, :destroy ]
+  before_action :check_author, only: [ :edit, :update, :destroy ]
 
   # GET /questions
   def index
@@ -58,16 +58,7 @@ class QuestionsController < ApplicationController
     redirect_to questions_path, notice: "Question was successfully deleted"
   end
 
-  # DELETE /questions/:id/attachments/:attachment_id
-  def remove_attachment
-    attachment = @question.files.find(params[:attachment_id])
-    attachment.purge
 
-    respond_to do |format|
-      format.html { redirect_to @question }
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("attachment_#{params[:attachment_id]}") }
-    end
-  end
 
   private
 
