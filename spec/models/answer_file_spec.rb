@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
-  describe 'файловые вложения' do
+  describe 'file attachments' do
     let(:user) { create(:user) }
     let(:question) { create(:question, user: user) }
     let(:answer) { build(:answer, question: question, user: user) }
@@ -11,31 +11,31 @@ RSpec.describe Answer, type: :model do
     let(:invalid_file) { fixture_file_upload("#{Rails.root}/spec/fixtures/files/invalid.exe", 'application/octet-stream') }
 
     before do
-      # Stub для метода blob.byte_size чтобы имитировать большой файл
+      # Stub blob.byte_size method to simulate large files
       allow_any_instance_of(ActiveStorage::Blob).to receive(:byte_size).and_return(1.megabyte)
       allow_any_instance_of(ActiveStorage::Blob).to receive(:byte_size).with(no_args) do |blob|
         if blob.filename.to_s =~ /large_file/
-          11.megabytes # Больше лимита в 10 МБ
+          11.megabytes # Exceeds 10MB limit
         else
-          1.megabytes # Подходящий размер
+          1.megabytes # Valid size
         end
       end
     end
 
-    it 'может иметь прикрепленные файлы' do
+    it 'can have attached files' do
       answer.files.attach(pdf_file)
       answer.files.attach(text_file)
       expect(answer.files).to be_attached
       expect(answer.files.count).to eq(2)
     end
 
-    it 'проверяет тип файла' do
+    it 'validates file type' do
       answer.files.attach(invalid_file)
       expect(answer).not_to be_valid
       expect(answer.errors[:files]).to include('must be images, PDFs, text or office documents')
     end
 
-    it 'проверяет размер файла' do
+    it 'validates file size' do
       answer.files.attach(large_file)
       expect(answer).not_to be_valid
       expect(answer.errors[:files]).to include('must not exceed 10MB')
