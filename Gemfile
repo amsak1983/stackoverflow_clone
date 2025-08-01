@@ -25,6 +25,9 @@ gem "devise"
 
 gem "tailwindcss-rails"
 
+# Use cocoon for nested forms
+gem "cocoon"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

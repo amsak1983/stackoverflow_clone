@@ -70,7 +70,12 @@ class QuestionsController < ApplicationController
 
   # Permitted parameters
   def question_params
-    params.require(:question).permit(:title, :body, files: [])
+    params.require(:question).permit(
+      :title, 
+      :body, 
+      files: [], 
+      links_attributes: [:id, :name, :url, :_destroy]
+    )
   end
 
   # Check if current user is the author of the question
