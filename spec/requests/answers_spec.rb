@@ -38,9 +38,9 @@ RSpec.describe "Answers", type: :request do
           }.not_to change(Answer, :count)
         end
 
-        it 'returns unprocessable_entity status' do
+        it 'returns unprocessable_content status' do
           post question_answers_path(question), params: invalid_params, xhr: true
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
     end

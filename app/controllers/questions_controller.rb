@@ -23,8 +23,8 @@ class QuestionsController < ApplicationController
         format.html { redirect_to @question, notice: "Question was successfully created" }
         format.json { render :show, status: :created, location: @question }
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @question.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_content }
+        format.json { render json: @question.errors, status: :unprocessable_content }
       end
     end
   end
@@ -46,8 +46,8 @@ class QuestionsController < ApplicationController
         format.html { redirect_to @question, notice: "Question was successfully updated" }
         format.turbo_stream { render :update, status: :ok }
       else
-        format.html { render "questions/show", status: :unprocessable_entity }
-        format.turbo_stream { render turbo_stream: turbo_stream.replace(@question, partial: "questions/form", locals: { question: @question }), status: :unprocessable_entity }
+        format.html { render "questions/show", status: :unprocessable_content }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@question, partial: "questions/form", locals: { question: @question }), status: :unprocessable_content }
       end
     end
   end

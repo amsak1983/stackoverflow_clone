@@ -20,9 +20,9 @@ class AnswersController < ApplicationController
     else
       @answers = @question.answers.best_first
       respond_to do |format|
-        format.html { render "questions/show", status: :unprocessable_entity }
-        format.json { render json: @answer.errors, status: :unprocessable_entity }
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("new-answer", partial: "answers/form", locals: { answer: @answer }), status: :unprocessable_entity }
+        format.html { render "questions/show", status: :unprocessable_content }
+        format.json { render json: @answer.errors, status: :unprocessable_content }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("new-answer", partial: "answers/form", locals: { answer: @answer }), status: :unprocessable_content }
       end
     end
   end
@@ -34,7 +34,7 @@ class AnswersController < ApplicationController
         format.html { redirect_to @answer.question, notice: "Answer was successfully updated" }
         format.turbo_stream
       else
-        format.html { render "questions/show", status: :unprocessable_entity }
+        format.html { render "questions/show", status: :unprocessable_content }
         format.turbo_stream { render turbo_stream: turbo_stream.replace(@answer, partial: "answers/form", locals: { answer: @answer }) }
       end
     end

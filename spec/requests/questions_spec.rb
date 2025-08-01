@@ -67,7 +67,7 @@ RSpec.describe "Questions", type: :request do
 
         it 're-renders the :new template' do
           post questions_path, params: invalid_params
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
     end
@@ -113,9 +113,9 @@ RSpec.describe "Questions", type: :request do
           expect(question.reload.title).not_to eq('')
         end
 
-        it 'returns unprocessable_entity status' do
+        it 'returns unprocessable_content status' do
           patch question_path(question, format: :turbo_stream), params: invalid_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
         end
       end
 
