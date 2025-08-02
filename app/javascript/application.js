@@ -4,7 +4,7 @@ import "controllers"
 import "flowbite"
 import "@nathanvda/cocoon"
 
-// Инициализация Cocoon для динамических вложенных форм
+// Cocoon initialization for dynamic nested forms
 document.addEventListener("turbo:load", function() {
   document.addEventListener('click', function(e) {
     if (e.target && e.target.matches('.add_fields')) {

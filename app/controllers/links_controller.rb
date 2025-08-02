@@ -22,7 +22,7 @@ class LinksController < ApplicationController
     unless current_user.author_of?(@link.linkable)
       respond_to do |format|
         format.turbo_stream { head :forbidden }
-        format.html { redirect_to root_path, alert: 'Вы не можете удалить эту ссылку' }
+        format.html { redirect_to root_path, alert: 'You can not remove this link' }
       end
     end
   end

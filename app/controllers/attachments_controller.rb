@@ -24,7 +24,7 @@ class AttachmentsController < ApplicationController
     return if current_user&.author_of?(@record)
 
     respond_to do |format|
-      format.html { redirect_back(fallback_location: root_path, alert: "У вас нет прав для удаления этого файла") }
+      format.html { redirect_back(fallback_location: root_path, alert: "You do not have permission to delete this file") }
       format.json { head :forbidden }
       format.turbo_stream { head :forbidden }
     end

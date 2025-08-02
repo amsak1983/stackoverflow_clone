@@ -17,15 +17,15 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Подключение Tailwind CSS через гем tailwindcss-rails %>
+    <%# Include Tailwind CSS via tailwindcss-rails gem %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     
-    <%# Подключение скомпилированных стилей приложения %>
+    <%# Include compiled application styles %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     
     <%= javascript_importmap_tags %>
     
-    <!-- Flowbite CDN для поддержки turbo -->
+    <!-- Flowbite CDN for turbo support -->
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.turbo.min.js"></script>
   </head>
 
@@ -40,7 +40,7 @@
           </div>
           <div class="flex items-center lg:order-2">
             <% if user_signed_in? %>
-              <%= link_to "Sign out", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 lg:py-2.5 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800" %>
+              <%= button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 lg:py-2.5 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800 bg-transparent border-0 p-0 m-0 cursor-pointer" %>
             <% else %>
               <%= link_to "Log in", new_user_session_path, class: "text-gray-800 dark:text-white hover:bg-gray-50 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 lg:py-2.5 mr-2 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800" %>
               <%= link_to "Sign up", new_user_registration_path, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" %>
@@ -100,7 +100,7 @@
     <footer class="bg-white dark:bg-gray-800 shadow-inner py-6 <%= Rails.env.test? ? '' : 'fixed bottom-0 left-0 w-full' %>">
       <div class="container mx-auto px-4">
         <div class="text-center text-gray-500 dark:text-gray-400 text-sm">
-          <p>© <%= Date.today.year %> Stackoverflow Clone. Все права защищены.</p>
+          <p>© <%= Date.today.year %> Stackoverflow Clone. All rights reserved.</p>
         </div>
       </div>
     </footer>

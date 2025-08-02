@@ -15,55 +15,55 @@ feature 'User can add links to question', %q{
       sign_in(user)
       visit new_question_path
 
-      fill_in 'Заголовок', with: 'Тестовый вопрос'
-      fill_in 'Текст вопроса', with: 'Текст тестового вопроса'
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Question text', with: 'Test question text'
     end
 
     scenario 'User adds link when asks question', js: true do
-      click_on 'Добавить ссылку'
+      click_on 'Add link'
 
       within '.nested-fields' do
-        fill_in 'Название', with: 'Мой гист'
-        fill_in 'Ссылка', with: gist_url
+        fill_in 'Name', with: 'My gist'
+        fill_in 'URL', with: gist_url
       end
 
-      click_on 'Создать вопрос'
+      click_on 'Create question'
 
-      expect(page).to have_link 'Мой гист', href: gist_url
+      expect(page).to have_link 'My gist', href: gist_url
     end
 
     scenario 'User adds multiple links when asks question', js: true do
-      click_on 'Добавить ссылку'
+      click_on 'Add link'
 
       within all('.nested-fields')[0] do
-        fill_in 'Название', with: 'Мой гист'
-        fill_in 'Ссылка', with: gist_url
+        fill_in 'Name', with: 'My gist'
+        fill_in 'URL', with: gist_url
       end
 
-      click_on 'Добавить ссылку'
+      click_on 'Add link'
 
       within all('.nested-fields')[1] do
-        fill_in 'Название', with: 'Google'
-        fill_in 'Ссылка', with: regular_url
+        fill_in 'Name', with: 'Google'
+        fill_in 'URL', with: regular_url
       end
 
-      click_on 'Создать вопрос'
+      click_on 'Create question'
 
-      expect(page).to have_link 'Мой гист', href: gist_url
+      expect(page).to have_link 'My gist', href: gist_url
       expect(page).to have_link 'Google', href: regular_url
     end
 
     scenario 'User tries to add invalid link when asks question', js: true do
-      click_on 'Добавить ссылку'
+      click_on 'Add link'
 
       within '.nested-fields' do
-        fill_in 'Название', with: 'Неверная ссылка'
-        fill_in 'Ссылка', with: 'invalid-url'
+        fill_in 'Name', with: 'Invalid link'
+        fill_in 'URL', with: 'invalid-url'
       end
 
-      click_on 'Создать вопрос'
+      click_on 'Create question'
 
-      expect(page).to have_content 'Ссылки url должен быть валидным URL, начинающимся с http:// или https://'
+      expect(page).to have_content 'Links url must be a valid URL starting with http:// or https://'
     end
   end
 
@@ -73,22 +73,22 @@ feature 'User can add links to question', %q{
     background do
       sign_in(user)
       visit question_path(question)
-      click_on 'Редактировать вопрос'
+      click_on 'Edit question'
     end
 
     scenario 'User adds link when edits question', js: true do
       within "#edit-question-#{question.id}" do
-        click_on 'Добавить ссылку'
+        click_on 'Add link'
 
         within '.nested-fields' do
-          fill_in 'Название', with: 'Мой гист'
-          fill_in 'Ссылка', with: gist_url
+          fill_in 'Name', with: 'My gist'
+          fill_in 'URL', with: gist_url
         end
 
-        click_on 'Сохранить'
+        click_on 'Save'
       end
 
-      expect(page).to have_link 'Мой гист', href: gist_url
+      expect(page).to have_link 'My gist', href: gist_url
     end
   end
 
@@ -102,11 +102,11 @@ feature 'User can add links to question', %q{
 
       expect(page).to have_link 'Google', href: regular_url
 
-      click_on 'Редактировать вопрос'
+      click_on 'Edit question'
 
       within "#edit-question-#{question.id}" do
-        click_on 'Удалить ссылку'
-        click_on 'Сохранить'
+        click_on 'Remove link'
+        click_on 'Save'
       end
 
       expect(page).to_not have_link 'Google', href: regular_url
@@ -118,19 +118,19 @@ feature 'User can add links to question', %q{
       visit question_path(question)
 
       expect(page).to have_link 'Google', href: regular_url
-      expect(page).to_not have_link 'Редактировать вопрос'
+      expect(page).to_not have_link 'Edit question'
     end
   end
 
   describe 'GitHub Gist embedding' do
     given!(:question) { create(:question, user: user) }
-    given!(:gist_link) { create(:link, linkable: question, name: 'Мой гист', url: gist_url) }
+    given!(:gist_link) { create(:link, linkable: question, name: 'My gist', url: gist_url) }
 
     scenario 'Gist link is embedded', js: true do
       sign_in(user)
       visit question_path(question)
 
-      expect(page).to have_link 'Мой гист', href: gist_url
+      expect(page).to have_link 'My gist', href: gist_url
       expect(page).to have_css('.gist-embed')
     end
   end

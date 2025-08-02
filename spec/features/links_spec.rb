@@ -17,18 +17,18 @@ feature 'User can add links to question', %q{
     fill_in 'Title', with: 'Test question'
     fill_in 'Body', with: 'text text text'
 
-    click_on 'Добавить ссылку'
+    click_on 'Add link'
 
     within all('.nested-fields').first do
-      fill_in 'Название', with: 'My gist'
-      fill_in 'Ссылка', with: gist_url
+      fill_in 'Name', with: 'My gist'
+      fill_in 'URL', with: gist_url
     end
 
-    click_on 'Добавить ссылку'
+    click_on 'Add link'
 
     within all('.nested-fields').last do
-      fill_in 'Название', with: 'My link'
-      fill_in 'Ссылка', with: simple_url
+      fill_in 'Name', with: 'My link'
+      fill_in 'URL', with: simple_url
     end
 
     click_on 'Ask'
@@ -55,18 +55,18 @@ feature 'User can add links to answer', %q{
 
     fill_in 'Body', with: 'My answer'
 
-    click_on 'Добавить ссылку'
+    click_on 'Add link'
 
     within all('.nested-fields').first do
-      fill_in 'Название', with: 'My gist'
-      fill_in 'Ссылка', with: gist_url
+      fill_in 'Name', with: 'My gist'
+      fill_in 'URL', with: gist_url
     end
 
-    click_on 'Добавить ссылку'
+    click_on 'Add link'
 
     within all('.nested-fields').last do
-      fill_in 'Название', with: 'My link'
-      fill_in 'Ссылка', with: simple_url
+      fill_in 'Name', with: 'My link'
+      fill_in 'URL', with: simple_url
     end
 
     click_on 'Answer'

@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :link do
-    name { "Тестовая ссылка" }
+    name { "Test link" }
     url { "https://example.com" }
     association :linkable, factory: :question
   end

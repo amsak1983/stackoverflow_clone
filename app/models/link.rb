@@ -21,6 +21,6 @@ class Link < ApplicationRecord
     return if url.blank?
     return if url.start_with?('http://', 'https://')
     
-    errors.add(:url, 'должен быть валидным URL, начинающимся с http:// или https://')
+    errors.add(:url, 'must be a valid URL starting with http:// or https://')
   end
 end

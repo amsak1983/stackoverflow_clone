@@ -37,7 +37,7 @@ RSpec.configure do |config|
     Rails.root.join('spec/fixtures')
   ]
 
-  # Добавляем класс selenium-webdriver к body в тестах с JavaScript
+  # Add selenium-webdriver class to body in JavaScript tests
   config.after(:each, js: true) do
     page.execute_script("document.body.classList.add('selenium-webdriver')")
   end
@@ -50,14 +50,14 @@ RSpec.configure do |config|
   # Include FactoryBot syntax methods
   config.include FactoryBot::Syntax::Methods
 
-  # Включаем вспомогательные методы для feature-тестов
+  # Include helper methods for feature tests
   config.include FeatureHelpers, type: :feature
 
-  # Включаем Devise test helpers для контроллеров
+  # Include Devise test helpers for controllers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
 
-  # Включаем helpers для request specs
+  # Include helpers for request specs
   config.include RequestHelpers, type: :request
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
@@ -84,7 +84,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 end
 
-# Конфигурация shoulda-matchers
+# Shoulda Matchers configuration
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
@@ -92,7 +92,7 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-# Конфигурация Capybara для тестов с JavaScript
+# Capybara configuration for JavaScript tests
 Capybara.register_driver :selenium_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new(args: [ '--headless', '--disable-gpu' ])
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)

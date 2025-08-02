@@ -35,10 +35,10 @@ feature 'User can attach files to question', %q(
     # Click on edit outside the within block
     click_on 'Edit'
 
-    # Ждем появления поля загрузки файлов
+    # Wait for the file upload field to appear
     expect(page).to have_field('Files')
 
-    # Загружаем файл и обновляем вопрос
+    # Upload the file and update the question
     attach_file 'Files', pdf_file
     click_on 'Update Question'
 
