@@ -93,9 +93,20 @@ Shoulda::Matchers.configure do |config|
 end
 
 # Capybara configuration for JavaScript tests
-Capybara.register_driver :selenium_chrome do |app|
-  options = Selenium::WebDriver::Chrome::Options.new(args: [ '--headless', '--disable-gpu' ])
+Capybara.register_driver :selenium_chromium do |app|
+  options = Selenium::WebDriver::Chrome::Options.new(
+    args: [
+      '--headless',
+      '--disable-gpu',
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      '--disable-web-security',
+      '--disable-features=VizDisplayCompositor'
+    ],
+    binary: '/usr/bin/chromium-browser'
+  )
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
-Capybara.javascript_driver = :selenium_chrome
+Capybara.javascript_driver = :selenium_chromium
+Capybara.default_max_wait_time = 5

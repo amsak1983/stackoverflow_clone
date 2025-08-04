@@ -18,7 +18,7 @@ feature 'User can add links to answer', %q{
     end
 
     scenario 'User adds link when creates answer', js: true do
-      fill_in 'Your answer', with: 'Answer text'
+      fill_in 'Body', with: 'Answer text'
 
       click_on 'Add link'
 
@@ -35,7 +35,7 @@ feature 'User can add links to answer', %q{
     end
 
     scenario 'User adds multiple links when creates answer', js: true do
-      fill_in 'Your answer', with: 'Answer text'
+      fill_in 'Body', with: 'Answer text'
 
       click_on 'Add link'
 
@@ -60,7 +60,7 @@ feature 'User can add links to answer', %q{
     end
 
     scenario 'User tries to add invalid link when creates answer', js: true do
-      fill_in 'Your answer', with: 'Answer text'
+      fill_in 'Body', with: 'Answer text'
 
       click_on 'Add link'
 
@@ -71,7 +71,7 @@ feature 'User can add links to answer', %q{
 
       click_on 'Create answer'
 
-      expect(page).to have_content 'Links url must be a valid URL starting with http:// or https://'
+      expect(page).to have_content 'Links must be valid URLs, starting with http:// or https://'
     end
   end
 

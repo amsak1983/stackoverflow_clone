@@ -16,7 +16,7 @@ feature 'User can add links to question', %q{
       visit new_question_path
 
       fill_in 'Title', with: 'Test question'
-      fill_in 'Question text', with: 'Test question text'
+      fill_in 'Body', with: 'Test question text'
     end
 
     scenario 'User adds link when asks question', js: true do

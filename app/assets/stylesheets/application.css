@@ -9,13 +9,13 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-/* Пользовательские стили для форм */
+/* Custom form styles */
 .field_with_errors input,
 .field_with_errors textarea {
   @apply border-red-500 focus:ring-red-500 focus:border-red-500;
 }
 
-/* Дополнительные стили приложения */
+/* Additional application styles */
 
 /* Enhanced typography */
 .prose {

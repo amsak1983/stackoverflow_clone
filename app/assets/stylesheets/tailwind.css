@@ -2,12 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Пользовательские компоненты */
+/* Custom components */
 @layer components {
-  /* Здесь можно добавить свои компоненты */
+  /* Add your custom components here */
 }
 
-/* Пользовательские утилиты */
+/* Custom utilities */
 @layer utilities {
   .line-clamp-2 {
     display: -webkit-box;
