@@ -5,7 +5,8 @@ import "flowbite"
 import "@nathanvda/cocoon"
 
 // Cocoon initialization for dynamic nested forms
-document.addEventListener("turbo:load", function() {
+// Using multiple events to ensure functionality in both normal and test environments
+function initCocoon() {
   document.addEventListener('click', function(e) {
     if (e.target && e.target.matches('.add_fields')) {
       e.preventDefault();
@@ -25,4 +26,11 @@ document.addEventListener("turbo:load", function() {
       wrapper.style.display = 'none';
     }
   });
-});
+}
+
+// Initialize when the page loads
+document.addEventListener("turbo:load", initCocoon);
+document.addEventListener("DOMContentLoaded", initCocoon);
+
+// Immediately initialize to support tests
+initCocoon();
