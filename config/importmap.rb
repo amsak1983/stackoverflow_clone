@@ -8,3 +8,6 @@ pin_all_from "app/javascript/controllers", under: "controllers"
 
 # Flowbite с поддержкой turbo
 pin "flowbite", to: "https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.turbo.min.js"
+
+# Cocoon for dynamic nested forms
+pin "cocoon", to: "https://cdn.jsdelivr.net/npm/@nathanvda/cocoon@1.2.14/cocoon.min.js"

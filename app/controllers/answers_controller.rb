@@ -74,7 +74,8 @@ class AnswersController < ApplicationController
 
   # Permitted parameters
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [], 
+      links_attributes: [:id, :name, :url, :_destroy])
   end
 
   # Check if current user is the author of the answer
