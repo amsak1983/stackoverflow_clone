@@ -4,7 +4,7 @@ FactoryBot.define do
     association :question
     association :user
     recipient { nil }
-    
+
     after(:build) do |reward|
       reward.image.attach(
         io: StringIO.new('fake image data'),
@@ -12,11 +12,11 @@ FactoryBot.define do
         content_type: 'image/jpeg'
       )
     end
-    
+
     trait :awarded do
       association :recipient, factory: :user
     end
-    
+
     trait :with_png_image do
       after(:build) do |reward|
         reward.image.attach(
