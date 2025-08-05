@@ -17,6 +17,11 @@ class QuestionsController < ApplicationController
   # POST /questions
   def create
     @question = current_user.questions.new(question_params)
+    
+    # Associate reward with current user if present
+    if @question.reward.present?
+      @question.reward.user = current_user
+    end
 
     respond_to do |format|
       if @question.save
@@ -71,7 +76,8 @@ class QuestionsController < ApplicationController
   # Permitted parameters
   def question_params
     params.require(:question).permit(:title, :body, files: [], 
-      links_attributes: [:id, :name, :url, :_destroy])
+      links_attributes: [:id, :name, :url, :_destroy],
+      reward_attributes: [:id, :title, :image, :_destroy])
   end
 
   # Check if current user is the author of the question

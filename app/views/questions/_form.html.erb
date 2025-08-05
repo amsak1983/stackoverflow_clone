@@ -64,6 +64,29 @@
   </div>
   <% end %>
 
+  <div class="reward" id="reward-section">
+    <h3 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Reward (Optional)</h3>
+    <% if question.reward.present? %>
+      <%= f.fields_for :reward do |reward_form| %>
+        <%= render 'shared/reward_fields', f: reward_form %>
+      <% end %>
+    <% else %>
+      <div id="add-reward-button" class="mb-4">
+        <button type="button" onclick="showRewardForm()" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+          <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732L14.146 12.8l-1.179 4.456a1 1 0 01-1.806.317L9 15.146l-2.161 2.427a1 1 0 01-1.806-.317L3.854 12.8.5 10.866a1 1 0 010-1.732L3.854 7.2l1.179-4.456A1 1 0 015.5 2h6.5z" clip-rule="evenodd"></path>
+          </svg>
+          Add Reward for Best Answer
+        </button>
+      </div>
+      <div id="reward-form" style="display: none;">
+        <%= f.fields_for :reward, question.build_reward do |reward_form| %>
+          <%= render 'shared/reward_fields', f: reward_form %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="flex items-center space-x-3">
     <%= f.submit class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 focus-ring" %>
     <%= link_to "Cancel", question_path(question), class: "text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-gray-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600" %>
@@ -74,3 +97,10 @@
     <% end %>
   </div>
 <% end %>
+
+<script>
+function showRewardForm() {
+  document.getElementById('add-reward-button').style.display = 'none';
+  document.getElementById('reward-form').style.display = 'block';
+}
+</script>

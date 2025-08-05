@@ -5,9 +5,11 @@ class Question < ApplicationRecord
   has_one :best_answer, -> { where(best: true) }, class_name: "Answer"
   has_many_attached :files
   has_many :links, as: :linkable, dependent: :destroy
+  has_one :reward, dependent: :destroy
   
   # Nested attributes
   accepts_nested_attributes_for :links, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :reward, allow_destroy: true, reject_if: :all_blank
 
   # Callbacks
   before_validation :sanitize_content

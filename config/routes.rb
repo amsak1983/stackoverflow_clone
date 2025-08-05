@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   resources :attachments, only: :destroy
   resources :links, only: :destroy
+  resources :rewards, only: :index
 
   resources :questions, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
     resources :answers, only: [ :create, :update, :destroy ], shallow: true do
