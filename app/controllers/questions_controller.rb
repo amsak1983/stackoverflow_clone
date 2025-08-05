@@ -46,7 +46,7 @@ class QuestionsController < ApplicationController
         format.html { redirect_to @question, notice: "Question was successfully updated" }
         format.turbo_stream { render :update, status: :ok }
       else
-        format.html { render "questions/show", status: :unprocessable_content }
+        format.html { render :edit, status: :unprocessable_content }
         format.turbo_stream { render turbo_stream: turbo_stream.replace(@question, partial: "questions/form", locals: { question: @question }), status: :unprocessable_content }
       end
     end
