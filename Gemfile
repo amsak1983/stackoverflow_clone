@@ -79,4 +79,7 @@ group :test do
 
   # Для поддержки assigns и assert_template в тестах контроллеров
   gem "rails-controller-testing"
+  
+  # Database cleaner for proper test cleanup
+  gem "database_cleaner-active_record"
 end
