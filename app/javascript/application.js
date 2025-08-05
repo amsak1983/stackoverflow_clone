@@ -2,4 +2,5 @@
 import "@hotwired/turbo-rails"
 import "controllers"
 import "flowbite"
-import "cocoon"
+import "jquery";
+import "cocoon";
