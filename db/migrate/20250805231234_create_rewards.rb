@@ -8,7 +8,7 @@ class CreateRewards < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    
-    add_index :rewards, [:user_id, :question_id], unique: true
+
+    add_index :rewards, [ :user_id, :question_id ], unique: true
   end
 end
