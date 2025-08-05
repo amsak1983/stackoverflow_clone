@@ -17,10 +17,6 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Подключение Tailwind CSS через гем tailwindcss-rails %>
-    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-    
-    <%# Подключение скомпилированных стилей приложения %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     
     <%= javascript_importmap_tags %>
