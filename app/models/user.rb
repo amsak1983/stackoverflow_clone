@@ -6,8 +6,8 @@ class User < ApplicationRecord
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
-  has_many :created_rewards, class_name: 'Reward', dependent: :destroy
-  has_many :received_rewards, class_name: 'Reward', foreign_key: 'recipient_id', dependent: :nullify
+  has_many :created_rewards, class_name: "Reward", dependent: :destroy
+  has_many :received_rewards, class_name: "Reward", foreign_key: "recipient_id", dependent: :nullify
 
   def name
     email.split("@").first&.capitalize || "User"

@@ -1,8 +1,8 @@
 class LinksController < ApplicationController
   include ErrorHandling
   before_action :authenticate_user!
-  before_action :set_link, only: [:destroy]
-  before_action :check_author, only: [:destroy]
+  before_action :set_link, only: [ :destroy ]
+  before_action :check_author, only: [ :destroy ]
 
   # DELETE /links/:id
   def destroy
