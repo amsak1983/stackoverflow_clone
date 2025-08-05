@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_05_135500) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_05_231234) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -69,6 +69,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_05_135500) do
     t.index ["user_id"], name: "index_questions_on_user_id"
   end
 
+  create_table "rewards", force: :cascade do |t|
+    t.string "title", null: false
+    t.integer "question_id", null: false
+    t.integer "user_id", null: false
+    t.integer "recipient_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["question_id"], name: "index_rewards_on_question_id"
+    t.index ["recipient_id"], name: "index_rewards_on_recipient_id"
+    t.index ["user_id", "question_id"], name: "index_rewards_on_user_id_and_question_id", unique: true
+    t.index ["user_id"], name: "index_rewards_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -86,4 +99,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_05_135500) do
   add_foreign_key "answers", "questions"
   add_foreign_key "answers", "users"
   add_foreign_key "questions", "users"
+  add_foreign_key "rewards", "questions"
+  add_foreign_key "rewards", "users"
+  add_foreign_key "rewards", "users", column: "recipient_id"
 end

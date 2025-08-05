@@ -52,6 +52,12 @@ class AnswersController < ApplicationController
   # PATCH /answers/:id/set_best
   def set_best
     @answer.make_best!
+    
+    # Award reward to the best answer author if reward exists
+    if @answer.question.reward.present? && !@answer.question.reward.awarded?
+      @answer.question.reward.award_to!(@answer.user)
+    end
+    
     respond_to do |format|
       format.html { redirect_to @answer.question, notice: "Best answer selected" }
       format.turbo_stream
