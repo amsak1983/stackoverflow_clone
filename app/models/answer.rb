@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  include Votable
+
   # Associations
   belongs_to :question
   belongs_to :user

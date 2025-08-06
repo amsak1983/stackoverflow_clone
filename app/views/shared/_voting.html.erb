@@ -1,0 +1,50 @@
+<%# Partial for rendering voting controls %>
+<%# @param votable [ActiveRecord::Base] the votable resource (Question or Answer) %>
+
+<div class="voting-controls" 
+     data-controller="votes"
+     id="<%= dom_id(votable) %>-votes">
+  
+  <% if user_signed_in? && !current_user.author_of?(votable) %>
+    <div class="flex items-center space-x-2">
+      <%= button_to "⬆", 
+                    polymorphic_path([votable, :votes], votable: votable.class.name.underscore),
+                    method: :post,
+                    params: { value: 1 },
+                    class: "vote-up #{votable.vote_value_by(current_user) == 1 ? 'text-green-600' : 'text-gray-600 hover:text-green-600'} font-bold text-xl focus:outline-none",
+                    form: { class: "inline-block", data: { turbo: true } },
+                    data: { action: "click->votes#vote" } %>
+      
+      <span class="font-bold text-gray-700" 
+            id="<%= dom_id(votable) %>-rating"
+            data-votes-target="rating">
+        <%= votable.rating %>
+      </span>
+      
+      <%= button_to "⬇", 
+                    polymorphic_path([votable, :votes], votable: votable.class.name.underscore),
+                    method: :post,
+                    params: { value: -1 },
+                    class: "vote-down #{votable.vote_value_by(current_user) == -1 ? 'text-red-600' : 'text-gray-600 hover:text-red-600'} font-bold text-xl focus:outline-none",
+                    form: { class: "inline-block", data: { turbo: true } },
+                    data: { action: "click->votes#vote" } %>
+      
+      <div class="cancel-vote-container <%= votable.voted_by?(current_user) ? '' : 'hidden' %>">
+        <% if vote = votable.votes.find_by(user: current_user) %>
+          <%= button_to "✕",
+                      polymorphic_path([votable, :votes, id: vote.id], votable: votable.class.name.underscore),
+                      method: :delete,
+                      class: "text-gray-400 hover:text-gray-600 text-sm ml-2",
+                      form: { class: "inline-block", data: { turbo: true } },
+                      data: { action: "click->votes#cancelVote" } %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="flex items-center space-x-2">
+      <span class="text-gray-600 font-bold text-xl">⬆</span>
+      <span class="font-bold text-gray-700"><%= votable.rating %></span>
+      <span class="text-gray-600 font-bold text-xl">⬇</span>
+    </div>
+  <% end %>
+</div>
