@@ -32,6 +32,11 @@ class Answer < ApplicationRecord
   def make_best!
     question.answers.update_all(best: false)
     update!(best: true)
+
+    # Award reward to the best answer author if reward exists
+    if question.reward.present? && !question.reward.awarded?
+      question.reward.award_to!(user)
+    end
   end
 
   private
