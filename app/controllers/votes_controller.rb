@@ -33,15 +33,17 @@ class VotesController < ApplicationController
 
   # Sets the votable object based on params
   def set_votable
-    votable_type = params[:votable].classify
-    votable_id = params["#{params[:votable]}_id"]
-
-    # Check if votable type is allowed
-    unless allowed_votable_types.include?(votable_type)
+    votable_param = params[:votable]&.to_s
+    votable_id = params["#{votable_param}_id"]
+    
+    case votable_param
+    when "question"
+      @votable = Question.find(votable_id)
+    when "answer"
+      @votable = Answer.find(votable_id)
+    else
       return render_error("Invalid votable type", :bad_request)
     end
-
-    @votable = votable_type.constantize.find(votable_id)
   end
 
   # Prevents authors from voting on their own content
