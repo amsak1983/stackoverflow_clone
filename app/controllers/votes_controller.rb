@@ -35,14 +35,14 @@ class VotesController < ApplicationController
   def set_votable
     votable_param = params[:votable]&.to_s
     votable_id = params["#{votable_param}_id"]
-    
+
     case votable_param
     when "question"
       @votable = Question.find(votable_id)
     when "answer"
       @votable = Answer.find(votable_id)
     else
-      return render_error("Invalid votable type", :bad_request)
+      render_error("Invalid votable type", :bad_request)
     end
   end
 
