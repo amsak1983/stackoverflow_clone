@@ -1,5 +1,4 @@
 module VotesHelper
-
   def render_voting_controls(votable)
     return "" unless current_user && !current_user.author_of?(votable)
 
