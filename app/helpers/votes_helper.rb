@@ -1,8 +1,5 @@
-# Helper methods for votes functionality in views
 module VotesHelper
-  # Renders voting controls for a votable resource
-  # @param votable [ActiveRecord::Base] the votable resource (Question or Answer)
-  # @return [String] HTML for voting controls
+
   def render_voting_controls(votable)
     return "" unless current_user && !current_user.author_of?(votable)
 
@@ -20,12 +17,6 @@ module VotesHelper
     end
   end
 
-  # Renders a vote button (upvote or downvote)
-  # @param votable [ActiveRecord::Base] the votable resource
-  # @param value [Integer] the vote value (1 or -1)
-  # @param icon [String] the button icon/text
-  # @param css_class [String] CSS classes for the button
-  # @return [String] HTML for the vote button
   def render_vote_button(votable, value, icon, css_class)
     button_to icon,
               polymorphic_path([ votable, :votes ], votable: votable.class.name.underscore),
@@ -35,9 +26,6 @@ module VotesHelper
               form: { class: "inline-block", data: { turbo: true, action: "click->votes#vote" } }
   end
 
-  # Renders a cancel vote button
-  # @param votable [ActiveRecord::Base] the votable resource
-  # @return [String] HTML for the cancel vote button
   def render_cancel_vote_button(votable)
     vote = votable.votes.find_by(user: current_user)
     return "" unless vote
