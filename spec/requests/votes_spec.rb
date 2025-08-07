@@ -110,7 +110,6 @@ RSpec.describe "Votes", type: :request do
 
       context "when canceling vote for a question" do
         it "removes the vote" do
-          # First create a vote
           vote = create(:vote, user: user, votable: question, value: 1)
 
           expect {
@@ -125,7 +124,6 @@ RSpec.describe "Votes", type: :request do
         end
 
         it "does nothing if user has not voted" do
-          # Create a vote from another user
           other_user = create(:user)
           vote = create(:vote, user: other_user, votable: question, value: 1)
 
