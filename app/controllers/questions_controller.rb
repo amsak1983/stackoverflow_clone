@@ -67,20 +67,17 @@ class QuestionsController < ApplicationController
 
   private
 
-  # Sets question from parameters
   def set_question
     @question = Question.find_by(id: params[:id])
     handle_record_not_found("Question") unless @question
   end
 
-  # Permitted parameters
   def question_params
     params.require(:question).permit(:title, :body, files: [],
       links_attributes: [ :id, :name, :url, :_destroy ],
       reward_attributes: [ :id, :title, :image, :_destroy ])
   end
 
-  # Check if current user is the author of the question
   def check_author
     return if current_user&.author_of?(@question)
 

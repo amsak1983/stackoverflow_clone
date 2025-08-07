@@ -15,13 +15,11 @@ class LinksController < ApplicationController
 
   private
 
-  # Sets link from parameters
   def set_link
     @link = Link.find_by(id: params[:id])
     handle_record_not_found("Link") unless @link
   end
 
-  # Check if current user is the author of the linkable resource
   def check_author
     return if current_user&.author_of?(@link.linkable)
 
