@@ -63,23 +63,19 @@ class AnswersController < ApplicationController
 
   private
 
-  # Sets question from parameters
   def set_question
     @question = Question.find(params[:question_id])
   end
 
-  # Sets answer from parameters
   def set_answer
     @answer = Answer.find(params[:id])
   end
 
-  # Permitted parameters
   def answer_params
     params.require(:answer).permit(:body, files: [],
       links_attributes: [ :id, :name, :url, :_destroy ])
   end
 
-  # Check if current user is the author of the answer
   def check_author
     return if current_user&.author_of?(@answer)
 
@@ -91,7 +87,6 @@ class AnswersController < ApplicationController
     head :forbidden and return
   end
 
-  # Check if current user is the author of the question
   def check_question_author
     return if current_user&.author_of?(@answer.question)
 

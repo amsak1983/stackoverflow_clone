@@ -1,11 +1,8 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
 
-  # Prevent CSRF attacks by raising an exception
   protect_from_forgery with: :exception
 
-  # Set secure headers
   before_action :set_secure_headers
 
   private

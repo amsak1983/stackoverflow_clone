@@ -4,15 +4,15 @@ class VotesController < ApplicationController
 
   def create
     value = params.require(:value).to_i
-    
+
     result = case value
-             when 1
+    when 1
                @votable.vote_up(current_user)
-             when -1
+    when -1
                @votable.vote_down(current_user)
-             else
+    else
                return render_error("Invalid vote value", :unprocessable_entity)
-             end
+    end
 
     if result
       render_vote_response
