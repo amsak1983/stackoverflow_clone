@@ -67,7 +67,7 @@ RSpec.describe "Votes", type: :request do
             post question_votes_path(question), params: { value: 1 }, as: :json
           }.not_to change(Vote, :count)
 
-          expect(response).to have_http_status(:forbidden)
+          expect(response).to have_http_status(:unprocessable_entity)
           expect(JSON.parse(response.body)).to include("error")
         end
 
