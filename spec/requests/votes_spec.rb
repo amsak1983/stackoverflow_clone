@@ -6,14 +6,14 @@ RSpec.describe "Votes", type: :request do
   let(:question) { create(:question, user: author) }
   let(:answer) { create(:answer, question: question, user: author) }
 
-  describe "POST /questions/:question_id/votes" do
+  describe "POST /questions/:question_id/votes/up and /questions/:question_id/votes/down" do
     context "when user is authenticated" do
       before { sign_in user }
 
       context "when voting for a question" do
         it "creates an upvote" do
           expect {
-            post question_votes_path(question), params: { value: 1 }, as: :json
+            post up_question_votes_path(question), as: :json
           }.to change(Vote, :count).by(1)
 
           expect(response).to have_http_status(:success)
@@ -25,7 +25,7 @@ RSpec.describe "Votes", type: :request do
 
         it "creates a downvote" do
           expect {
-            post question_votes_path(question), params: { value: -1 }, as: :json
+            post down_question_votes_path(question), as: :json
           }.to change(Vote, :count).by(1)
 
           expect(response).to have_http_status(:success)
@@ -36,21 +36,21 @@ RSpec.describe "Votes", type: :request do
         end
 
         it "returns error when trying to vote with the same value again" do
-          post question_votes_path(question), params: { value: 1 }, as: :json
+          post up_question_votes_path(question), as: :json
 
           expect {
-            post question_votes_path(question), params: { value: 1 }, as: :json
+            post up_question_votes_path(question), as: :json
           }.not_to change(Vote, :count)
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(JSON.parse(response.body)).to include("error")
         end
 
         it "updates vote when voting with opposite value" do
-          post question_votes_path(question), params: { value: 1 }, as: :json
+          post up_question_votes_path(question), as: :json
 
           expect {
-            post question_votes_path(question), params: { value: -1 }, as: :json
+            post down_question_votes_path(question), as: :json
           }.not_to change(Vote, :count)
 
           expect(response).to have_http_status(:success)
@@ -64,19 +64,19 @@ RSpec.describe "Votes", type: :request do
           sign_in author
 
           expect {
-            post question_votes_path(question), params: { value: 1 }, as: :json
+            post up_question_votes_path(question), as: :json
           }.not_to change(Vote, :count)
 
-          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response).to have_http_status(:unprocessable_content)
           expect(JSON.parse(response.body)).to include("error")
         end
 
-        it "returns error when value is invalid" do
-          expect {
-            post question_votes_path(question), params: { value: 2 }, as: :json
-          }.not_to change(Vote, :count)
-
-          expect(response).to have_http_status(:unprocessable_entity)
+        it "returns error when trying to vote for own question" do
+          sign_in author
+          
+          post up_question_votes_path(question), as: :json
+          
+          expect(response).to have_http_status(:unprocessable_content)
           expect(JSON.parse(response.body)).to include("error")
         end
       end
@@ -84,7 +84,7 @@ RSpec.describe "Votes", type: :request do
       context "when voting for an answer" do
         it "creates an upvote" do
           expect {
-            post answer_votes_path(answer), params: { value: 1 }, as: :json
+            post up_answer_votes_path(answer), as: :json
           }.to change(Vote, :count).by(1)
 
           expect(response).to have_http_status(:success)
@@ -98,7 +98,7 @@ RSpec.describe "Votes", type: :request do
 
     context "when user is not authenticated" do
       it "returns unauthorized status" do
-        post question_votes_path(question), params: { value: 1 }, as: :json
+        post up_question_votes_path(question), as: :json
         expect(response).to have_http_status(:unauthorized)
       end
     end

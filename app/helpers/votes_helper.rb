@@ -17,10 +17,17 @@ module VotesHelper
   end
 
   def render_vote_button(votable, value, icon, css_class)
+    action = value.positive? ? :up : :down
+    
+    if votable.is_a?(Question)
+      path = send("#{action}_question_votes_path", votable, votable: 'question')
+    else
+      path = send("#{action}_answer_votes_path", votable, votable: 'answer')
+    end
+    
     button_to icon,
-              polymorphic_path([ votable, :votes ], votable: votable.class.name.underscore),
+              path,
               method: :post,
-              params: { value: value },
               class: "#{css_class} font-bold text-xl focus:outline-none",
               form: { class: "inline-block", data: { turbo: true, action: "click->votes#vote" } }
   end

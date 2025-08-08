@@ -8,7 +8,7 @@ class VotesController < ApplicationController
     if result
       render_vote_response
     else
-      render_error("Unable to vote up", :unprocessable_entity)
+      render_error("Unable to vote up", :unprocessable_content)
     end
   end
 
@@ -18,7 +18,7 @@ class VotesController < ApplicationController
     if result
       render_vote_response
     else
-      render_error("Unable to vote down", :unprocessable_entity)
+      render_error("Unable to vote down", :unprocessable_content)
     end
   end
 
