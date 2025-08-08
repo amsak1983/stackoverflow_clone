@@ -17,11 +17,9 @@ export default class extends Controller {
     
     const form = event.target.closest("form")
     const url = form.action
-    const formData = new FormData(form)
     
     this._sendVoteRequest(url, {
-      method: "POST",
-      body: formData
+      method: "POST"
     })
   }
 

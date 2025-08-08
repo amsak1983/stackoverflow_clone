@@ -8,9 +8,8 @@
   <% if user_signed_in? && !current_user.author_of?(votable) %>
     <div class="flex items-center space-x-2">
       <%= button_to "⬆", 
-                    polymorphic_path([votable, :votes], votable: votable.class.name.underscore),
+                    up_polymorphic_path([votable, :votes], votable: votable.class.name.underscore),
                     method: :post,
-                    params: { value: 1 },
                     class: "vote-up #{votable.vote_value_by(current_user) == 1 ? 'text-green-600' : 'text-gray-600 hover:text-green-600'} font-bold text-xl focus:outline-none",
                     form: { class: "inline-block", data: { turbo: true } },
                     data: { action: "click->votes#vote" } %>
@@ -22,9 +21,8 @@
       </span>
       
       <%= button_to "⬇", 
-                    polymorphic_path([votable, :votes], votable: votable.class.name.underscore),
+                    down_polymorphic_path([votable, :votes], votable: votable.class.name.underscore),
                     method: :post,
-                    params: { value: -1 },
                     class: "vote-down #{votable.vote_value_by(current_user) == -1 ? 'text-red-600' : 'text-gray-600 hover:text-red-600'} font-bold text-xl focus:outline-none",
                     form: { class: "inline-block", data: { turbo: true } },
                     data: { action: "click->votes#vote" } %>
