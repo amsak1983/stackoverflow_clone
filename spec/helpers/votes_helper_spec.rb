@@ -59,6 +59,12 @@ RSpec.describe VotesHelper, type: :helper do
       expect(result).to include('⬆')
       expect(result).to include('data-action="click-')
       expect(result).to include('votes#vote')
+      expect(result).to include('up')
+    end
+
+    it 'renders a down vote button for negative value' do
+      result = helper.render_vote_button(question, -1, '⬇', 'test-class')
+      expect(result).to include('down')
     end
   end
 
