@@ -3,8 +3,8 @@ module VotesHelper
     return "" unless current_user && !current_user.author_of?(votable)
 
     user_vote = votable.vote_value_by(current_user)
-    upvote_class = user_vote == 1 ? "text-green-600" : "text-gray-600 hover:text-green-600"
-    downvote_class = user_vote == -1 ? "text-red-600" : "text-gray-600 hover:text-red-600"
+    upvote_class = user_vote&.positive? ? "text-green-600" : "text-gray-600 hover:text-green-600"
+    downvote_class = user_vote&.negative? ? "text-red-600" : "text-gray-600 hover:text-red-600"
 
     content_tag(:div, class: "flex items-center space-x-2") do
       concat(render_vote_button(votable, 1, "⬆", upvote_class))

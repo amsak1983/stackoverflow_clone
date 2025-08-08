@@ -2,22 +2,23 @@ class VotesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_votable
 
-  def create
-    value = params.require(:value).to_i
-
-    result = case value
-    when 1
-               @votable.vote_up(current_user)
-    when -1
-               @votable.vote_down(current_user)
-    else
-               return render_error("Invalid vote value", :unprocessable_entity)
-    end
+  def up
+    result = @votable.vote_up(current_user)
 
     if result
       render_vote_response
     else
-      render_error("Unable to vote", :unprocessable_entity)
+      render_error("Unable to vote up", :unprocessable_entity)
+    end
+  end
+
+  def down
+    result = @votable.vote_down(current_user)
+
+    if result
+      render_vote_response
+    else
+      render_error("Unable to vote down", :unprocessable_entity)
     end
   end
 

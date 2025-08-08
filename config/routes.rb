@@ -10,14 +10,24 @@ Rails.application.routes.draw do
   resources :rewards, only: :index
 
   resources :questions, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
-    resources :votes, only: [ :create, :destroy ], defaults: { votable: "question" }
+    resources :votes, only: [ :destroy ], defaults: { votable: "question" } do
+      collection do
+        post :up
+        post :down
+      end
+    end
 
     resources :answers, only: [ :create, :update, :destroy ], shallow: true do
       member do
         patch :set_best
       end
 
-      resources :votes, only: [ :create, :destroy ], defaults: { votable: "answer" }
+      resources :votes, only: [ :destroy ], defaults: { votable: "answer" } do
+        collection do
+          post :up
+          post :down
+        end
+      end
     end
   end
 end
