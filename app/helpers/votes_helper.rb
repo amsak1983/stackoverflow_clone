@@ -18,13 +18,13 @@ module VotesHelper
 
   def render_vote_button(votable, value, icon, css_class)
     action = value.positive? ? :up : :down
-    
+
     if votable.is_a?(Question)
-      path = send("#{action}_question_votes_path", votable, votable: 'question')
+      path = send("#{action}_question_votes_path", votable, votable: "question")
     else
-      path = send("#{action}_answer_votes_path", votable, votable: 'answer')
+      path = send("#{action}_answer_votes_path", votable, votable: "answer")
     end
-    
+
     button_to icon,
               path,
               method: :post,

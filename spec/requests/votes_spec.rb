@@ -73,9 +73,9 @@ RSpec.describe "Votes", type: :request do
 
         it "returns error when trying to vote for own question" do
           sign_in author
-          
+
           post up_question_votes_path(question), as: :json
-          
+
           expect(response).to have_http_status(:unprocessable_content)
           expect(JSON.parse(response.body)).to include("error")
         end
