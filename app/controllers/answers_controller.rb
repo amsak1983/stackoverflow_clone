@@ -16,7 +16,7 @@ class AnswersController < ApplicationController
       ActionCable.server.broadcast(
         "question_#{@question.id}_answers",
         {
-          action: 'create',
+          action: "create",
           answer: render_answer(@answer)
         }
       )
@@ -78,7 +78,7 @@ class AnswersController < ApplicationController
 
   def render_answer(answer)
     ApplicationController.render(
-      partial: 'answers/answer',
+      partial: "answers/answer",
       locals: { answer: answer }
     )
   end

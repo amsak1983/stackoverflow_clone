@@ -29,11 +29,11 @@ class QuestionsController < ApplicationController
         ActionCable.server.broadcast(
           "questions",
           {
-            action: 'create',
+            action: "create",
             question: render_question(@question)
           }
         )
-        
+
         format.html { redirect_to @question, notice: "Question was successfully created" }
         format.json { render :show, status: :created, location: @question }
       else
@@ -83,7 +83,7 @@ class QuestionsController < ApplicationController
 
   def render_question(question)
     ApplicationController.render(
-      partial: 'questions/question_item',
+      partial: "questions/question_item",
       locals: { question: question }
     )
   end

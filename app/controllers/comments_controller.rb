@@ -1,8 +1,8 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_commentable
-  before_action :set_comment, only: [:destroy]
-  before_action :check_author, only: [:destroy]
+  before_action :set_comment, only: [ :destroy ]
+  before_action :check_author, only: [ :destroy ]
 
   def create
     @comment = @commentable.comments.build(comment_params)
@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
       ActionCable.server.broadcast(
         "question_#{question_id}_comments",
         {
-          action: 'create',
+          action: "create",
           comment: render_comment(@comment),
           commentable_type: @commentable.class.name.downcase,
           commentable_id: @commentable.id
@@ -26,8 +26,8 @@ class CommentsController < ApplicationController
       end
     else
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_form_#{@commentable.class.name.downcase}_#{@commentable.id}", partial: 'comments/form', locals: { commentable: @commentable, comment: @comment }) }
-        format.html { redirect_to question_path(question_id), alert: 'Comment could not be created.' }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("comment_form_#{@commentable.class.name.downcase}_#{@commentable.id}", partial: "comments/form", locals: { commentable: @commentable, comment: @comment }) }
+        format.html { redirect_to question_path(question_id), alert: "Comment could not be created." }
       end
     end
   end
@@ -39,7 +39,7 @@ class CommentsController < ApplicationController
     ActionCable.server.broadcast(
       "question_#{question_id}_comments",
       {
-        action: 'destroy',
+        action: "destroy",
         comment_id: @comment.id
       }
     )
@@ -88,7 +88,7 @@ class CommentsController < ApplicationController
 
   def render_comment(comment)
     ApplicationController.render(
-      partial: 'comments/comment',
+      partial: "comments/comment",
       locals: { comment: comment }
     )
   end
