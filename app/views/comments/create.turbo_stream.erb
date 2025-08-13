@@ -1,0 +1,5 @@
+<%= turbo_stream.prepend "comments_list_#{@commentable.class.name.downcase}_#{@commentable.id}", @comment %>
+<%= turbo_stream.replace "comment_form_#{@commentable.class.name.downcase}_#{@commentable.id}", 
+                         partial: 'comments/form', 
+                         locals: { commentable: @commentable, comment: Comment.new } %>
+<%= turbo_stream.replace "comments_count_#{@commentable.class.name.downcase}_#{@commentable.id}", @commentable.comments.count %>

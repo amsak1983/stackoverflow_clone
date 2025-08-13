@@ -17,6 +17,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :comments, only: [ :create, :destroy ]
+
     resources :answers, only: [ :create, :update, :destroy ], shallow: true do
       member do
         patch :set_best
@@ -28,6 +30,8 @@ Rails.application.routes.draw do
           post :down
         end
       end
+
+      resources :comments, only: [ :create, :destroy ]
     end
   end
 end

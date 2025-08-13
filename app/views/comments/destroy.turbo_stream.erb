@@ -1,0 +1,2 @@
+<%= turbo_stream.remove "comment_#{@comment.id}" %>
+<%= turbo_stream.replace "comments_count_#{@comment.commentable.class.name.downcase}_#{@comment.commentable.id}", @comment.commentable.comments.count %>

@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :set_secure_headers
+  before_action :set_current_user_for_cable
 
   private
 
@@ -20,5 +21,9 @@ class ApplicationController < ActionController::Base
 
   def record_not_found
     redirect_to questions_path, alert: "Record not found"
+  end
+
+  def set_current_user_for_cable
+    cookies.encrypted[:user_id] = current_user&.id
   end
 end

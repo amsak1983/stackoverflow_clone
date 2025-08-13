@@ -1,0 +1,29 @@
+<div id="comment_form_<%= commentable.class.name.downcase %>_<%= commentable.id %>" class="mt-4">
+  <%= form_with model: [commentable, Comment.new], 
+                local: false,
+                data: { turbo: true },
+                class: "space-y-3" do |form| %>
+    
+    <% if comment.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+        <ul class="list-disc list-inside">
+          <% comment.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div>
+      <%= form.text_area :body, 
+                         placeholder: "Add a comment...",
+                         rows: 2,
+                         class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+    </div>
+
+    <div class="flex justify-end">
+      <%= form.submit "Add Comment", 
+                      class: "px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+    </div>
+  <% end %>
+</div>

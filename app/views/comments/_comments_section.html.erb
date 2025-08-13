@@ -1,0 +1,17 @@
+<div id="comments_<%= commentable.class.name.downcase %>_<%= commentable.id %>" class="mt-6">
+  <h4 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+    Comments (<span id="comments_count_<%= commentable.class.name.downcase %>_<%= commentable.id %>"><%= commentable.comments.count %></span>)
+  </h4>
+  
+  <div id="comments_list_<%= commentable.class.name.downcase %>_<%= commentable.id %>" class="space-y-2 mb-4">
+    <%= render commentable.comments.newest_first %>
+  </div>
+
+  <% if user_signed_in? %>
+    <%= render 'comments/form', commentable: commentable, comment: Comment.new %>
+  <% else %>
+    <p class="text-sm text-gray-500 dark:text-gray-400 italic">
+      <%= link_to "Sign in", new_user_session_path, class: "text-blue-600 hover:text-blue-800" %> to add a comment
+    </p>
+  <% end %>
+</div>

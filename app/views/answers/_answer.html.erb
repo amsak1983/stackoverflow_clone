@@ -93,6 +93,9 @@
         <% end %>
       </div>
     <% end %>
+    
+    <!-- Comments for Answer -->
+    <%= render 'comments/comments_section', commentable: answer %>
   </div>
 
   <% if user_signed_in? && current_user.author_of?(answer) %>

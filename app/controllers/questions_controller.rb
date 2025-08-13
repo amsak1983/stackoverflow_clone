@@ -25,6 +25,15 @@ class QuestionsController < ApplicationController
 
     respond_to do |format|
       if @question.save
+        # Broadcast new question to all subscribers
+        ActionCable.server.broadcast(
+          "questions",
+          {
+            action: 'create',
+            question: render_question(@question)
+          }
+        )
+        
         format.html { redirect_to @question, notice: "Question was successfully created" }
         format.json { render :show, status: :created, location: @question }
       else
@@ -70,6 +79,13 @@ class QuestionsController < ApplicationController
   def set_question
     @question = Question.find_by(id: params[:id])
     handle_record_not_found("Question") unless @question
+  end
+
+  def render_question(question)
+    ApplicationController.render(
+      partial: 'questions/question_item',
+      locals: { question: question }
+    )
   end
 
   def question_params

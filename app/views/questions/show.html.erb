@@ -1,4 +1,7 @@
-<div class="max-w-4xl mx-auto px-4 py-8">
+<div class="max-w-4xl mx-auto px-4 py-8" 
+     data-controller="answers-channel comments-channel" 
+     data-answers-channel-question-id-value="<%= @question.id %>"
+     data-comments-channel-question-id-value="<%= @question.id %>">
   <% if notice.present? %>
     <div class="mb-6 px-4 py-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
       <%= notice %>
@@ -43,6 +46,9 @@
       <% end %>
     </div>
     
+    <!-- Comments for Question -->
+    <%= render 'comments/comments_section', commentable: @question %>
+    
     <div class="flex flex-wrap items-center justify-between mb-6">
       <div class="flex items-center space-x-4">
         <div class="flex items-center">
@@ -72,11 +78,13 @@
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Answers</h2>
       <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-        <%= @answers.count %> <%= "Answer".pluralize(@answers.count) %>
+        <span id="answers-count"><%= @answers.count %></span> <%= "Answer".pluralize(@answers.count) %>
       </span>
     </div>
     
-    <%= render "questions/answers", answers: @answers %>
+    <div id="answers-list">
+      <%= render @answers %>
+    </div>
   </div>
   
   <div class="mb-6">

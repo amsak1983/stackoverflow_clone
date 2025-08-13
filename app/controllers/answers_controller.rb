@@ -12,6 +12,15 @@ class AnswersController < ApplicationController
     @answer.user = current_user
 
     if @answer.save
+      # Broadcast new answer to all subscribers
+      ActionCable.server.broadcast(
+        "question_#{@question.id}_answers",
+        {
+          action: 'create',
+          answer: render_answer(@answer)
+        }
+      )
+
       respond_to do |format|
         format.html { redirect_to @question, notice: "Answer was successfully created" }
         format.json { render json: @answer, status: :created, location: @question }
@@ -65,6 +74,13 @@ class AnswersController < ApplicationController
 
   def set_question
     @question = Question.find(params[:question_id])
+  end
+
+  def render_answer(answer)
+    ApplicationController.render(
+      partial: 'answers/answer',
+      locals: { answer: answer }
+    )
   end
 
   def set_answer
