@@ -6,9 +6,9 @@ pin "@hotwired/stimulus", to: "stimulus.min.js"
 pin "@hotwired/stimulus-loading", to: "stimulus-loading.js"
 pin_all_from "app/javascript/controllers", under: "controllers"
 
-# Flowbite с поддержкой turbo
-pin "jquery", to: "vendor/jquery-3.7.1.min.js"
-pin "flowbite", to: "vendor/flowbite.turbo.min.js"
+# Flowbite
+pin "jquery", to: "https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+pin "flowbite", to: "https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"
 
 # Cocoon for dynamic nested forms
 pin "cocoon", to: "vendor/cocoon.min.js"
