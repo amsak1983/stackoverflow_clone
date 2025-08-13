@@ -41,6 +41,18 @@
         </ul>
       </div>
       <% end %>
+
+      <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">Comments</h3>
+        <div data-comments-channel-target="list" id="question-<%= @question.id %>-comments">
+          <%= render partial: 'comments/comment', collection: @question.comments, as: :comment %>
+        </div>
+        <% if user_signed_in? %>
+          <div class="mt-3">
+            <%= render 'comments/form', commentable: @question %>
+          </div>
+        <% end %>
+      </div>
     </div>
     
     <div class="flex flex-wrap items-center justify-between mb-6">
@@ -68,7 +80,7 @@
     </div>
   </div>
   
-  <div class="mb-8">
+  <div data-controller="answers-channel comments-channel" data-answers-channel-question-id-value="<%= @question.id %>" data-comments-channel-question-id-value="<%= @question.id %>" class="mb-8">
     <div class="flex items-center justify-between mb-4">
       <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Answers</h2>
       <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">

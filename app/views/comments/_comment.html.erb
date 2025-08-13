@@ -1,0 +1,10 @@
+<div id="<%= dom_id(comment) %>" class="mt-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded border border-gray-200 dark:border-gray-700">
+  <div class="text-sm text-gray-700 dark:text-gray-300">
+    <%= simple_format(comment.body) %>
+  </div>
+  <div class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+    <span><%= comment.user&.name || 'User' %></span>
+    ·
+    <span><%= time_ago_in_words(comment.created_at) %> ago</span>
+  </div>
+</div> 

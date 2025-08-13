@@ -12,6 +12,9 @@ class AnswersController < ApplicationController
     @answer.user = current_user
 
     if @answer.save
+      ActionCable.server.broadcast("questions/#{@question.id}/answers", {
+        html: render_to_string(partial: 'answers/answer', locals: { answer: @answer })
+      })
       respond_to do |format|
         format.html { redirect_to @question, notice: "Answer was successfully created" }
         format.json { render json: @answer, status: :created, location: @question }

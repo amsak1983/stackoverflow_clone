@@ -18,13 +18,15 @@ class QuestionsController < ApplicationController
   def create
     @question = current_user.questions.new(question_params)
 
-    # Associate reward with current user if present
     if @question.reward.present?
       @question.reward.user = current_user
     end
 
     respond_to do |format|
       if @question.save
+        ActionCable.server.broadcast('questions', {
+          html: render_to_string(partial: 'questions/question', locals: { question: @question })
+        })
         format.html { redirect_to @question, notice: "Question was successfully created" }
         format.json { render :show, status: :created, location: @question }
       else

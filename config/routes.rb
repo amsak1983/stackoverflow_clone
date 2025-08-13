@@ -28,6 +28,10 @@ Rails.application.routes.draw do
           post :down
         end
       end
+
+      resources :comments, only: :create
     end
+
+    resources :comments, only: :create
   end
 end
