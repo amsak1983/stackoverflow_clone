@@ -4,3 +4,8 @@ import "controllers"
 import "flowbite"
 import "jquery";
 import "cocoon";
+
+// Инициализируем Flowbite после каждой загрузки Turbo
+document.addEventListener('turbo:load', () => {
+  if (window.initFlowbite) { window.initFlowbite(); }
+});
