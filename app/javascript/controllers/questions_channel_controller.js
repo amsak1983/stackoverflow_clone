@@ -5,10 +5,21 @@ export default class extends Controller {
 
   connect() {
     this.subscription = window.App.cable.subscriptions.create({ channel: "QuestionsChannel" }, {
+      connected: () => {
+        console.log("Connected to QuestionsChannel")
+      },
+      disconnected: () => {
+        console.log("Disconnected from QuestionsChannel")
+      },
       received: (data) => {
+        console.log("Received question data:", data)
         if (data.html) {
-          const container = this.listTarget || this.element
-          container.insertAdjacentHTML('afterbegin', data.html)
+          const container = document.getElementById('questions') || this.listTarget || this.element
+          if (container) {
+            container.insertAdjacentHTML('afterbegin', data.html)
+          } else {
+            console.error("Could not find questions container")
+          }
         }
       }
     })

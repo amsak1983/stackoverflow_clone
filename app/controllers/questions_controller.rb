@@ -28,7 +28,7 @@ class QuestionsController < ApplicationController
           "questions",
           {
             action: "create",
-            question: render_question(@question)
+            html: render_question(@question)
           }
         )
 
