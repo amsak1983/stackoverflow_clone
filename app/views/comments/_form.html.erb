@@ -1,4 +1,4 @@
-<%= form_with(model: [commentable, Comment.new], data: { turbo: true }) do |f| %>
+<%= form_with(model: [commentable, Comment.new], data: { turbo: true }, id: dom_id(commentable, :new_comment_form)) do |f| %>
   <div class="flex items-start gap-2">
     <%= f.text_area :body, rows: 2, placeholder: "Add a comment...", class: "w-full p-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200" %>
     <%= f.submit "Comment", class: "px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800" %>

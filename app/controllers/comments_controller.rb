@@ -8,7 +8,7 @@ class CommentsController < ApplicationController
       broadcast_comment(@comment)
       respond_to do |format|
         format.html { redirect_back fallback_location: root_path, notice: 'Comment created' }
-        format.turbo_stream
+        format.turbo_stream { head :ok }
       end
     else
       respond_to do |format|
@@ -45,6 +45,14 @@ class CommentsController < ApplicationController
       locals: { comment: comment }
     )
 
-    ActionCable.server.broadcast("questions/#{question_id}/comments", { html: rendered, dom_id: "comment_#{comment.id}" })
+    ActionCable.server.broadcast(
+      "questions_#{question_id}_comments",
+      {
+        html: rendered,
+        dom_id: "comment_#{comment.id}",
+        commentable_type: comment.commentable_type,
+        commentable_id: comment.commentable_id
+      }
+    )
   end
 end 

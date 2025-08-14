@@ -9,7 +9,7 @@ module ApplicationCable
     private
 
     def find_verified_user
-      env["warden"].user || GuestUser.new
+      env["warden"]&.user
     end
   end
 end 

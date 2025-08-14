@@ -1,0 +1,9 @@
+<% container_id = @comment.commentable.is_a?(Question) ? "question-#{@comment.commentable.id}-comments" : "answer-#{@comment.commentable.id}-comments" %>
+
+<%= turbo_stream.append container_id do %>
+  <%= render 'comments/comment', comment: @comment %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@comment.commentable, :new_comment_form) do %>
+  <%= render 'comments/form', commentable: @comment.commentable %>
+<% end %> 
