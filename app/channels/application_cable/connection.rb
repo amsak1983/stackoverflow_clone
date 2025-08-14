@@ -16,4 +16,4 @@ module ApplicationCable
       user
     end
   end
-end 
+end

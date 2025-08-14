@@ -7,4 +7,4 @@ class QuestionsChannel < ApplicationCable::Channel
   def unsubscribed
     logger.info "User #{current_user&.id || 'Anonymous'} unsubscribed from questions channel"
   end
-end 
+end

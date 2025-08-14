@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
     if @comment.save
       broadcast_comment(@comment)
       respond_to do |format|
-        format.html { redirect_back fallback_location: root_path, notice: 'Comment created' }
+        format.html { redirect_back fallback_location: root_path, notice: "Comment created" }
         format.turbo_stream { head :ok }
       end
     else
@@ -36,12 +36,12 @@ class CommentsController < ApplicationController
 
   def broadcast_comment(comment)
     question_id = case comment.commentable
-                  when Question then comment.commentable_id
-                  when Answer then comment.commentable.question_id
-                  end
+    when Question then comment.commentable_id
+    when Answer then comment.commentable.question_id
+    end
 
     rendered = ApplicationController.render(
-      partial: 'comments/comment',
+      partial: "comments/comment",
       locals: { comment: comment }
     )
 
@@ -55,4 +55,4 @@ class CommentsController < ApplicationController
       }
     )
   end
-end 
+end
