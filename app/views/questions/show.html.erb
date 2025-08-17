@@ -1,4 +1,6 @@
 <div class="max-w-4xl mx-auto px-4 py-8">
+  <%= turbo_stream_from [@question, :answers] %>
+  <%= turbo_stream_from [@question, :comments] %>
   <% if notice.present? %>
     <div class="mb-6 px-4 py-3 bg-green-100 border border-green-400 text-green-700 rounded-lg">
       <%= notice %>
@@ -78,7 +80,26 @@
     
     <%= render "questions/answers", answers: @answers %>
   </div>
-  
+
+  <div class="mb-8">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Comments</h2>
+      <span class="inline-flex items-center px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+        <%= @question.comments.size %> <%= "Comment".pluralize(@question.comments.size) %>
+      </span>
+    </div>
+    <div id="<%= dom_id(@question) %>_comments" class="space-y-3">
+      <% @question.comments.order(created_at: :asc).each do |comment| %>
+        <%= render "comments/comment", comment: comment, show_controls: (user_signed_in? && current_user.author_of?(comment)) %>
+      <% end %>
+    </div>
+    <% if user_signed_in? %>
+      <div class="mt-4">
+        <%= render "comments/form", commentable: @question, comment: Comment.new %>
+      </div>
+    <% end %>
+  </div>
+
   <div class="mb-6">
     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Your Answer</h3>
     <%= render "answers/form", answer: @answer %>

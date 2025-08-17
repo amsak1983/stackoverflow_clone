@@ -1,0 +1,3 @@
+<%# Reset or re-render the comment form after submit %>
+<% form_comment = @comment.persisted? ? Comment.new : @comment %>
+<%= turbo_stream.replace dom_id(@commentable, :new_comment), partial: "comments/form", locals: { commentable: @commentable, comment: form_comment } %>

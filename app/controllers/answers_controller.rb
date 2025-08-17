@@ -22,7 +22,7 @@ class AnswersController < ApplicationController
       respond_to do |format|
         format.html { render "questions/show", status: :unprocessable_content }
         format.json { render json: @answer.errors, status: :unprocessable_content }
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("new-answer", partial: "answers/form", locals: { answer: @answer }), status: :unprocessable_content }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("new_answer", partial: "answers/form", locals: { answer: @answer }), status: :unprocessable_content }
       end
     end
   end
