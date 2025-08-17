@@ -48,4 +48,3 @@ class Question < ApplicationRecord
     end
   end
 end
-
