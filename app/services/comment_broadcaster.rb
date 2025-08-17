@@ -4,7 +4,7 @@ class CommentBroadcaster
   class << self
     def append(comment)
       commentable = comment.commentable
-      stream = [commentable, :comments]
+      stream = [ commentable, :comments ]
       target = "#{ActionView::RecordIdentifier.dom_id(commentable)}_comments"
 
       Turbo::StreamsChannel.broadcast_append_to(
@@ -17,7 +17,7 @@ class CommentBroadcaster
 
     def remove(comment)
       commentable = comment.commentable
-      stream = [commentable, :comments]
+      stream = [ commentable, :comments ]
       target = ActionView::RecordIdentifier.dom_id(comment)
 
       Turbo::StreamsChannel.broadcast_remove_to(

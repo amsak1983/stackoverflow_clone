@@ -18,7 +18,7 @@ class Answer < ApplicationRecord
   scope :newest_first, -> { order(created_at: :desc) }
   scope :best_first, -> { order(best: :desc, created_at: :desc) }
 
-  after_create_commit -> { broadcast_append_to [question, :answers], target: "answers" }
+  after_create_commit -> { broadcast_append_to [ question, :answers ], target: "answers" }
 
   def preview
     body.truncate(50) if body
