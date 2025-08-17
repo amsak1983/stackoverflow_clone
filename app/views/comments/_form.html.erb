@@ -1,0 +1,20 @@
+<%= form_with model: [commentable, comment], local: false, id: dom_id(commentable, :new_comment), class: "space-y-2" do |f| %>
+  <% if comment.errors.any? %>
+    <div class="bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg dark:bg-red-900/20 dark:border-red-700">
+      <div class="text-xs text-red-700 dark:text-red-300">
+        <ul class="list-disc pl-5 space-y-0.5">
+          <% comment.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.text_area :body, rows: 3, placeholder: "Add a comment…", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+  </div>
+  <div>
+    <%= f.submit "Add comment", class: "px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus-ring" %>
+  </div>
+<% end %>
