@@ -7,6 +7,7 @@ class Question < ApplicationRecord
   has_many_attached :files
   has_many :links, as: :linkable, dependent: :destroy
   has_one :reward, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   accepts_nested_attributes_for :links, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :reward, allow_destroy: true, reject_if: :all_blank
@@ -19,6 +20,8 @@ class Question < ApplicationRecord
   validates_with FileAttachmentValidator
 
   scope :recent, -> { order(created_at: :desc) }
+
+  after_create_commit -> { broadcast_prepend_to :questions, target: "questions" }
 
   def preview
     body.truncate(150) if body
@@ -45,3 +48,4 @@ class Question < ApplicationRecord
     end
   end
 end
+

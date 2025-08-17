@@ -1,2 +1,1 @@
-<%= turbo_stream.append "answers", @answer %>
 <%= turbo_stream.replace "new_answer", partial: "answers/form", locals: { answer: @question.answers.build } %>
