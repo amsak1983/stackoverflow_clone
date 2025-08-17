@@ -5,6 +5,7 @@ class Answer < ApplicationRecord
   belongs_to :user
   has_many_attached :files
   has_many :links, as: :linkable, dependent: :destroy
+  has_many :comments, as: :commentable, dependent: :destroy
 
   accepts_nested_attributes_for :links, allow_destroy: true, reject_if: :all_blank
 
@@ -16,6 +17,9 @@ class Answer < ApplicationRecord
 
   scope :newest_first, -> { order(created_at: :desc) }
   scope :best_first, -> { order(best: :desc, created_at: :desc) }
+
+  # Broadcast new answers to the question-specific answers stream
+  after_create_commit -> { broadcast_append_to [question, :answers] }
 
   def preview
     body.truncate(50) if body
