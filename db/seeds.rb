@@ -3,6 +3,13 @@
 
 # Clear existing data to avoid duplicates
 puts "Cleaning database..."
+# Delete in proper order to avoid foreign key constraints
+Vote.destroy_all if defined?(Vote)
+Comment.destroy_all if defined?(Comment)
+Link.destroy_all if defined?(Link)
+Reward.destroy_all if defined?(Reward)
+Answer.destroy_all if defined?(Answer)
+Question.destroy_all if defined?(Question)
 User.destroy_all
 
 # Create test users
