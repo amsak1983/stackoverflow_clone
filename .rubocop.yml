@@ -4,7 +4,7 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # Disable all cops by default
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.2.0
+  TargetRubyVersion: 3.2.6
   Exclude:
     - 'bin/**/*'
     - 'db/**/*'
