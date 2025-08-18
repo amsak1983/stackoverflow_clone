@@ -25,6 +25,7 @@ class QuestionsController < ApplicationController
 
     respond_to do |format|
       if @question.save
+        QuestionBroadcaster.append(@question)
         format.html { redirect_to @question, notice: "Question was successfully created" }
         format.json { render :show, status: :created, location: @question }
       else
@@ -48,6 +49,7 @@ class QuestionsController < ApplicationController
   def update
     respond_to do |format|
       if @question.update(question_params)
+        QuestionBroadcaster.update(@question)
         format.html { redirect_to @question, notice: "Question was successfully updated" }
         format.turbo_stream { render :update, status: :ok }
       else
@@ -60,6 +62,7 @@ class QuestionsController < ApplicationController
   # DELETE /questions/:id
   def destroy
     @question.destroy
+    QuestionBroadcaster.remove(@question)
     redirect_to questions_path, notice: "Question was successfully deleted"
   end
 

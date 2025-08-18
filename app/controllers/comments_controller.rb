@@ -24,10 +24,11 @@ class CommentsController < ApplicationController
   end
 
   def destroy
+    commentable = @comment.commentable
     @comment.destroy
     CommentBroadcaster.remove(@comment)
     respond_to do |format|
-      format.html { redirect_to question_path(question_for(@commentable)), notice: "Comment deleted" }
+      format.html { redirect_to question_path(question_for(commentable)), notice: "Comment deleted" }
       format.turbo_stream { head :ok }
     end
   end

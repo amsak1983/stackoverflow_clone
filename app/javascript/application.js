@@ -4,6 +4,7 @@ import "controllers"
 import "flowbite"
 import "jquery";
 import "cocoon";
+import "channels";
 
 document.addEventListener('turbo:load', () => {
   if (window.initFlowbite) { window.initFlowbite(); }
