@@ -134,5 +134,4 @@ Capybara.javascript_driver = :selenium_chrome
 Capybara.default_driver = :rack_test
 Capybara.always_include_port = true
 
-# Настройка для использования полного Rails middleware stack
 Capybara.server = :puma, { Silent: true }

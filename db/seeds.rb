@@ -1,9 +1,7 @@
 # This file creates sample data for the Stack Overflow clone application
 # Run with: rails db:seed
 
-# Clear existing data to avoid duplicates
 puts "Cleaning database..."
-# Delete in proper order to avoid foreign key constraints
 Vote.destroy_all if defined?(Vote)
 Comment.destroy_all if defined?(Comment)
 Link.destroy_all if defined?(Link)
