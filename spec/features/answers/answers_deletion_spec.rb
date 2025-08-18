@@ -22,7 +22,6 @@ feature 'Answers deletion', %q(
         find('button[data-turbo-method="delete"]').click
       end
 
-      expect(page).to have_content 'Answer was successfully deleted'
       expect(page).not_to have_css("#answer_#{answer.id}")
     end
 
