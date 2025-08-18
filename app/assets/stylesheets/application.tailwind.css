@@ -2,12 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Пользовательские компоненты */
 @layer components {
-  /* Здесь можно добавить свои компоненты */
+
 }
 
-/* Пользовательские утилиты */
 @layer utilities {
   .line-clamp-2 {
     display: -webkit-box;
@@ -17,16 +15,11 @@
   }
 }
 
-/* Пользовательские стили приложения (перенесено из application.css для обработки @apply) */
-/* Пользовательские стили для форм */
 .field_with_errors input,
 .field_with_errors textarea {
   @apply border-red-500 focus:ring-red-500 focus:border-red-500;
 }
 
-/* Дополнительные стили приложения */
-
-/* Enhanced typography */
 .prose {
   font-size: 1rem;
   line-height: 1.625;
@@ -57,7 +50,6 @@
   @apply bg-transparent p-0;
 }
 
-/* Custom utility classes */
 .shadow-card {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -66,17 +58,14 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-/* Focus styles for better accessibility */
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800;
 }
 
-/* Smooth transitions */
 .transition-all {
   transition: all 0.2s ease-in-out;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

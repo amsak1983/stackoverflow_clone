@@ -10,7 +10,6 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-        # Broadcast the newly created comment to subscribers
         CommentBroadcaster.append(@comment)
         format.html { redirect_to question_path(question_for(@commentable)), notice: "Comment added" }
         format.turbo_stream { render :create, status: :created }
@@ -26,7 +25,6 @@ class CommentsController < ApplicationController
 
   def destroy
     @comment.destroy
-    # Broadcast removal to subscribers
     CommentBroadcaster.remove(@comment)
     respond_to do |format|
       format.html { redirect_to question_path(question_for(@commentable)), notice: "Comment deleted" }
