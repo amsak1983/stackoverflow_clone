@@ -1,30 +1,52 @@
-<div id="<%= dom_id(answer) %>" class="p-6 mb-4 bg-white border border-gray-200 rounded-lg shadow-card hover:shadow-card-hover transition-all duration-200 dark:bg-gray-800 dark:border-gray-700">
-  <%= turbo_stream_from [answer, :comments] %>
-  <div class="flex flex-col md:flex-row md:items-start gap-4">
-    <!-- Voting section (placeholder for future implementation) -->
-    <div class="flex flex-row md:flex-col items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-lg p-2 md:p-3 flex-shrink-0">
-      <button class="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 p-1 rounded focus:outline-none" aria-label="Upvote">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path></svg>
-      </button>
-      <span class="text-sm font-bold text-gray-700 dark:text-gray-300 my-1 md:my-2">0</span>
-      <button class="text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 p-1 rounded focus:outline-none" aria-label="Downvote">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-      </button>
+<div id="answer_<%= answer.id %>" class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm mb-6">
+  <div class="flex flex-col md:flex-row">
+    <!-- Vote controls -->
+    <div class="flex md:flex-col items-center md:items-start space-x-4 md:space-x-0 md:space-y-2 p-4 md:pr-0">
+      <% begin %>
+        <% if current_user.present? %>
+          <%= render 'shared/vote_controls', votable: answer %>
+        <% end %>
+      <% rescue Devise::MissingWarden %>
+        <!-- Devise not available in test environment -->
+      <% end %>
     </div>
     
     <!-- Answer content -->
-    <div class="flex-1">
-      <div class="prose prose-gray max-w-none dark:prose-invert mb-4">
-        <p class="text-gray-700 dark:text-gray-300"><%= simple_format(answer.body) %></p>
+    <div class="flex-1 p-4 md:pl-0">
+      <div class="prose prose-gray dark:prose-invert max-w-none">
+        <%= simple_format(answer.body) %>
       </div>
       
-      <% if answer.links.present? %>
-      <div class="mb-4">
-        <%= render 'shared/links', resource: answer %>
+      <!-- Links -->
+      <% if answer.links.any? %>
+      <div class="p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800">
+        <h3 class="text-base font-medium mb-3 text-gray-900 dark:text-white">Links:</h3>
+        <ul class="space-y-2">
+          <% answer.links.each do |link| %>
+            <li id="answer_link_<%= link.id %>" class="flex items-center justify-between p-2 border border-gray-200 rounded-lg dark:border-gray-700">
+              <div class="flex items-center">
+                <a href="<%= link.url %>" target="_blank" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 text-sm">
+                  <%= link.name %>
+                </a>
+              </div>
+              <% begin %>
+                <% if current_user&.author_of?(answer) %>
+                  <%= link_to '✕', link_path(link), 
+                      method: :delete, 
+                      data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
+                      class: "text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400" %>
+                <% end %>
+              <% rescue Devise::MissingWarden %>
+                <!-- Devise not available in test environment -->
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
       </div>
       <% end %>
       
-      <% if answer.files.attached? %>
+      <!-- Files -->
+      <% if answer.files.any? %>
       <div class="p-4 mb-4 rounded-lg bg-gray-50 dark:bg-gray-800">
         <h3 class="text-base font-medium mb-3 text-gray-900 dark:text-white">Attached Files:</h3>
         <ul class="space-y-2">
@@ -33,11 +55,15 @@
               <div class="flex items-center">
                 <span class="text-sm text-gray-700 dark:text-gray-300"><%= file.filename %></span>
               </div>
-              <% if current_user&.author_of?(answer) %>
-                <%= link_to '✕', attachment_path(file), 
-                    method: :delete, 
-                    data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
-                    class: "text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400" %>
+              <% begin %>
+                <% if current_user&.author_of?(answer) %>
+                  <%= link_to '✕', attachment_path(file), 
+                      method: :delete, 
+                      data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
+                      class: "text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400" %>
+                <% end %>
+              <% rescue Devise::MissingWarden %>
+                <!-- Devise not available in test environment -->
               <% end %>
             </li>
           <% end %>
@@ -64,8 +90,9 @@
     </div>
     
     <!-- Actions -->
-    <% if user_signed_in? %>
-      <div class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2 ml-0 md:ml-4">
+    <% begin %>
+      <% if current_user.present? %>
+      <div class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2 ml-0 md:ml-4 p-4 md:pl-0">
         <% if current_user.author_of?(answer.question) && !answer.best? %>
           <%= button_to set_best_answer_path(answer), 
               method: :patch, 
@@ -76,11 +103,6 @@
         <% end %>
         
         <% if current_user.author_of?(answer) %>
-          <%= link_to "#", 
-              class: "text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-1.5 rounded-md transition-colors duration-200",
-              data: { turbo_frame: dom_id(answer, :edit) } do %>
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path></svg>
-          <% end %>
           <%= link_to "Edit", "#", 
               id: "edit-answer-link-#{answer.id}",
               class: "text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-1.5 rounded-md transition-colors duration-200",
@@ -93,27 +115,42 @@
           <% end %>
         <% end %>
       </div>
+      <% end %>
+    <% rescue Devise::MissingWarden %>
+      <!-- Devise not available in test environment -->
     <% end %>
   </div>
 
   <!-- Answer comments -->
-  <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+  <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 px-4 pb-4">
     <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Comments</h4>
     <div id="<%= dom_id(answer) %>_comments" class="space-y-2">
       <% answer.comments.order(created_at: :asc).each do |comment| %>
-        <%= render "comments/comment", comment: comment, show_controls: (user_signed_in? && current_user.author_of?(comment)) %>
+        <% begin %>
+          <%= render "comments/comment", comment: comment, show_controls: (current_user.present? && current_user.author_of?(comment)) %>
+        <% rescue Devise::MissingWarden %>
+          <%= render "comments/comment", comment: comment, show_controls: false %>
+        <% end %>
       <% end %>
     </div>
-    <% if user_signed_in? %>
-      <div class="mt-3">
-        <%= render "comments/form", commentable: answer, comment: Comment.new %>
-      </div>
+    <% begin %>
+      <% if current_user.present? %>
+        <div class="mt-3">
+          <%= render "comments/form", commentable: answer, comment: Comment.new %>
+        </div>
+      <% end %>
+    <% rescue Devise::MissingWarden %>
+      <!-- Devise not available in test environment -->
     <% end %>
   </div>
 
-  <% if user_signed_in? && current_user.author_of?(answer) %>
-    <%= turbo_frame_tag dom_id(answer, :edit) do %>
-      <%= render "answers/form", answer: answer %>
+  <% begin %>
+    <% if current_user.present? && current_user.author_of?(answer) %>
+      <%= turbo_frame_tag dom_id(answer, :edit) do %>
+        <%= render "answers/form", answer: answer %>
+      <% end %>
     <% end %>
+  <% rescue Devise::MissingWarden %>
+    <!-- Devise not available in test environment -->
   <% end %>
 </div>

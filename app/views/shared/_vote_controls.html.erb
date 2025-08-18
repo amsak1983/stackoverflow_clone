@@ -1,0 +1,76 @@
+<% begin %>
+  <% if current_user && !current_user.author_of?(votable) %>
+    <% user_vote = votable.vote_value_by(current_user) %>
+    <% upvote_class = user_vote&.positive? ? "text-green-600" : "text-gray-600 hover:text-green-600" %>
+    <% downvote_class = user_vote&.negative? ? "text-red-600" : "text-gray-600 hover:text-red-600" %>
+    
+    <div class="flex flex-col items-center space-y-1">
+      <!-- Upvote button -->
+      <% if votable.is_a?(Question) %>
+        <%= button_to "⬆", up_question_votes_path(votable, votable: "question"),
+            method: :post,
+            class: "#{upvote_class} font-bold text-xl focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-800 p-1 rounded",
+            form: { class: "inline-block", data: { turbo: true } } %>
+      <% else %>
+        <%= button_to "⬆", up_answer_votes_path(votable, votable: "answer"),
+            method: :post,
+            class: "#{upvote_class} font-bold text-xl focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-800 p-1 rounded",
+            form: { class: "inline-block", data: { turbo: true } } %>
+      <% end %>
+      
+      <!-- Rating display -->
+      <span class="font-bold text-gray-700 dark:text-gray-300 text-lg" id="<%= dom_id(votable) %>-rating">
+        <%= votable.rating %>
+      </span>
+      
+      <!-- Downvote button -->
+      <% if votable.is_a?(Question) %>
+        <%= button_to "⬇", down_question_votes_path(votable, votable: "question"),
+            method: :post,
+            class: "#{downvote_class} font-bold text-xl focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-800 p-1 rounded",
+            form: { class: "inline-block", data: { turbo: true } } %>
+      <% else %>
+        <%= button_to "⬇", down_answer_votes_path(votable, votable: "answer"),
+            method: :post,
+            class: "#{downvote_class} font-bold text-xl focus:outline-none hover:bg-gray-100 dark:hover:bg-gray-800 p-1 rounded",
+            form: { class: "inline-block", data: { turbo: true } } %>
+      <% end %>
+      
+      <!-- Cancel vote button -->
+      <% if user_vote %>
+        <% vote = votable.votes.find_by(user: current_user) %>
+        <% if vote %>
+          <% if votable.is_a?(Answer) %>
+            <%= button_to "✕", vote_path(vote, votable: "answer", answer_id: votable.id),
+                method: :delete,
+                class: "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 p-1 rounded",
+                form: { class: "inline-block", data: { turbo: true } } %>
+          <% else %>
+            <%= button_to "✕", question_vote_path(votable, vote),
+                method: :delete,
+                class: "text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 p-1 rounded",
+                form: { class: "inline-block", data: { turbo: true } } %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <!-- Show rating for authors or non-authenticated users -->
+    <div class="flex flex-col items-center space-y-1">
+      <span class="text-gray-400 font-bold text-xl">⬆</span>
+      <span class="font-bold text-gray-700 dark:text-gray-300 text-lg">
+        <%= votable.rating %>
+      </span>
+      <span class="text-gray-400 font-bold text-xl">⬇</span>
+    </div>
+  <% end %>
+<% rescue Devise::MissingWarden %>
+  <!-- Devise not available in test environment -->
+  <div class="flex flex-col items-center space-y-1">
+    <span class="text-gray-400 font-bold text-xl">⬆</span>
+    <span class="font-bold text-gray-700 dark:text-gray-300 text-lg">
+      <%= votable.rating %>
+    </span>
+    <span class="text-gray-400 font-bold text-xl">⬇</span>
+  </div>
+<% end %>

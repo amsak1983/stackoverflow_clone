@@ -1,4 +1,4 @@
-class CreateComments < ActiveRecord::Migration[7.1]
+class CreateComments < ActiveRecord::Migration[8.0]
   def change
     unless table_exists?(:comments)
       create_table :comments do |t|

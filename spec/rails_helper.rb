@@ -8,6 +8,7 @@ require 'rspec/rails'
 require 'rails-controller-testing'
 require 'database_cleaner/active_record'
 require 'capybara/rspec'
+require 'devise'
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -53,6 +54,10 @@ RSpec.configure do |config|
   end
 
   config.before(:each, js: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.before(:each, type: :feature) do
     DatabaseCleaner.strategy = :truncation
   end
 
@@ -126,3 +131,8 @@ Capybara.register_driver :selenium_chrome do |app|
 end
 
 Capybara.javascript_driver = :selenium_chrome
+Capybara.default_driver = :rack_test
+Capybara.always_include_port = true
+
+# Настройка для использования полного Rails middleware stack
+Capybara.server = :puma, { Silent: true }
