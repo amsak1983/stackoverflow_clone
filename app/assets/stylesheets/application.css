@@ -9,4 +9,4 @@
  * Consider organizing styles into separate files for maintainability.
  */
 
-/* Tailwind-compiled CSS is loaded from app/assets/builds/tailwind.css */
+@import "application.tailwind.css";
