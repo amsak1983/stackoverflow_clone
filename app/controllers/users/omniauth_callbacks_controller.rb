@@ -3,7 +3,6 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     handle_omniauth("Google")
   end
 
-
   def failure
     redirect_to root_path, alert: "Authentication error: #{params[:message]}"
   end
@@ -11,9 +10,12 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def handle_omniauth(provider_name)
-    @user = User.from_omniauth(request.env["omniauth.auth"])
+    service = OauthAuthenticationService.new(request.env["omniauth.auth"])
+    result = service.authenticate
 
-    if @user.persisted?
+    if result[:success] && result[:user]
+      @user = result[:user]
+      
       if @user.email_verified?
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: provider_name) if is_navigational_format?
@@ -22,8 +24,9 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
         redirect_to new_user_email_confirmation_path
       end
     else
+      error_message = result[:errors]&.first || "Failed to create account"
       session["devise.#{provider_name.downcase}_data"] = request.env["omniauth.auth"].except(:extra)
-      redirect_to new_user_registration_url, alert: "Failed to create account"
+      redirect_to new_user_registration_url, alert: error_message
     end
   end
 end

@@ -38,7 +38,7 @@ RSpec.feature 'OAuth Authentication', type: :feature do
 
 
   scenario 'User completes email confirmation process', js: false do
-    user = create(:user, :oauth_user, :unconfirmed)
+    user = create(:user, :oauth_user, :unconfirmed, email: 'temp@example.com')
 
     user.update!(
       unconfirmed_email: 'confirmed@example.com',
@@ -53,6 +53,7 @@ RSpec.feature 'OAuth Authentication', type: :feature do
 
     user.reload
     expect(user.email).to eq('confirmed@example.com')
+    expect(user.unconfirmed_email).to be_nil
     expect(user.email_verified?).to be true
   end
 

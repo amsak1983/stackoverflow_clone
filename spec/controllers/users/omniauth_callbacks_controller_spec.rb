@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe Users::OmniauthCallbacksController, type: :controller do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]
+    @request.env["omniauth.auth"] = auth_hash
+    routes { Rails.application.routes }
   end
 
   describe '#google_oauth2' do
@@ -64,14 +66,19 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
     end
 
     context 'when user creation fails' do
-      before do
-        allow(User).to receive(:from_omniauth).and_return(User.new)
-      end
+      it 'handles authentication service failure' do
+        service = instance_double(OauthAuthenticationService)
+        allow(OauthAuthenticationService).to receive(:new).and_return(service)
+        allow(service).to receive(:authenticate).and_return({
+          success: false,
+          user: nil,
+          errors: ['Authentication failed']
+        })
 
-      it 'redirects to registration with error' do
         get :google_oauth2
+        
         expect(response).to redirect_to(new_user_registration_url)
-        expect(flash[:alert]).to eq("Failed to create account")
+        expect(flash[:alert]).to eq('Authentication failed')
       end
     end
   end

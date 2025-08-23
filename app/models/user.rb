@@ -12,6 +12,12 @@ class User < ApplicationRecord
   validates :unconfirmed_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :provider, :uid, presence: true, if: :oauth_user?
 
+  # Отключаем автоматическую отправку confirmation instructions для OAuth пользователей с временным email
+  def send_on_create_confirmation_instructions
+    return if oauth_user? && email.include?('@temp.local')
+    super
+  end
+
   def name
     email.split("@").first&.capitalize || "User"
   end
@@ -28,53 +34,18 @@ class User < ApplicationRecord
     confirmed_at.present?
   end
 
-  def send_confirmation_instructions
-    self.confirmation_token = Devise.friendly_token
-    self.confirmation_sent_at = Time.current
-    save!
-    UserMailer.email_confirmation(self).deliver_now
+  def send_confirmation_instructions(email = nil)
+    if email
+      service = EmailConfirmationService.new(self)
+      service.send_confirmation_email(email)
+    else
+      super()
+    end
   end
 
   def self.from_omniauth(auth)
-    user = find_by(provider: auth.provider, uid: auth.uid)
-
-    if user
-      return user
-    end
-
-    email = auth.info.email
-    if email.present?
-      user = find_by(email: email)
-      if user
-        user.update!(provider: auth.provider, uid: auth.uid)
-        return user
-      end
-    end
-
-    create_from_omniauth(auth)
-  end
-
-  private
-
-  def self.create_from_omniauth(auth)
-    email = auth.info.email
-
-    if email.blank?
-      create!(
-        provider: auth.provider,
-        uid: auth.uid,
-        email: "#{auth.provider}_#{auth.uid}@temp.local",
-        password: Devise.friendly_token[0, 20],
-        confirmed_at: nil
-      )
-    else
-      create!(
-        provider: auth.provider,
-        uid: auth.uid,
-        email: email,
-        password: Devise.friendly_token[0, 20],
-        confirmed_at: Time.current
-      )
-    end
+    service = OauthAuthenticationService.new(auth)
+    result = service.authenticate
+    result[:user]
   end
 end
