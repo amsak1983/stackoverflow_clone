@@ -9,8 +9,8 @@
     "@tailwindcss/typography": "^0.5.10"
   },
   "scripts": {
-    "build:css": "tailwindcss -i ./app/assets/stylesheets/tailwind.css -o ./app/assets/builds/application.css --minify",
-    "build:css:dev": "tailwindcss -i ./app/assets/stylesheets/tailwind.css -o ./app/assets/builds/application.css --watch",
+    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --minify",
+    "build:css:dev": "tailwindcss -i ./app/assets/stylesheets/application.tailwind.css -o ./app/assets/builds/application.css --watch",
     "build": "yarn build:css"
   }
 }

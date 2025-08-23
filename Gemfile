@@ -25,6 +25,12 @@ gem "bcrypt", "~> 3.1.7"
 # Use Devise for authentication
 gem "devise"
 
+# OAuth authentication
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-telegram"
+gem "omniauth-rails_csrf_protection"
+
 gem "tailwindcss-rails"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
