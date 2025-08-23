@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Users::EmailConfirmationsController, type: :controller do
-  let(:user) { create(:user, confirmed_at: nil, provider: 'telegram', uid: '123456') }
+  let(:user) { create(:user, :oauth_user, :unconfirmed, email: 'oauth_user@temp.local') }
 
   describe '#new' do
     context 'when oauth user is in session' do

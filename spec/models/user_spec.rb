@@ -56,24 +56,25 @@ RSpec.describe User, type: :model do
     end
 
     describe '#send_confirmation_instructions' do
-      let(:user) { create(:user, confirmed_at: nil) }
+      context 'with custom email (OAuth flow)' do
+        let(:user) { create(:user, :oauth_user, :unconfirmed) }
 
-      before do
-        user.update_columns(confirmation_token: nil, confirmation_sent_at: nil)
+        it 'uses EmailConfirmationService' do
+          service = instance_double(EmailConfirmationService)
+          allow(EmailConfirmationService).to receive(:new).with(user).and_return(service)
+          expect(service).to receive(:send_confirmation_email).with('new@example.com')
+          
+          user.send_confirmation_instructions('new@example.com')
+        end
       end
 
-      it 'generates confirmation token' do
-        expect { user.send_confirmation_instructions }.to change { user.confirmation_token }.from(nil)
-      end
+      context 'with standard Devise behavior (no email parameter)' do
+        let(:user) { create(:user, confirmed_at: nil, provider: nil, uid: nil) }
 
-      it 'sets confirmation_sent_at' do
-        expect { user.send_confirmation_instructions }.to change { user.confirmation_sent_at }.from(nil)
-      end
-
-      it 'sends email' do
-        expect(UserMailer).to receive(:email_confirmation).with(user).and_call_original
-        expect_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now)
-        user.send_confirmation_instructions
+        it 'calls super for standard Devise behavior' do
+          expect(user).to receive(:send_devise_notification).with(:confirmation_instructions, anything, {})
+          user.send_confirmation_instructions
+        end
       end
     end
 
