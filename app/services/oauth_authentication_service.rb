@@ -11,7 +11,7 @@ class OauthAuthenticationService
 
   def authenticate
     user = find_or_create_user
-    
+
     if user.persisted?
       { user: user, success: true }
     else
@@ -19,7 +19,7 @@ class OauthAuthenticationService
     end
   rescue StandardError => e
     Rails.logger.error "OAuth authentication failed: #{e.message}"
-    { user: nil, success: false, errors: [e.message] }
+    { user: nil, success: false, errors: [ e.message ] }
   end
 
   private
@@ -37,7 +37,7 @@ class OauthAuthenticationService
     return user if user
 
     return nil if email.blank?
-    
+
     user = User.find_by(email: email)
     if user
       user.update!(provider: provider, uid: uid)

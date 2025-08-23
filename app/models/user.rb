@@ -14,7 +14,7 @@ class User < ApplicationRecord
 
   # Отключаем автоматическую отправку confirmation instructions для OAuth пользователей с временным email
   def send_on_create_confirmation_instructions
-    return if oauth_user? && email.include?('@temp.local')
+    return if oauth_user? && email.include?("@temp.local")
     super
   end
 

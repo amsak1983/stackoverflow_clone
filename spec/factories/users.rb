@@ -12,7 +12,7 @@ FactoryBot.define do
 
     trait :unconfirmed do
       confirmed_at { nil }
-      
+
       after(:create) do |user|
         user.update_columns(confirmation_token: nil, confirmation_sent_at: nil) if user.oauth_user?
       end

@@ -15,7 +15,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     if result[:success] && result[:user]
       @user = result[:user]
-      
+
       if @user.email_verified?
         sign_in_and_redirect @user, event: :authentication
         set_flash_message(:notice, :success, kind: provider_name) if is_navigational_format?

@@ -63,7 +63,7 @@ RSpec.describe User, type: :model do
           service = instance_double(EmailConfirmationService)
           allow(EmailConfirmationService).to receive(:new).with(user).and_return(service)
           expect(service).to receive(:send_confirmation_email).with('new@example.com')
-          
+
           user.send_confirmation_instructions('new@example.com')
         end
       end

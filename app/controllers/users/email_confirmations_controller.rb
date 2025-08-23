@@ -19,7 +19,7 @@ class Users::EmailConfirmationsController < ApplicationController
 
   def confirm
     @user = EmailConfirmationService.find_user_by_token(params[:id], params[:confirmation_token])
-    
+
     unless @user
       redirect_to root_path, alert: "Invalid or expired confirmation link"
       return

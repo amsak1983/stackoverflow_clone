@@ -72,11 +72,11 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         allow(service).to receive(:authenticate).and_return({
           success: false,
           user: nil,
-          errors: ['Authentication failed']
+          errors: [ 'Authentication failed' ]
         })
 
         get :google_oauth2
-        
+
         expect(response).to redirect_to(new_user_registration_url)
         expect(flash[:alert]).to eq('Authentication failed')
       end
