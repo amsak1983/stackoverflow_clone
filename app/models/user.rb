@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :confirmable, :omniauthable, omniauth_providers: [:google_oauth2]
+         :confirmable, :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   has_many :questions, dependent: :destroy
   has_many :answers, dependent: :destroy
@@ -37,7 +37,7 @@ class User < ApplicationRecord
 
   def self.from_omniauth(auth)
     user = find_by(provider: auth.provider, uid: auth.uid)
-    
+
     if user
       return user
     end
@@ -58,7 +58,7 @@ class User < ApplicationRecord
 
   def self.create_from_omniauth(auth)
     email = auth.info.email
-    
+
     if email.blank?
       create!(
         provider: auth.provider,
