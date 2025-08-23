@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: {
-    omniauth_callbacks: 'users/omniauth_callbacks'
+    omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  resources :user_email_confirmations, path: 'users/email_confirmations', controller: 'users/email_confirmations', only: [:new, :create] do
+  resources :user_email_confirmations, path: "users/email_confirmations", controller: "users/email_confirmations", only: [ :new, :create ] do
     member do
       get :confirm
     end

@@ -7,8 +7,8 @@ RSpec.describe UserMailer, type: :mailer do
 
     it 'renders the headers' do
       expect(mail.subject).to eq('Confirm your email address')
-      expect(mail.to).to eq([user.unconfirmed_email])
-      expect(mail.from).to eq(['noreply@stackoverflow-clone.com'])
+      expect(mail.to).to eq([ user.unconfirmed_email ])
+      expect(mail.from).to eq([ 'noreply@stackoverflow-clone.com' ])
     end
 
     it 'renders the body' do

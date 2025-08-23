@@ -20,15 +20,15 @@ RSpec.feature 'OAuth Authentication', type: :feature do
     })
 
     visit new_user_session_path
-    
+
     expect(page).to have_content('Sign in to your account')
     expect(page).to have_link('Sign in with Google')
-    
+
     click_link 'Sign in with Google'
-    
+
     expect(page).to have_current_path(root_path)
     expect(page).to have_content('Successfully authenticated from Google account')
-    
+
     user = User.find_by(email: 'test@example.com')
     expect(user).to be_present
     expect(user.provider).to eq('google_oauth2')
@@ -39,18 +39,18 @@ RSpec.feature 'OAuth Authentication', type: :feature do
 
   scenario 'User completes email confirmation process', js: false do
     user = create(:user, :oauth_user, :unconfirmed)
-    
+
     user.update!(
       unconfirmed_email: 'confirmed@example.com',
       confirmation_token: 'valid_token',
       confirmation_sent_at: Time.current
     )
-    
+
     visit confirm_user_email_confirmation_path(user, confirmation_token: 'valid_token')
-    
+
     expect(page).to have_content('Email successfully confirmed! Welcome!')
     expect(page).to have_current_path(root_path)
-    
+
     user.reload
     expect(user.email).to eq('confirmed@example.com')
     expect(user.email_verified?).to be true
@@ -58,16 +58,16 @@ RSpec.feature 'OAuth Authentication', type: :feature do
 
   scenario 'User tries to confirm with invalid email format', js: false do
     user = create(:user, :oauth_user, :unconfirmed)
-    
+
     visit confirm_user_email_confirmation_path(user, confirmation_token: 'invalid_token')
-    
+
     expect(page).to have_content('Invalid or expired confirmation link')
     expect(page).to have_current_path(root_path)
   end
 
   scenario 'User tries to access email confirmation without OAuth session' do
     visit new_user_email_confirmation_path
-    
+
     expect(page).to have_content('Session expired')
     expect(page).to have_current_path(root_path)
   end
@@ -78,16 +78,16 @@ RSpec.feature 'OAuth Authentication', type: :feature do
       confirmation_token: 'expired_token',
       confirmation_sent_at: 4.days.ago
     )
-    
+
     visit confirm_user_email_confirmation_path(user, confirmation_token: 'expired_token')
-    
+
     expect(page).to have_content('Invalid or expired confirmation link')
     expect(page).to have_current_path(root_path)
   end
 
   scenario 'Existing user links OAuth account' do
     existing_user = create(:user, email: 'existing@example.com')
-    
+
     OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
       provider: 'google_oauth2',
       uid: '123456789',
@@ -99,9 +99,9 @@ RSpec.feature 'OAuth Authentication', type: :feature do
 
     visit new_user_session_path
     click_link 'Sign in with Google'
-    
+
     expect(page).to have_current_path(root_path)
-    
+
     existing_user.reload
     expect(existing_user.provider).to eq('google_oauth2')
     expect(existing_user.uid).to eq('123456789')
@@ -110,10 +110,10 @@ RSpec.feature 'OAuth Authentication', type: :feature do
 
   scenario 'OAuth authentication failure' do
     OmniAuth.config.mock_auth[:google_oauth2] = :invalid_credentials
-    
+
     visit new_user_session_path
     click_link 'Sign in with Google'
-    
+
     expect(page).to have_content('Authentication error')
     expect(page).to have_current_path(root_path)
   end
