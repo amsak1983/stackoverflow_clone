@@ -18,19 +18,19 @@ class EmailConfirmationService
         confirmation_token: generate_token,
         confirmation_sent_at: Time.current
       )
-      
+
       UserMailer.email_confirmation(@user).deliver_now
     end
 
     { success: true, message: "Confirmation email sent to #{email}" }
   rescue StandardError => e
     Rails.logger.error "Failed to send confirmation email: #{e.message}"
-    { success: false, errors: [e.message] }
+    { success: false, errors: [ e.message ] }
   end
 
   def confirm_email(token)
     validate_confirmation_token!(token)
-    
+
     @user.transaction do
       confirmed_email = @user.unconfirmed_email
       @user.update_columns(
@@ -44,10 +44,10 @@ class EmailConfirmationService
 
     { success: true, message: "Email successfully confirmed! Welcome!" }
   rescue InvalidTokenError, ExpiredTokenError => e
-    { success: false, errors: [e.message] }
+    { success: false, errors: [ e.message ] }
   rescue StandardError => e
     Rails.logger.error "Failed to confirm email: #{e.message}"
-    { success: false, errors: ["Confirmation failed"] }
+    { success: false, errors: [ "Confirmation failed" ] }
   end
 
   def self.find_user_by_token(user_id, token)
@@ -69,14 +69,14 @@ class EmailConfirmationService
   def validate_confirmation_token!(token)
     raise InvalidTokenError, "Invalid or expired confirmation link" if @user.confirmation_token != token
     raise InvalidTokenError, "Invalid or expired confirmation link" if @user.unconfirmed_email.blank?
-    
+
     if token_expired?
       raise ExpiredTokenError, "Invalid or expired confirmation link"
     end
   end
 
   def token_expired?
-    @user.confirmation_sent_at.blank? || 
+    @user.confirmation_sent_at.blank? ||
     @user.confirmation_sent_at < CONFIRMATION_TOKEN_EXPIRY.ago
   end
 end
