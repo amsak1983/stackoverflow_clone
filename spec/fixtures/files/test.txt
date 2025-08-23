@@ -1,2 +1,2 @@
-Это тестовый текстовый файл для проверки загрузки файлов.
-В этом файле содержится простой текст, который будет использоваться в тестах.
+This is a test text file for checking file uploads.
+This file contains simple text that will be used in tests.

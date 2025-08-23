@@ -76,6 +76,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+  
+  # Letter opener for email testing in development
+  gem "letter_opener"
 end
 
 group :test do
@@ -88,4 +91,7 @@ group :test do
 
   # Database cleaner for proper test cleanup
   gem "database_cleaner-active_record"
+  
+  # Capybara email for testing emails in acceptance tests
+  gem "capybara-email"
 end

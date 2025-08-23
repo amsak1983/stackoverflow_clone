@@ -8,6 +8,7 @@ require 'rspec/rails'
 require 'rails-controller-testing'
 require 'database_cleaner/active_record'
 require 'capybara/rspec'
+require 'capybara/email/rspec'
 require 'devise'
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -39,10 +40,10 @@ RSpec.configure do |config|
     Rails.root.join('spec/fixtures')
   ]
 
-  # Добавляем класс selenium-webdriver к body в тестах с JavaScript
-  config.after(:each, js: true) do
-    page.execute_script("document.body.classList.add('selenium-webdriver')")
-  end
+  # Skip JavaScript execution since we're using rack_test driver
+  # config.after(:each, js: true) do
+  #   page.execute_script("document.body.classList.add('selenium-webdriver')")
+  # end
 
   # Database Cleaner configuration
   config.before(:suite) do
@@ -77,14 +78,14 @@ RSpec.configure do |config|
   # Include FactoryBot syntax methods
   config.include FactoryBot::Syntax::Methods
 
-  # Включаем вспомогательные методы для feature-тестов
+  # Include helper methods for feature tests
   config.include FeatureHelpers, type: :feature
 
-  # Включаем Devise test helpers для контроллеров
+  # Include Devise test helpers for controllers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include ControllerHelpers, type: :controller
 
-  # Включаем helpers для request specs
+  # Include helpers for request specs
   config.include RequestHelpers, type: :request
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
@@ -111,7 +112,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 end
 
-# Конфигурация shoulda-matchers
+# Shoulda-matchers configuration
 Shoulda::Matchers.configure do |config|
   config.integrate do |with|
     with.test_framework :rspec
@@ -119,19 +120,9 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-# Конфигурация Capybara для тестов с JavaScript
-Capybara.register_driver :selenium_chrome do |app|
-  options = Selenium::WebDriver::Chrome::Options.new
-  options.add_argument('--headless')
-  options.add_argument('--disable-gpu')
-  options.add_argument('--no-sandbox')
-  options.add_argument('--disable-dev-shm-usage')
-  options.binary = ENV['GOOGLE_CHROME_BIN'] || '/usr/bin/chromium-browser'
-  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
-end
-
-Capybara.javascript_driver = :selenium_chrome
+# Capybara configuration - use rack_test for all tests to avoid browser issues
 Capybara.default_driver = :rack_test
+Capybara.javascript_driver = :rack_test
 Capybara.always_include_port = true
 
 Capybara.server = :puma, { Silent: true }
