@@ -24,7 +24,7 @@ A functional clone of StackOverflow built with Ruby on Rails 8. This application
 ### Prerequisites
 
 * Ruby 3.x
-* Rails 8
+* Rails 8.1
 * PostgreSQL
 
 ### Installation Steps
