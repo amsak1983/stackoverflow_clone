@@ -1,0 +1,16 @@
+Email Address Confirmation
+
+Hello!
+
+You have registered in our application via <%= @user.provider&.capitalize || 'OAuth' %>. To complete your registration, you need to confirm your email address.
+
+Click the link below to confirm your email:
+
+<%= @confirmation_url %>
+
+This link is valid for 3 days.
+
+If you did not register in our application, simply ignore this email.
+
+Best regards,
+Stack Overflow Clone Team

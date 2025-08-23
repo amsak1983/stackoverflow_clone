@@ -15,8 +15,8 @@ feature 'Authentication', %q(
 
       expect { click_button 'Sign Up' }.to change(User, :count).by(1)
 
-      expect(page).to have_content('Welcome! You have signed up successfully')
-      expect(page).to have_content('Sign out')
+      expect(page).to have_content('A message with a confirmation link has been sent to your email address')
+      expect(page).not_to have_content('Sign out')
     end
 
     scenario 'User cannot register with invalid data' do
