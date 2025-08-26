@@ -10,7 +10,7 @@ RSpec.describe EmailConfirmationService, type: :service do
     context 'with valid email' do
       it 'updates user with confirmation details' do
         allow(UserMailer).to receive_message_chain(:email_confirmation, :deliver_now)
-        
+
         expect {
           service.send_confirmation_email(valid_email)
         }.to change { user.reload.unconfirmed_email }.to(valid_email)
@@ -28,9 +28,9 @@ RSpec.describe EmailConfirmationService, type: :service do
 
       it 'returns success response' do
         allow(UserMailer).to receive_message_chain(:email_confirmation, :deliver_now)
-        
+
         result = service.send_confirmation_email(valid_email)
-        
+
         expect(result[:success]).to be true
         expect(result[:message]).to eq("Confirmation email sent to #{valid_email}")
       end
@@ -39,7 +39,7 @@ RSpec.describe EmailConfirmationService, type: :service do
     context 'with invalid email' do
       it 'returns error response' do
         result = service.send_confirmation_email(invalid_email)
-        
+
         expect(result[:success]).to be false
         expect(result[:errors]).to include('Invalid email format')
       end
@@ -54,9 +54,9 @@ RSpec.describe EmailConfirmationService, type: :service do
     context 'when mailer fails' do
       it 'returns error response' do
         allow(UserMailer).to receive(:email_confirmation).and_raise(StandardError, 'Mail server error')
-        
+
         result = service.send_confirmation_email(valid_email)
-        
+
         expect(result[:success]).to be false
         expect(result[:errors]).to include('Mail server error')
       end
@@ -65,7 +65,7 @@ RSpec.describe EmailConfirmationService, type: :service do
 
   describe '#confirm_email' do
     let(:token) { 'valid_token' }
-    
+
     before do
       user.update!(
         unconfirmed_email: valid_email,
@@ -78,7 +78,7 @@ RSpec.describe EmailConfirmationService, type: :service do
       it 'confirms email and updates user' do
         result = service.confirm_email(token)
         user.reload
-        
+
         expect(user.email).to eq(valid_email)
         expect(user.unconfirmed_email).to be_nil
         expect(user.confirmation_token).to be_nil
@@ -88,7 +88,7 @@ RSpec.describe EmailConfirmationService, type: :service do
 
       it 'returns success response' do
         result = service.confirm_email(token)
-        
+
         expect(result[:success]).to be true
         expect(result[:message]).to eq('Email successfully confirmed! Welcome!')
       end
@@ -97,7 +97,7 @@ RSpec.describe EmailConfirmationService, type: :service do
     context 'with invalid token' do
       it 'returns error response' do
         result = service.confirm_email('wrong_token')
-        
+
         expect(result[:success]).to be false
         expect(result[:errors]).to include('Invalid or expired confirmation link')
       end
@@ -110,7 +110,7 @@ RSpec.describe EmailConfirmationService, type: :service do
 
       it 'returns error response' do
         result = service.confirm_email(token)
-        
+
         expect(result[:success]).to be false
         expect(result[:errors]).to include('Invalid or expired confirmation link')
       end
@@ -123,7 +123,7 @@ RSpec.describe EmailConfirmationService, type: :service do
 
       it 'returns error response' do
         result = service.confirm_email(token)
-        
+
         expect(result[:success]).to be false
         expect(result[:errors]).to include('Invalid or expired confirmation link')
       end
@@ -132,7 +132,7 @@ RSpec.describe EmailConfirmationService, type: :service do
 
   describe '.find_user_by_token' do
     let(:token) { 'test_token' }
-    
+
     before do
       user.update!(confirmation_token: token)
     end
@@ -166,7 +166,7 @@ RSpec.describe EmailConfirmationService, type: :service do
     describe '#token_expired?' do
       context 'when confirmation_sent_at is nil' do
         before { user.update!(confirmation_sent_at: nil) }
-        
+
         it 'returns true' do
           expect(service.send(:token_expired?)).to be true
         end
@@ -174,7 +174,7 @@ RSpec.describe EmailConfirmationService, type: :service do
 
       context 'when token is expired' do
         before { user.update!(confirmation_sent_at: 4.days.ago) }
-        
+
         it 'returns true' do
           expect(service.send(:token_expired?)).to be true
         end
@@ -182,7 +182,7 @@ RSpec.describe EmailConfirmationService, type: :service do
 
       context 'when token is not expired' do
         before { user.update!(confirmation_sent_at: 1.hour.ago) }
-        
+
         it 'returns false' do
           expect(service.send(:token_expired?)).to be false
         end
