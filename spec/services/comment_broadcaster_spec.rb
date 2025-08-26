@@ -7,7 +7,7 @@ RSpec.describe CommentBroadcaster, type: :service do
   describe '.append' do
     it 'broadcasts append action to correct stream' do
       expect(Turbo::StreamsChannel).to receive(:broadcast_append_to).with(
-        [question, :comments],
+        [ question, :comments ],
         target: "#{ActionView::RecordIdentifier.dom_id(question)}_comments",
         partial: "comments/comment",
         locals: { comment: comment }
@@ -20,7 +20,7 @@ RSpec.describe CommentBroadcaster, type: :service do
   describe '.remove' do
     it 'broadcasts remove action to correct stream' do
       expect(Turbo::StreamsChannel).to receive(:broadcast_remove_to).with(
-        [question, :comments],
+        [ question, :comments ],
         target: ActionView::RecordIdentifier.dom_id(comment)
       )
 

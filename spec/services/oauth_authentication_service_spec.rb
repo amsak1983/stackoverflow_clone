@@ -16,7 +16,7 @@ RSpec.describe OauthAuthenticationService, type: :service do
 
       it 'returns existing user' do
         result = service.authenticate
-        
+
         expect(result[:success]).to be true
         expect(result[:user]).to eq(existing_user)
         expect(result[:errors]).to be_nil
@@ -29,7 +29,7 @@ RSpec.describe OauthAuthenticationService, type: :service do
       it 'updates existing user with provider info' do
         result = service.authenticate
         existing_user.reload
-        
+
         expect(result[:success]).to be true
         expect(result[:user]).to eq(existing_user)
         expect(existing_user.provider).to eq('github')
@@ -41,7 +41,7 @@ RSpec.describe OauthAuthenticationService, type: :service do
       it 'creates confirmed user' do
         result = service.authenticate
         user = result[:user]
-        
+
         expect(result[:success]).to be true
         expect(user).to be_persisted
         expect(user.email).to eq('user@example.com')
@@ -63,7 +63,7 @@ RSpec.describe OauthAuthenticationService, type: :service do
       it 'creates unconfirmed user with temp email' do
         result = service.authenticate
         user = result[:user]
-        
+
         expect(result[:success]).to be true
         expect(user).to be_persisted
         expect(user.email).to eq('github_12345@temp.local')
@@ -80,7 +80,7 @@ RSpec.describe OauthAuthenticationService, type: :service do
 
       it 'returns error response' do
         result = service.authenticate
-        
+
         expect(result[:success]).to be false
         expect(result[:user]).to be_nil
         expect(result[:errors]).to be_present
@@ -94,7 +94,7 @@ RSpec.describe OauthAuthenticationService, type: :service do
 
       it 'returns error response' do
         result = service.authenticate
-        
+
         expect(result[:success]).to be false
         expect(result[:user]).to be_nil
         expect(result[:errors]).to include('Database error')
@@ -119,7 +119,7 @@ RSpec.describe OauthAuthenticationService, type: :service do
         it 'updates and returns the user' do
           user = service.send(:find_existing_user)
           existing_user.reload
-          
+
           expect(user).to eq(existing_user)
           expect(existing_user.provider).to eq('github')
           expect(existing_user.uid).to eq('12345')
