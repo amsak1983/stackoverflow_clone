@@ -1,10 +1,11 @@
 class AttachmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_attachment
-  before_action :check_author
+  after_action :verify_authorized
 
   # DELETE /attachments/:id
   def destroy
+    authorize @attachment
     @attachment.purge
 
     respond_to do |format|
@@ -18,16 +19,5 @@ class AttachmentsController < ApplicationController
   def find_attachment
     @attachment = ActiveStorage::Attachment.find(params[:id])
     @record = @attachment.record
-  end
-
-  def check_author
-    return if current_user&.author_of?(@record)
-
-    respond_to do |format|
-      format.html { redirect_back(fallback_location: root_path, alert: "У вас нет прав для удаления этого файла") }
-      format.json { head :forbidden }
-      format.turbo_stream { head :forbidden }
-    end
-    head :forbidden and return
   end
 end

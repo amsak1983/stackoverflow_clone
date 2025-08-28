@@ -3,13 +3,13 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_question, only: [ :create ]
   before_action :set_answer, only: [ :update, :destroy, :set_best ]
-  before_action :check_author, only: [ :update, :destroy ]
-  before_action :check_question_author, only: [ :set_best ]
+  after_action :verify_authorized
 
   # POST /questions/:question_id/answers
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
+    authorize @answer
 
     if @answer.save
       respond_to do |format|
@@ -29,6 +29,7 @@ class AnswersController < ApplicationController
 
   # PATCH/PUT /answers/:id
   def update
+    authorize @answer
     respond_to do |format|
       if @answer.update(answer_params)
         format.html { redirect_to @answer.question, notice: "Answer was successfully updated" }
@@ -42,6 +43,7 @@ class AnswersController < ApplicationController
 
   # DELETE /answers/:id
   def destroy
+    authorize @answer
     @answer.destroy
     respond_to do |format|
       format.html { redirect_to @answer.question, notice: "Answer was successfully deleted" }
@@ -51,6 +53,7 @@ class AnswersController < ApplicationController
 
   # PATCH /answers/:id/set_best
   def set_best
+    authorize @answer, :set_best?
     @answer.make_best!
 
     respond_to do |format|
@@ -74,27 +77,5 @@ class AnswersController < ApplicationController
   def answer_params
     params.require(:answer).permit(:body, files: [],
       links_attributes: [ :id, :name, :url, :_destroy ])
-  end
-
-  def check_author
-    return if current_user&.author_of?(@answer)
-
-    respond_to do |format|
-      format.html { redirect_to question_path(@answer.question), alert: "You do not have permission to modify this answer" }
-      format.json { head :forbidden }
-      format.turbo_stream { head :forbidden }
-    end
-    head :forbidden and return
-  end
-
-  def check_question_author
-    return if current_user&.author_of?(@answer.question)
-
-    respond_to do |format|
-      format.html { redirect_to question_path(@answer.question), alert: "Only the question author can select the best answer" }
-      format.json { head :forbidden }
-      format.turbo_stream { head :forbidden }
-    end
-    head :forbidden and return
   end
 end

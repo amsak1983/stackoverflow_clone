@@ -3,10 +3,11 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_commentable, except: :destroy
   before_action :set_comment, only: :destroy
-  before_action :authorize_destroy!, only: :destroy
+  after_action :verify_authorized
 
   def create
     @comment = @commentable.comments.new(comment_params.merge(user: current_user))
+    authorize @comment
 
     respond_to do |format|
       if @comment.save
@@ -24,6 +25,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
+    authorize @comment
     commentable = @comment.commentable
     @comment.destroy
     CommentBroadcaster.remove(@comment)
@@ -53,9 +55,6 @@ class CommentsController < ApplicationController
     @commentable = @comment.commentable
   end
 
-  def authorize_destroy!
-    head :forbidden unless current_user&.author_of?(@comment)
-  end
 
   def question_for(record)
     record.is_a?(Question) ? record : record.question

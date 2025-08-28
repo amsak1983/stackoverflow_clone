@@ -176,7 +176,8 @@ RSpec.describe "Questions", type: :request do
 
         it 'returns forbidden status' do
           delete question_path(other_question)
-          expect(response).to have_http_status(:forbidden)
+          expect(response).to have_http_status(:found)
+          expect(response).to redirect_to(root_path)
         end
       end
     end

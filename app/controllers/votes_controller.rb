@@ -1,8 +1,10 @@
 class VotesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_votable
+  after_action :verify_authorized
 
   def up
+    authorize @votable, policy_class: VotePolicy
     result = @votable.vote_up(current_user)
 
     if result
@@ -13,6 +15,7 @@ class VotesController < ApplicationController
   end
 
   def down
+    authorize @votable, policy_class: VotePolicy
     result = @votable.vote_down(current_user)
 
     if result
@@ -23,6 +26,14 @@ class VotesController < ApplicationController
   end
 
   def destroy
+    vote = @votable.votes.find_by(user: current_user)
+
+    if vote
+      authorize vote
+    else
+      skip_authorization
+    end
+
     @votable.cancel_vote_by(current_user)
     render_vote_response(nil)
   end

@@ -60,24 +60,22 @@ RSpec.describe "Votes", type: :request do
           )
         end
 
-        it "returns error when author tries to vote for own question" do
+        it "returns forbidden when author tries to vote for own question" do
           sign_in author
 
           expect {
             post up_question_votes_path(question), as: :json
           }.not_to change(Vote, :count)
 
-          expect(response).to have_http_status(:unprocessable_content)
-          expect(JSON.parse(response.body)).to include("error")
+          expect(response).to have_http_status(:forbidden)
         end
 
-        it "returns error when trying to vote for own question" do
+        it "returns forbidden when trying to vote for own question" do
           sign_in author
 
           post up_question_votes_path(question), as: :json
 
-          expect(response).to have_http_status(:unprocessable_content)
-          expect(JSON.parse(response.body)).to include("error")
+          expect(response).to have_http_status(:forbidden)
         end
       end
 

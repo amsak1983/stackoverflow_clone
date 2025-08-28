@@ -1,5 +1,5 @@
 <% begin %>
-  <% if current_user && !current_user.author_of?(votable) %>
+  <% if VotePolicy.new(current_user, votable).vote? %>
     <% user_vote = votable.vote_value_by(current_user) %>
     <% upvote_class = user_vote&.positive? ? "text-green-600" : "text-gray-600 hover:text-green-600" %>
     <% downvote_class = user_vote&.negative? ? "text-red-600" : "text-gray-600 hover:text-red-600" %>
@@ -39,7 +39,7 @@
       <!-- Cancel vote button -->
       <% if user_vote %>
         <% vote = votable.votes.find_by(user: current_user) %>
-        <% if vote %>
+        <% if vote && policy(vote).destroy? %>
           <% if votable.is_a?(Answer) %>
             <%= button_to "✕", vote_path(vote, votable: "answer", answer_id: votable.id),
                 method: :delete,
