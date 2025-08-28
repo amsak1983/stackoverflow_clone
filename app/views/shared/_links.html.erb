@@ -16,7 +16,7 @@
             <% end %>
           </div>
           
-          <% if user_signed_in? && current_user.author_of?(resource) %>
+          <% if policy(link).destroy? %>
             <%= link_to "Delete", link_path(link), 
                 data: { 
                   turbo_method: :delete,

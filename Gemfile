@@ -31,6 +31,9 @@ gem "omniauth-google-oauth2"
 gem "omniauth-telegram"
 gem "omniauth-rails_csrf_protection"
 
+# Authorization
+gem "pundit"
+
 gem "tailwindcss-rails"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

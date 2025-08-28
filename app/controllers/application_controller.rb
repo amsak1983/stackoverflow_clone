@@ -1,9 +1,12 @@
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
   allow_browser versions: :modern
 
   protect_from_forgery with: :exception
 
   before_action :set_secure_headers
+
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
 
@@ -20,5 +23,13 @@ class ApplicationController < ActionController::Base
 
   def record_not_found
     redirect_to questions_path, alert: "Record not found"
+  end
+
+  def user_not_authorized
+    respond_to do |format|
+      format.html { redirect_back(fallback_location: root_path, alert: "У вас нет прав для выполнения этого действия") }
+      format.json { head :forbidden }
+      format.turbo_stream { head :forbidden }
+    end
   end
 end

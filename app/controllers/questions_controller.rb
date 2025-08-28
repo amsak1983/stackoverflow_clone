@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
   include ErrorHandling
   before_action :authenticate_user!, except: [ :index, :show ]
   before_action :set_question, only: [ :show, :edit, :update, :destroy ]
-  before_action :check_author, only: [ :edit, :update, :destroy ]
+  after_action :verify_authorized, except: [ :index, :show ]
 
   # GET /questions
   def index
@@ -12,11 +12,13 @@ class QuestionsController < ApplicationController
   # GET /questions/new
   def new
     @question = Question.new
+    authorize @question
   end
 
   # POST /questions
   def create
     @question = current_user.questions.new(question_params)
+    authorize @question
 
     # Associate reward with current user if present
     if @question.reward.present?
@@ -43,10 +45,12 @@ class QuestionsController < ApplicationController
 
   # GET /questions/:id/edit
   def edit
+    authorize @question
   end
 
   # PATCH/PUT /questions/:id
   def update
+    authorize @question
     respond_to do |format|
       if @question.update(question_params)
         QuestionBroadcaster.update(@question)
@@ -61,6 +65,7 @@ class QuestionsController < ApplicationController
 
   # DELETE /questions/:id
   def destroy
+    authorize @question
     @question.destroy
     QuestionBroadcaster.remove(@question)
     redirect_to questions_path, notice: "Question was successfully deleted"
@@ -79,16 +84,5 @@ class QuestionsController < ApplicationController
     params.require(:question).permit(:title, :body, files: [],
       links_attributes: [ :id, :name, :url, :_destroy ],
       reward_attributes: [ :id, :title, :image, :_destroy ])
-  end
-
-  def check_author
-    return if current_user&.author_of?(@question)
-
-    respond_to do |format|
-      format.html { redirect_to questions_path, alert: "You do not have permission to modify this question" }
-      format.json { head :forbidden }
-      format.turbo_stream { head :forbidden }
-    end
-    head :forbidden and return
   end
 end

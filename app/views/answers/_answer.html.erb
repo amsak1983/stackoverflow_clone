@@ -30,7 +30,7 @@
                 </a>
               </div>
               <% begin %>
-                <% if current_user&.author_of?(answer) %>
+                <% if policy(link).destroy? %>
                   <%= link_to '✕', link_path(link), 
                       method: :delete, 
                       data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
@@ -56,7 +56,7 @@
                 <span class="text-sm text-gray-700 dark:text-gray-300"><%= file.filename %></span>
               </div>
               <% begin %>
-                <% if current_user&.author_of?(answer) %>
+                <% if policy(file).destroy? %>
                   <%= link_to '✕', attachment_path(file), 
                       method: :delete, 
                       data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' },
@@ -93,7 +93,7 @@
     <% begin %>
       <% if current_user.present? %>
       <div class="flex md:flex-col space-x-2 md:space-x-0 md:space-y-2 ml-0 md:ml-4 p-4 md:pl-0">
-        <% if current_user.author_of?(answer.question) && !answer.best? %>
+        <% if policy(answer).set_best? && !answer.best? %>
           <%= button_to set_best_answer_path(answer), 
               method: :patch, 
               class: "text-sm text-green-600 hover:text-green-800 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 p-1.5 rounded-md transition-colors duration-200",
@@ -102,7 +102,7 @@
           <% end %>
         <% end %>
         
-        <% if current_user.author_of?(answer) %>
+        <% if policy(answer).update? %>
           <%= link_to "Edit", "#", 
               id: "edit-answer-link-#{answer.id}",
               class: "text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 p-1.5 rounded-md transition-colors duration-200",
@@ -127,7 +127,7 @@
     <div id="<%= dom_id(answer) %>_comments" class="space-y-2">
       <% answer.comments.order(created_at: :asc).each do |comment| %>
         <% begin %>
-          <%= render "comments/comment", comment: comment, show_controls: (current_user.present? && current_user.author_of?(comment)) %>
+          <%= render "comments/comment", comment: comment, show_controls: policy(comment).destroy? %>
         <% rescue Devise::MissingWarden %>
           <%= render "comments/comment", comment: comment, show_controls: false %>
         <% end %>
@@ -145,7 +145,7 @@
   </div>
 
   <% begin %>
-    <% if current_user.present? && current_user.author_of?(answer) %>
+    <% if policy(answer).update? %>
       <%= turbo_frame_tag dom_id(answer, :edit) do %>
         <%= render "answers/form", answer: answer %>
       <% end %>
