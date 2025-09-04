@@ -44,7 +44,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get 'profiles/me', to: 'profiles#me'
+      get "profiles/me", to: "profiles#me"
 
       resources :profiles, only: :index
 
