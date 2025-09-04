@@ -87,6 +87,7 @@ RSpec.configure do |config|
 
   # Include helpers for request specs
   config.include RequestHelpers, type: :request
+  config.include ApiHelpers, type: :request
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false

@@ -44,6 +44,11 @@ GEM
       erubi (~> 1.11)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    active_model_serializers (0.10.15)
+      actionpack (>= 4.1)
+      activemodel (>= 4.1)
+      case_transform (>= 0.2)
+      jsonapi-renderer (>= 0.1.1.beta1, < 0.3)
     activejob (8.0.2)
       activesupport (= 8.0.2)
       globalid (>= 0.3.6)
@@ -98,6 +103,8 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
+    case_transform (0.2)
+      activesupport
     childprocess (5.1.0)
       logger (~> 1.5)
     cocoon (1.2.15)
@@ -119,6 +126,8 @@ GEM
       responders
       warden (~> 1.2.3)
     diff-lcs (1.6.2)
+    doorkeeper (5.8.2)
+      railties (>= 5)
     dotenv (3.1.8)
     drb (2.2.3)
     ed25519 (1.4.0)
@@ -158,6 +167,7 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.12.2)
+    jsonapi-renderer (0.2.2)
     jwt (3.1.2)
       base64
     kamal (2.7.0)
@@ -472,6 +482,7 @@ PLATFORMS
   x86_64-linux-musl
 
 DEPENDENCIES
+  active_model_serializers (~> 0.10.0)
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman
@@ -481,6 +492,7 @@ DEPENDENCIES
   database_cleaner-active_record
   debug
   devise
+  doorkeeper
   factory_bot_rails
   importmap-rails
   jbuilder

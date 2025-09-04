@@ -36,6 +36,12 @@ gem "pundit"
 
 gem "tailwindcss-rails"
 
+# OAuth 2 provider (Authorization Code Flow)
+gem "doorkeeper"
+
+# JSON serialization for API
+gem "active_model_serializers", "~> 0.10.0"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

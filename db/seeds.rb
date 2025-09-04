@@ -15,14 +15,16 @@ puts "Creating test users..."
 test_user = User.create!(
   email: "test@example.com",
   password: "password123",
-  password_confirmation: "password123"
+  password_confirmation: "password123",
+  confirmed_at: Time.current
 )
 puts "Created test user: #{test_user.email} with password: password123"
 
 second_user = User.create!(
   email: "user2@example.com",
   password: "password123",
-  password_confirmation: "password123"
+  password_confirmation: "password123",
+  confirmed_at: Time.current
 )
 puts "Created second user: #{second_user.email} with password: password123"
 
@@ -75,7 +77,7 @@ questions.each do |question_data|
       created_at: rand(1..question.created_at.to_i).seconds.ago
     )
     puts "  - Created answer #{i+1} by #{answer_user.email} for question: #{question.title}"
-1  end
+  end
 end
 
 puts "Seed data created successfully!"

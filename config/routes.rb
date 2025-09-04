@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
   }
@@ -38,6 +39,20 @@ Rails.application.routes.draw do
           post :down
         end
       end
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      get 'profiles/me', to: 'profiles#me'
+
+      resources :profiles, only: :index
+
+      resources :questions, only: [ :index, :show, :create, :update, :destroy ] do
+        resources :answers, only: [ :index, :create ]
+      end
+
+      resources :answers, only: [ :show, :update, :destroy ]
     end
   end
 end
