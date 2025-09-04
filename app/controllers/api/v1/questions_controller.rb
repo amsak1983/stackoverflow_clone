@@ -44,7 +44,6 @@ module Api
         @question = Question.find(params[:id])
       end
 
-      # No file attachments via API per requirements
       def question_params
         params.require(:question).permit(:title, :body)
       end
