@@ -1,9 +1,9 @@
 module Api
   module V1
-    class BaseController < ActionController::API
-      include Pundit::Authorization
+    class BaseController < ApplicationController
       include Rails.application.routes.url_helpers
 
+      protect_from_forgery with: :null_session
       before_action :doorkeeper_authorize!
       before_action :set_default_url_options
 
@@ -16,10 +16,6 @@ module Api
       end
 
       private
-
-      def current_user
-        @current_user ||= User.find(doorkeeper_token&.resource_owner_id) if doorkeeper_token
-      end
 
       def set_default_url_options
         host = Rails.application.config.action_mailer.default_url_options&.[](:host)
