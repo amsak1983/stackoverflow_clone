@@ -5,6 +5,10 @@ FactoryBot.define do
     password_confirmation { 'password123' }
     confirmed_at { Time.current }
 
+    before(:create) do |user|
+      user.skip_confirmation_notification!
+    end
+
     trait :oauth_user do
       provider { 'google_oauth2' }
       sequence(:uid) { |n| "oauth_uid_#{n}" }

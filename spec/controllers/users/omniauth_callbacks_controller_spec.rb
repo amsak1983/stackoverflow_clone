@@ -36,7 +36,7 @@ RSpec.describe Users::OmniauthCallbacksController, type: :controller do
         expect(user).to be_email_verified
 
         expect(response).to redirect_to(root_path)
-        expect(controller.current_user).to eq(user)
+        expect(warden).to be_authenticated(:user)
       end
     end
 

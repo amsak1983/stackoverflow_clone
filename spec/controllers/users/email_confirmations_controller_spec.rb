@@ -85,7 +85,7 @@ RSpec.describe Users::EmailConfirmationsController, type: :controller do
 
         expect(response).to redirect_to(root_path)
         expect(flash[:notice]).to eq("Email successfully confirmed! Welcome!")
-        expect(controller.current_user).to eq(user)
+        expect(warden).to be_authenticated(:user)
       end
     end
 
