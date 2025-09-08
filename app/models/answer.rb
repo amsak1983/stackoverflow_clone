@@ -54,4 +54,3 @@ class Answer < ApplicationRecord
     AnswerNotificationJob.perform_later(id)
   end
 end
-

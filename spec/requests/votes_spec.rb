@@ -18,7 +18,7 @@ RSpec.describe "Votes", type: :request do
           expect {
             post up_question_votes_path(votable)
           }.to change(Vote, :count).by(1)
-          
+
           expect(response).to have_http_status(:success)
           expect(votable.votes.last.value).to eq(1)
         end
@@ -41,7 +41,7 @@ RSpec.describe "Votes", type: :request do
           expect {
             post down_question_votes_path(votable)
           }.to change(Vote, :count).by(1)
-          
+
           expect(response).to have_http_status(:success)
           expect(votable.votes.last.value).to eq(-1)
         end
@@ -59,14 +59,14 @@ RSpec.describe "Votes", type: :request do
     describe 'DELETE /questions/:question_id/votes/:id' do
       context 'when user is authenticated' do
         before { sign_in(user) }
-        
+
         it 'deletes the vote' do
           vote # создаем голос
-          
+
           expect {
             delete question_vote_path(votable, vote)
           }.to change(Vote, :count).by(-1)
-          
+
           expect(response).to have_http_status(:success)
         end
       end
@@ -93,7 +93,7 @@ RSpec.describe "Votes", type: :request do
           expect {
             post up_answer_votes_path(votable)
           }.to change(Vote, :count).by(1)
-          
+
           expect(response).to have_http_status(:success)
           expect(votable.votes.last.value).to eq(1)
         end
@@ -116,7 +116,7 @@ RSpec.describe "Votes", type: :request do
           expect {
             post down_answer_votes_path(votable)
           }.to change(Vote, :count).by(1)
-          
+
           expect(response).to have_http_status(:success)
           expect(votable.votes.last.value).to eq(-1)
         end
@@ -134,14 +134,14 @@ RSpec.describe "Votes", type: :request do
     describe 'DELETE /votes/:id' do
       context 'when user is authenticated' do
         before { sign_in(user) }
-        
+
         it 'deletes the vote' do
-          vote 
-          
+          vote
+
           expect {
             delete vote_path(vote, votable: 'answer', answer_id: votable.id)
           }.to change(Vote, :count).by(-1)
-          
+
           expect(response).to have_http_status(:success)
         end
       end

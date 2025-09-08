@@ -1,11 +1,11 @@
 Rails.application.routes.draw do
-  require 'sidekiq/web'
+  require "sidekiq/web"
   use_doorkeeper
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
   }
 
-  mount Sidekiq::Web => '/sidekiq'
+  mount Sidekiq::Web => "/sidekiq"
 
   resources :user_email_confirmations, path: "users/email_confirmations", controller: "users/email_confirmations", only: [ :new, :create ] do
     member do

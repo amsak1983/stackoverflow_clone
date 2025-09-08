@@ -19,7 +19,7 @@ RSpec.describe DailyDigestJob, type: :job do
 
       expect {
         described_class.perform_now
-      }.to change { ActionMailer::Base.deliveries.size }.by(2) 
+      }.to change { ActionMailer::Base.deliveries.size }.by(2)
 
       subjects = ActionMailer::Base.deliveries.map(&:subject)
       expect(subjects).to all(include('Daily questions digest'))
