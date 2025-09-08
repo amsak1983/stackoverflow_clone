@@ -1,7 +1,7 @@
 class SubscriptionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_question, only: [:create]
-  before_action :set_subscription, only: [:destroy]
+  before_action :set_question, only: [ :create ]
+  before_action :set_subscription, only: [ :destroy ]
 
   def create
     subscription = @question.subscriptions.find_or_initialize_by(user: current_user)
@@ -34,4 +34,3 @@ class SubscriptionsController < ApplicationController
     @subscription = Subscription.find(params[:id])
   end
 end
-

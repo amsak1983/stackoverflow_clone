@@ -55,4 +55,3 @@ class Question < ApplicationRecord
     subscriptions.find_or_create_by(user: user)
   end
 end
-
