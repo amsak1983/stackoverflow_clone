@@ -1,0 +1,13 @@
+<h1>Daily questions digest</h1>
+<p>Hello, <%= @user.name %>!</p>
+<p>Here is the list of questions created in the last 24 hours:</p>
+<ul>
+  <% @questions.each do |q| %>
+    <li>
+      <strong><%= q.title %></strong>
+      — <%= l(q.created_at, format: :short) %>
+      — <%= link_to 'Open', question_url(q) %>
+    </li>
+  <% end %>
+</ul>
+<p>Have a great day!</p>
