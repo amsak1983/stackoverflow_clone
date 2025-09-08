@@ -16,6 +16,7 @@ class User < ApplicationRecord
 
   def send_on_create_confirmation_instructions
     return if oauth_user? && email.include?("@temp.local")
+    return if confirmed?
     super
   end
 
