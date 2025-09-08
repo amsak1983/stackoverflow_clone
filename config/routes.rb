@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
+  require "sidekiq/web"
   use_doorkeeper
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
   }
+
+  mount Sidekiq::Web => "/sidekiq"
 
   resources :user_email_confirmations, path: "users/email_confirmations", controller: "users/email_confirmations", only: [ :new, :create ] do
     member do
@@ -19,6 +22,7 @@ Rails.application.routes.draw do
   resources :rewards, only: :index
 
   resources :questions, only: [ :index, :new, :create, :show, :edit, :update, :destroy ] do
+    resources :subscriptions, only: [ :create ], shallow: true
     resources :comments, only: [ :create, :destroy ], shallow: true
     resources :votes, only: [ :destroy ], defaults: { votable: "question" } do
       collection do
@@ -41,6 +45,8 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  resources :subscriptions, only: [ :destroy ]
 
   namespace :api do
     namespace :v1 do

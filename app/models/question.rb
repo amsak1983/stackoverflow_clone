@@ -8,6 +8,8 @@ class Question < ApplicationRecord
   has_many :links, as: :linkable, dependent: :destroy
   has_one :reward, dependent: :destroy
   has_many :comments, as: :commentable, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribers, through: :subscriptions, source: :user
 
   accepts_nested_attributes_for :links, allow_destroy: true, reject_if: :all_blank
   accepts_nested_attributes_for :reward, allow_destroy: true, reject_if: :all_blank
@@ -22,6 +24,7 @@ class Question < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
 
   after_create_commit -> { broadcast_prepend_to :questions, target: "questions" }
+  after_create_commit :auto_subscribe_author
 
   def preview
     body.truncate(150) if body
@@ -46,5 +49,9 @@ class Question < ApplicationRecord
     if body.present? && (body.include?("<script>") || body.include?("javascript:"))
       errors.add(:body, "contains potentially dangerous code")
     end
+  end
+
+  def auto_subscribe_author
+    subscriptions.find_or_create_by(user: user)
   end
 end

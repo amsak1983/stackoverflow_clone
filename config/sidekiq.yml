@@ -1,0 +1,9 @@
+:concurrency: 5
+:queues:
+  - default
+
+:schedule:
+  daily_digest:
+    cron: "0 8 * * *" # каждый день в 8 часов по времени сервера
+    class: "DailyDigestJob"
+    queue: default

@@ -1,6 +1,3 @@
-# This file creates sample data for the Stack Overflow clone application
-# Run with: rails db:seed
-
 puts "Cleaning database..."
 Vote.destroy_all if defined?(Vote)
 Comment.destroy_all if defined?(Comment)
@@ -10,7 +7,6 @@ Answer.destroy_all if defined?(Answer)
 Question.destroy_all if defined?(Question)
 User.destroy_all
 
-# Create test users
 puts "Creating test users..."
 test_user = User.create!(
   email: "test@example.com",
@@ -28,7 +24,6 @@ second_user = User.create!(
 )
 puts "Created second user: #{second_user.email} with password: password123"
 
-# Create sample questions
 puts "Creating questions..."
 questions = [
   {
