@@ -7,12 +7,13 @@ class User < ApplicationRecord
   has_many :answers, dependent: :destroy
   has_many :created_rewards, class_name: "Reward", dependent: :destroy
   has_many :received_rewards, class_name: "Reward", foreign_key: "recipient_id", dependent: :nullify
+  has_many :subscriptions, dependent: :destroy
+  has_many :subscribed_questions, through: :subscriptions, source: :question
 
   validates :email, presence: true, uniqueness: true, allow_blank: false
   validates :unconfirmed_email, format: { with: URI::MailTo::EMAIL_REGEXP }, allow_blank: true
   validates :provider, :uid, presence: true, if: :oauth_user?
 
-  # Отключаем автоматическую отправку confirmation instructions для OAuth пользователей с временным email
   def send_on_create_confirmation_instructions
     return if oauth_user? && email.include?("@temp.local")
     super

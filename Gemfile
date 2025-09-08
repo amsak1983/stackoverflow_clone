@@ -42,6 +42,11 @@ gem "doorkeeper"
 # JSON serialization for API
 gem "active_model_serializers", "~> 0.10.0"
 
+# Background jobs with Redis
+gem "sidekiq"
+gem "redis"
+gem "sidekiq-cron"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

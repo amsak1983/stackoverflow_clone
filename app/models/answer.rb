@@ -19,6 +19,7 @@ class Answer < ApplicationRecord
   scope :best_first, -> { order(best: :desc, created_at: :desc) }
 
   after_create_commit -> { broadcast_append_to [ question, :answers ], target: "answers" }
+  after_create_commit :notify_subscribers
 
   def preview
     body.truncate(50) if body
@@ -48,4 +49,9 @@ class Answer < ApplicationRecord
       errors.add(:body, "contains potentially dangerous code")
     end
   end
+
+  def notify_subscribers
+    AnswerNotificationJob.perform_later(id)
+  end
 end
+
