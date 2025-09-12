@@ -10,6 +10,63 @@
   <% end %>
 </div>
 
+<!-- Search form (Flowbite) -->
+<div class="max-w-3xl mb-8">
+  <%= form_with url: questions_path, method: :get, local: true do |f| %>
+    <div class="flex gap-2 items-center">
+      <div class="w-full">
+        <%= f.text_field :query, value: @query, placeholder: "Search...", class: "block w-full p-2.5 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      </div>
+
+      <%= f.select :model,
+        options_for_select([
+          ["All", "all"],
+          ["Questions", "questions"],
+          ["Answers", "answers"],
+          ["Comments", "comments"],
+          ["Users", "users"]
+        ], @model),
+        {},
+        class: "p-2.5 text-sm rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+
+      <%= f.button type: :submit, class: "inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" do %>
+        <svg class="w-4 h-4 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+        </svg>
+        Search
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Search results -->
+<% if @query.present? %>
+  <div class="mt-6">
+    <% if @search_results.present? %>
+      <ul class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <% @search_results.each do |r| %>
+          <li class="p-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-xs uppercase text-gray-500 dark:text-gray-400 mb-1"><%= r[:model] %></p>
+                <h3 class="text-base font-semibold text-gray-900 dark:text-white"><%= r[:title] %></h3>
+                <p class="mt-1 text-sm text-gray-700 dark:text-gray-300"><%= r[:text] %></p>
+              </div>
+              <% if r[:path].present? %>
+                <%= link_to "Open", r[:path], class: "ml-4 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="p-6 text-center text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        Nothing found for "<%= @query %>".
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
 <%= turbo_stream_from :questions %>
 
 <div id="questions" class="space-y-4">
@@ -20,10 +77,9 @@
   <% else %>
     <div class="flex p-4 mb-4 text-sm text-blue-800 border-t-4 border-blue-300 bg-blue-50 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-800" role="alert">
       <svg class="flex-shrink-0 inline w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
-      <div>
-        <span class="font-medium">Информация!</span> There are no questions yet. Be the first to ask a question!
-      </div>
+      <div>There are no questions yet. Be the first to ask a question!</div>
     </div>
   <% end %>
 </div>
+
 

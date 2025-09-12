@@ -1,6 +1,16 @@
 class Question < ApplicationRecord
   include Votable
 
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+
+  settings index: { number_of_shards: 1, number_of_replicas: 0 } do
+    mappings dynamic: false do
+      indexes :title, type: :text
+      indexes :body,  type: :text
+    end
+  end
+
   belongs_to :user
   has_many :answers, dependent: :destroy
   has_one :best_answer, -> { where(best: true) }, class_name: "Answer"
@@ -25,6 +35,26 @@ class Question < ApplicationRecord
 
   after_create_commit -> { broadcast_prepend_to :questions, target: "questions" }
   after_create_commit :auto_subscribe_author
+
+  def as_indexed_json(_options = {})
+    {
+      title: title,
+      body:  body
+    }
+  end
+
+  def self.search_simple(query)
+    return none if query.blank?
+
+    __elasticsearch__.search(
+      query: {
+        multi_match: {
+          query: query,
+          fields: %w[title body]
+        }
+      }
+    )
+  end
 
   def preview
     body.truncate(150) if body
