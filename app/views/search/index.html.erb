@@ -1,0 +1,63 @@
+<% content_for :title, "Search" %>
+
+<div class="max-w-3xl mx-auto">
+  <!-- Search form -->
+  <%= form_with url: search_path, method: :get, local: true, class: "" do |f| %>
+    <div class="flex gap-2 items-center">
+      <div class="relative w-full">
+        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+          <!-- Search icon -->
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/></svg>
+        </div>
+        <%= f.text_field :query, value: @query, placeholder: "Search...", class: "block w-full p-2.5 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" %>
+      </div>
+
+      <%= f.select :model,
+        options_for_select([
+          ["All", "all"],
+          ["Questions", "questions"],
+          ["Answers", "answers"],
+          ["Comments", "comments"],
+          ["Users", "users"]
+        ], @model),
+        {},
+        class: "p-2.5 text-sm rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" %>
+
+      <%= f.button type: :submit, class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" do %>
+        Search
+      <% end %>
+    </div>
+  <% end %>
+
+  <!-- Results -->
+  <% if @query.present? %>
+    <div class="mt-6">
+      <% if @results.present? %>
+        <ul class="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <% @results.each do |r| %>
+            <li class="p-4">
+              <div class="flex items-start justify-between">
+                <div>
+                  <p class="text-xs uppercase text-gray-500 dark:text-gray-400 mb-1"><%= r[:model] %></p>
+                  <h3 class="text-base font-semibold text-gray-900 dark:text-white"><%= r[:title] %></h3>
+                  <p class="mt-1 text-sm text-gray-700 dark:text-gray-300"><%= r[:text] %></p>
+                </div>
+                <% if r[:path].present? %>
+                  <%= link_to "Open", r[:path], class: "ml-4 inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" %>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div class="p-6 text-center text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          Nothing found for "<%= @query %>".
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="mt-6 text-gray-600 dark:text-gray-300">
+      Enter a query and click "Search" to see results.
+    </div>
+  <% end %>
+</div>

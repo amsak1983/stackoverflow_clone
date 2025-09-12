@@ -1,6 +1,15 @@
 class Answer < ApplicationRecord
   include Votable
 
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
+
+  settings index: { number_of_shards: 1, number_of_replicas: 0 } do
+    mappings dynamic: false do
+      indexes :body, type: :text
+    end
+  end
+
   belongs_to :question
   belongs_to :user
   has_many_attached :files
@@ -20,6 +29,20 @@ class Answer < ApplicationRecord
 
   after_create_commit -> { broadcast_append_to [ question, :answers ], target: "answers" }
   after_create_commit :notify_subscribers
+
+  def as_indexed_json(_options = {})
+    { body: body }
+  end
+
+  def self.search_simple(query)
+    return none if query.blank?
+
+    __elasticsearch__.search(
+      query: {
+        match: { body: query }
+      }
+    )
+  end
 
   def preview
     body.truncate(50) if body

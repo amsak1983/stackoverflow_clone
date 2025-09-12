@@ -36,6 +36,10 @@ gem "pundit"
 
 gem "tailwindcss-rails"
 
+# Full-text search via Elasticsearch
+gem "elasticsearch-rails"
+gem "elasticsearch-model"
+
 # OAuth 2 provider (Authorization Code Flow)
 gem "doorkeeper"
 
@@ -100,7 +104,7 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 
-  # Для поддержки assigns и assert_template в тестах контроллеров
+  # For assigns and assert_template support in controller tests
   gem "rails-controller-testing"
 
   # Database cleaner for proper test cleanup
