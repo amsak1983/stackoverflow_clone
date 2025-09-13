@@ -10,5 +10,4 @@ class SearchController < ApplicationController
 
     @results = SearchService.new(@query, @model).call
   end
-
 end
