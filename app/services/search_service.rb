@@ -29,7 +29,7 @@ class SearchService
       model_class = model_name.singularize.classify.constantize
       serialize_results(model_class.search_simple(@query).records)
     end
-    
+
     results.sort_by { |r| r[:created_at] || Time.at(0) }.reverse
   end
 
