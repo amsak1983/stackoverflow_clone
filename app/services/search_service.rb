@@ -9,8 +9,7 @@ class SearchService
   def call
     return [] if @query.blank?
 
-    case @model
-    when *SEARCHABLE_MODELS
+    if SEARCHABLE_MODELS.include?(@model)
       search_single_model(@model)
     else
       search_all_models
@@ -25,10 +24,7 @@ class SearchService
   end
 
   def search_all_models
-    results = SEARCHABLE_MODELS.flat_map do |model_name|
-      model_class = model_name.singularize.classify.constantize
-      serialize_results(model_class.search_simple(@query).records)
-    end
+    results = SEARCHABLE_MODELS.flat_map { |model_name| search_single_model(model_name) }
 
     results.sort_by { |r| r[:created_at] || Time.at(0) }.reverse
   end
