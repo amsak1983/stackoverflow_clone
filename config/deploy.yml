@@ -6,9 +6,9 @@ servers:
   web:
     - 89.23.97.92
 
-# Credentials for your image host (Docker Hub).
 registry:
-  username: amsak701
+  username:
+    - KAMAL_REGISTRY_USERNAME
   password:
     - KAMAL_REGISTRY_PASSWORD
 
@@ -25,8 +25,6 @@ env:
     REDIS_URL: redis://redis:6379/0
     ELASTICSEARCH_URL: http://elasticsearch:9200
 
-# Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
-# "bin/kamal logs -r job" will tail logs from the first server in the job section.
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
   shell: app exec --interactive --reuse "bash"
@@ -41,9 +39,13 @@ volumes:
 asset_path: /rails/public/assets
 
 builder:
+  remote: 89.23.97.92
   arch: amd64
 
-
+# Traefik reverse proxy
+proxy:
+  ssl: false
+  host: 89.23.97.92
 
 accessories:
   redis:
