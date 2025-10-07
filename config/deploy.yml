@@ -64,10 +64,3 @@ accessories:
         ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     directories:
       - es-data:/usr/share/elasticsearch/data
-
-healthcheck:
-  path: /up
-  interval: 5
-  timeout: 2
-  healthy: 2
-  unhealthy: 3
