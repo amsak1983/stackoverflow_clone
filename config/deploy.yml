@@ -4,7 +4,7 @@ image: amsak701/stclone
 
 servers:
   web:
-    - 89.23.97.92
+    - 90.156.228.95
 
 registry:
   username:
@@ -39,25 +39,25 @@ volumes:
 asset_path: /rails/public/assets
 
 builder:
-  remote: 89.23.97.92
+  remote: 90.156.228.95
   arch: amd64
 
 # Traefik reverse proxy
 proxy:
   ssl: false
-  host: 89.23.97.92
+  host: 90.156.228.95
 
 accessories:
   redis:
     image: redis:7-alpine
-    host: 89.23.97.92
+    host: 90.156.228.95
     port: "127.0.0.1:6379:6379"
     directories:
       - redis-data:/data
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
-    host: 89.23.97.92
+    host: 90.156.228.95
     port: "127.0.0.1:9200:9200"
     env:
       clear:
