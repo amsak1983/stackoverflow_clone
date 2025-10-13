@@ -82,7 +82,7 @@ Rails.application.configure do
     # SMTP not configured - disable email delivery (dev mode)
     config.action_mailer.perform_deliveries = false
     config.action_mailer.delivery_method = :test
-    Rails.logger.warn "⚠️  SMTP not configured. Email delivery is disabled. Configure SMTP_ADDRESS to enable."
+    # Logger not available during initialization, warning will be logged at runtime if needed
   end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
