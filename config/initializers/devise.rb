@@ -16,7 +16,18 @@ Devise.setup do |config|
     config.secret_key = devise_key
   else
     # Fallback to Rails secret_key_base (recommended for production)
-    config.secret_key = Rails.application.secret_key_base
+    # Safely access secret_key_base which may try to decrypt credentials
+    begin
+      config.secret_key = Rails.application.secret_key_base
+    rescue ActiveSupport::MessageEncryptor::InvalidMessage, ArgumentError => e
+      # Credentials decryption failed - generate a fallback secret
+      # This will be regenerated on each boot, so sessions will be invalidated
+      puts "⚠ WARNING: Using temporary secret key. Sessions will not persist across restarts."
+      config.secret_key = ENV.fetch("SECRET_KEY_BASE") do
+        require 'securerandom'
+        SecureRandom.hex(64)
+      end
+    end
   end
 
   # ==> Controller configuration
