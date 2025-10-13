@@ -4,7 +4,9 @@ class User < ApplicationRecord
          :confirmable, :omniauthable, omniauth_providers: [ :google_oauth2 ]
 
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
+  # Callbacks disabled to prevent 500 errors if Elasticsearch is unavailable
+  # Use User.__elasticsearch__.import for manual indexing if needed
+  # include Elasticsearch::Model::Callbacks
 
   settings index: { number_of_shards: 1, number_of_replicas: 0 } do
     mappings dynamic: false do
