@@ -14,7 +14,7 @@ registry:
 
 env:
   secret:
-    - RAILS_MASTER_KEY
+    - SECRET_KEY_BASE
     - GOOGLE_CLIENT_ID
     - GOOGLE_CLIENT_SECRET
     - SIDEKIQ_USERNAME
@@ -84,7 +84,7 @@ accessories:
     cmd: bundle exec sidekiq -C config/sidekiq.yml
     env:
       secret:
-        - RAILS_MASTER_KEY
+        - SECRET_KEY_BASE
       clear:
         RAILS_ENV: production
         REDIS_URL: redis://redis:6379/0
