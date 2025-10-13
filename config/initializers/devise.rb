@@ -9,12 +9,15 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
-  # The secret key used by Devise. Devise uses this key to generate
-  # random tokens. Changing this key will render invalid all existing
-  # confirmation, reset password and unlock tokens in the database.
-  # Devise will use the `secret_key_base` as its `secret_key`
-  # by default. You can change it below and use your own secret key.
-  # config.secret_key = '050b1fdbc8ecf2fc3aef40193adecc2a5b68f5dbf50f27d802aefe8d88ae83598e8bbebac835ecb9fba4b11faa6e7ad271e9c2ca3a373cdcd234fd837f50bbe5'
+  # Use Rails secret_key_base for Devise (safe and secure by default)
+  # Only use DEVISE_SECRET_KEY if it's explicitly set and has proper length (>= 64 bytes)
+  devise_key = ENV["DEVISE_SECRET_KEY"]
+  if devise_key.present? && devise_key.length >= 64
+    config.secret_key = devise_key
+  else
+    # Fallback to Rails secret_key_base (recommended for production)
+    config.secret_key = Rails.application.secret_key_base
+  end
 
   # ==> Controller configuration
   # Configure the parent class to the devise controllers.
@@ -24,7 +27,7 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = "please-change-me-at-config-initializers-devise@example.com"
+  config.mailer_sender = ENV.fetch("MAILER_FROM_EMAIL", "noreply@stackoverflow-clone.com")
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
@@ -273,12 +276,18 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
-  config.omniauth :google_oauth2, Rails.application.credentials.dig(:google, :client_id), Rails.application.credentials.dig(:google, :client_secret), {
-    scope: "email,profile",
-    prompt: "select_account",
-    image_aspect_ratio: "square",
-    image_size: 50
-  }
+  # Google OAuth2 configuration - using environment variables for production
+  google_client_id = ENV["GOOGLE_CLIENT_ID"]
+  google_client_secret = ENV["GOOGLE_CLIENT_SECRET"]
+  
+  if google_client_id.present? && google_client_secret.present?
+    config.omniauth :google_oauth2, google_client_id, google_client_secret, {
+      scope: "email,profile",
+      prompt: "select_account",
+      image_aspect_ratio: "square",
+      image_size: 50
+    }
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

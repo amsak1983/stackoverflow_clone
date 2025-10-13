@@ -6,7 +6,11 @@ Doorkeeper.configure do
   end
 
   admin_authenticator do
-    current_user || redirect_to(new_user_session_url)
+    if current_user&.admin?
+      current_user
+    else
+      redirect_to(root_url, alert: "Access denied. Admin privileges required.")
+    end
   end
 
   default_scopes :public

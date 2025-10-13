@@ -15,15 +15,21 @@ registry:
 env:
   secret:
     - RAILS_MASTER_KEY
+    - GOOGLE_CLIENT_ID
+    - GOOGLE_CLIENT_SECRET
+    - SIDEKIQ_USERNAME
+    - SIDEKIQ_PASSWORD
+ 
   clear:
     RAILS_ENV: production
     RAILS_LOG_TO_STDOUT: "1"
     RAILS_SERVE_STATIC_FILES: "true"
-    SOLID_QUEUE_IN_PUMA: "true"
     WEB_CONCURRENCY: "2"
     RAILS_MAX_THREADS: "5"
     REDIS_URL: redis://redis:6379/0
     ELASTICSEARCH_URL: http://elasticsearch:9200
+    APP_HOST: "90.156.228.95"
+    MAILER_FROM_EMAIL: "noreply@stackoverflow-clone.com"
 
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
@@ -42,10 +48,15 @@ builder:
   remote: 90.156.228.95
   arch: amd64
 
-# Traefik reverse proxy
+# Traefik reverse proxy with SSL
 proxy:
-  ssl: false
+  # ssl: true
   host: 90.156.228.95
+  # Automatic SSL certificates via Let's Encrypt
+  # Note: Let's Encrypt requires a domain name, not IP
+  # For IP-only access, you'll need to manually configure SSL certificates
+  # acme:
+  #   email: your-email@example.com
 
 accessories:
   redis:
@@ -66,3 +77,16 @@ accessories:
         ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     directories:
       - es-data:/usr/share/elasticsearch/data
+
+  sidekiq:
+    image: amsak701/stclone
+    host: 90.156.228.95
+    cmd: bundle exec sidekiq -C config/sidekiq.yml
+    env:
+      secret:
+        - RAILS_MASTER_KEY
+      clear:
+        RAILS_ENV: production
+        REDIS_URL: redis://redis:6379/0
+        ELASTICSEARCH_URL: http://elasticsearch:9200
+

@@ -18,3 +18,15 @@ Elasticsearch::Model.client = Elasticsearch::Client.new(
 if Rails.env.development?
   Elasticsearch::Model.client.transport.logger = Logger.new(STDOUT)
 end
+
+# Check Elasticsearch connection and log status
+begin
+  if Elasticsearch::Model.client.ping
+    Rails.logger.info "✓ Elasticsearch connected successfully at #{ENV.fetch('ELASTICSEARCH_URL', 'http://127.0.0.1:9200')}"
+  end
+rescue Faraday::ConnectionFailed, Elasticsearch::Transport::Transport::Errors::ServiceUnavailable => e
+  Rails.logger.warn "⚠ Elasticsearch connection failed: #{e.message}"
+  Rails.logger.warn "Search functionality will be limited. Please ensure Elasticsearch is running."
+rescue => e
+  Rails.logger.error "✗ Elasticsearch error: #{e.message}"
+end
