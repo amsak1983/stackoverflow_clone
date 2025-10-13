@@ -63,7 +63,32 @@ Rails.application.configure do
   }
 
   # SMTP settings - configure via environment variables or rails credentials
-  smtp_address = ENV["SMTP_ADDRESS"] || Rails.application.credentials.dig(:smtp, :address)
+  # Only try to access credentials if RAILS_MASTER_KEY is properly set
+  smtp_credentials = if ENV['RAILS_MASTER_KEY'].present? && ENV['RAILS_MASTER_KEY'].length == 32
+    begin
+      {
+        address: Rails.application.credentials.dig(:smtp, :address),
+        port: Rails.application.credentials.dig(:smtp, :port),
+        domain: Rails.application.credentials.dig(:smtp, :domain),
+        user_name: Rails.application.credentials.dig(:smtp, :user_name),
+        password: Rails.application.credentials.dig(:smtp, :password)
+      }
+    rescue ActiveSupport::MessageEncryptor::InvalidMessage, ArgumentError => e
+      # Credentials decryption failed - RAILS_MASTER_KEY is invalid
+      puts "⚠ Could not decrypt credentials: #{e.class}"
+      {}
+    rescue => e
+      # Other credentials errors - will use ENV vars only
+      puts "⚠ Credentials error: #{e.message}"
+      {}
+    end
+  else
+    # RAILS_MASTER_KEY not set or invalid length - skip credentials
+    puts "⚠ RAILS_MASTER_KEY not configured, using ENV variables only"
+    {}
+  end
+  
+  smtp_address = ENV["SMTP_ADDRESS"] || smtp_credentials[:address]
   
   if smtp_address.present?
     # SMTP is configured - use it
@@ -71,10 +96,10 @@ Rails.application.configure do
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
       address: smtp_address,
-      port: (ENV["SMTP_PORT"] || Rails.application.credentials.dig(:smtp, :port) || 587).to_i,
-      domain: ENV["SMTP_DOMAIN"] || Rails.application.credentials.dig(:smtp, :domain),
-      user_name: ENV["SMTP_USERNAME"] || Rails.application.credentials.dig(:smtp, :user_name),
-      password: ENV["SMTP_PASSWORD"] || Rails.application.credentials.dig(:smtp, :password),
+      port: (ENV["SMTP_PORT"] || smtp_credentials[:port] || 587).to_i,
+      domain: ENV["SMTP_DOMAIN"] || smtp_credentials[:domain],
+      user_name: ENV["SMTP_USERNAME"] || smtp_credentials[:user_name],
+      password: ENV["SMTP_PASSWORD"] || smtp_credentials[:password],
       authentication: :plain,
       enable_starttls_auto: true
     }
