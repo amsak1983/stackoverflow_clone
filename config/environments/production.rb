@@ -65,8 +65,6 @@ Rails.application.configure do
     protocol: "http"  # Use http for IP-based deployment without SSL
   }
 
-  # SMTP settings - configure via environment variables or rails credentials
-  # Only try to access credentials if RAILS_MASTER_KEY is properly set
   smtp_credentials = if ENV['RAILS_MASTER_KEY'].present? && ENV['RAILS_MASTER_KEY'].length == 32
     begin
       {
@@ -77,16 +75,13 @@ Rails.application.configure do
         password: Rails.application.credentials.dig(:smtp, :password)
       }
     rescue ActiveSupport::MessageEncryptor::InvalidMessage, ArgumentError => e
-      # Credentials decryption failed - RAILS_MASTER_KEY is invalid
       puts "⚠ Could not decrypt credentials: #{e.class}"
       {}
     rescue => e
-      # Other credentials errors - will use ENV vars only
       puts "⚠ Credentials error: #{e.message}"
       {}
     end
   else
-    # RAILS_MASTER_KEY not set or invalid length - skip credentials
     puts "⚠ RAILS_MASTER_KEY not configured, using ENV variables only"
     {}
   end
@@ -94,7 +89,6 @@ Rails.application.configure do
   smtp_address = ENV["SMTP_ADDRESS"] || smtp_credentials[:address]
   
   if smtp_address.present?
-    # SMTP is configured - use it
     config.action_mailer.perform_deliveries = true
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
