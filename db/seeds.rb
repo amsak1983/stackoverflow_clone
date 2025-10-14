@@ -9,26 +9,32 @@ User.destroy_all
 
 puts "Creating users..."
 
-# Create main users
+# Create main users with unique passwords
 users_data = [
-  { email: "john.doe@example.com", name: "John Doe" },
-  { email: "alice.smith@example.com", name: "Alice Smith" },
-  { email: "bob.johnson@example.com", name: "Bob Johnson" },
-  { email: "emma.wilson@example.com", name: "Emma Wilson" },
-  { email: "mike.brown@example.com", name: "Mike Brown" }
+  { email: "john.doe@example.com", name: "John Doe", password: "john2024secure" },
+  { email: "alice.smith@example.com", name: "Alice Smith", password: "alice_dev123" },
+  { email: "bob.johnson@example.com", name: "Bob Johnson", password: "bob!secure99" },
+  { email: "emma.wilson@example.com", name: "Emma Wilson", password: "emma@rails2024" },
+  { email: "mike.brown@example.com", name: "Mike Brown", password: "mikebrown_pass" }
 ]
 
 users = []
+puts "\n" + "="*60
+puts "Creating users with credentials:"
+puts "="*60
+
 users_data.each do |user_data|
   user = User.create!(
     email: user_data[:email],
-    password: "password123",
-    password_confirmation: "password123",
+    password: user_data[:password],
+    password_confirmation: user_data[:password],
     confirmed_at: Time.current
   )
   users << user
-  puts "Created user: #{user.email}"
+  puts "✓ Email: #{user.email.ljust(30)} | Password: #{user_data[:password]}"
 end
+
+puts "="*60
 
 puts "Creating questions..."
 questions = [
@@ -146,12 +152,18 @@ questions.each_with_index do |question_data, index|
   end
 end
 
-puts "\n" + "="*50
-puts "Seed data created successfully!"
-puts "="*50
-puts "Users: #{User.count}"
-puts "Questions: #{Question.count}"
-puts "Answers: #{Answer.count}"
-puts "\nLogin credentials for all users:"
-puts "Password: password123"
-puts "="*50
+puts "\n" + "="*70
+puts "🎉 Seed data created successfully!"
+puts "="*70
+puts "📊 Statistics:"
+puts "   Users: #{User.count}"
+puts "   Questions: #{Question.count}"
+puts "   Answers: #{Answer.count}"
+puts "\n🔐 Login Credentials:"
+puts "-"*70
+
+users_data.each do |user_data|
+  puts "   Email: #{user_data[:email].ljust(35)} | Password: #{user_data[:password]}"
+end
+
+puts "="*70
