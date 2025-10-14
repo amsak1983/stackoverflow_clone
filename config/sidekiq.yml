@@ -1,9 +1,10 @@
 :concurrency: 5
 :queues:
   - default
+  - mailers
 
 :schedule:
   daily_digest:
-    cron: "0 8 * * *" # каждый день в 8 часов по времени сервера
+    cron: "0 8 * * *"
     class: "DailyDigestJob"
     queue: default
