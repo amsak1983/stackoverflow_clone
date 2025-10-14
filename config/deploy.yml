@@ -67,14 +67,14 @@ accessories:
   redis:
     image: redis:7-alpine
     host: 90.156.228.95
-    port: "127.0.0.1:6379:6379"
+    port: "6379"
     directories:
       - redis-data:/data
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
     host: 90.156.228.95
-    port: "127.0.0.1:9200:9200"
+    port: "9200"
     env:
       clear:
         discovery.type: single-node
