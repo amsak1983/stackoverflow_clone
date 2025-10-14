@@ -9,7 +9,6 @@ User.destroy_all
 
 puts "Creating users..."
 
-# Create main users with unique passwords
 users_data = [
   { email: "john.doe@example.com", name: "John Doe", password: "john2024secure" },
   { email: "alice.smith@example.com", name: "Alice Smith", password: "alice_dev123" },
