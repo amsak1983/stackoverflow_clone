@@ -29,8 +29,8 @@ env:
     RAILS_SERVE_STATIC_FILES: "true"
     WEB_CONCURRENCY: "2"
     RAILS_MAX_THREADS: "5"
-    REDIS_URL: redis://redis:6379/0
-    ELASTICSEARCH_URL: http://elasticsearch:9200
+    REDIS_URL: redis://stackoverflow_clone-redis:6379/0
+    ELASTICSEARCH_URL: http://stackoverflow_clone-elasticsearch:9200
     APP_HOST: "90.156.228.95"
     MAILER_FROM_EMAIL: "noreply@stackoverflow-clone.com"
     SMTP_PORT: "587"
@@ -95,10 +95,9 @@ accessories:
         - SMTP_PASSWORD
       clear:
         RAILS_ENV: production
-        REDIS_URL: redis://redis:6379/0
-        ELASTICSEARCH_URL: http://elasticsearch:9200
+        REDIS_URL: redis://stackoverflow_clone-redis:6379/0
+        ELASTICSEARCH_URL: http://stackoverflow_clone-elasticsearch:9200
         APP_HOST: "90.156.228.95"
         MAILER_FROM_EMAIL: "noreply@stackoverflow-clone.com"
         SMTP_PORT: "587"
         SMTP_DOMAIN: "90.156.228.95"
-
