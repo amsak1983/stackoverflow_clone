@@ -7,51 +7,120 @@ Answer.destroy_all if defined?(Answer)
 Question.destroy_all if defined?(Question)
 User.destroy_all
 
-puts "Creating test users..."
-test_user = User.create!(
-  email: "test@example.com",
-  password: "password123",
-  password_confirmation: "password123",
-  confirmed_at: Time.current
-)
-puts "Created test user: #{test_user.email} with password: password123"
+puts "Creating users..."
 
-second_user = User.create!(
-  email: "user2@example.com",
-  password: "password123",
-  password_confirmation: "password123",
-  confirmed_at: Time.current
-)
-puts "Created second user: #{second_user.email} with password: password123"
+# Create main users
+users_data = [
+  { email: "john.doe@example.com", name: "John Doe" },
+  { email: "alice.smith@example.com", name: "Alice Smith" },
+  { email: "bob.johnson@example.com", name: "Bob Johnson" },
+  { email: "emma.wilson@example.com", name: "Emma Wilson" },
+  { email: "mike.brown@example.com", name: "Mike Brown" }
+]
+
+users = []
+users_data.each do |user_data|
+  user = User.create!(
+    email: user_data[:email],
+    password: "password123",
+    password_confirmation: "password123",
+    confirmed_at: Time.current
+  )
+  users << user
+  puts "Created user: #{user.email}"
+end
 
 puts "Creating questions..."
 questions = [
   {
-    title: "How to use Active Record in Rails?",
-    body: "I'm new to Rails and would like to know how to properly use Active Record for database operations. What are the best practices?"
+    title: "How to deploy Rails application with Kamal?",
+    body: "I want to deploy my Rails 8 application using Kamal. What are the basic steps? I have a VPS with Ubuntu. Need help with configuration and setup."
   },
   {
-    title: "Differences between has_many and has_many :through",
-    body: "What's the difference between has_many and has_many :through relationships in Rails? When should I use each of them?"
+    title: "Sidekiq not processing background jobs",
+    body: "My Sidekiq workers are running but jobs stay in the queue and never get processed. Redis connection is fine. What could be wrong?"
   },
   {
-    title: "How to set up RSpec in a Rails project?",
-    body: "I want to add tests to my Rails project. How do I properly set up RSpec and what gems should I add?"
+    title: "Best way to send emails in Rails production?",
+    body: "I'm getting SMTP timeout errors when sending emails. My hosting provider blocks port 587. What are alternative solutions for sending transactional emails?"
   },
   {
-    title: "Problem with validation in Rails",
-    body: "When saving my model, I'm getting a validation error, but I can't figure out what's wrong. What's the best way to debug validations in Rails?"
+    title: "How to use Active Record associations?",
+    body: "I'm learning Rails and confused about has_many, belongs_to and has_many :through. Can someone explain with simple examples when to use each?"
   },
   {
-    title: "How to implement authentication in Rails?",
-    body: "What are the different ways to implement user authentication in Rails? Should I use Devise or build my own solution?"
+    title: "Docker volume permissions issue",
+    body: "Getting 'permission denied' when trying to access SQLite database from Docker container. How do I fix volume permissions?"
+  },
+  {
+    title: "TailwindCSS not loading styles in production",
+    body: "My TailwindCSS styles work fine in development but don't load in production after deployment. Asset pipeline is configured. What am I missing?"
+  },
+  {
+    title: "How to implement real-time features with ActionCable?",
+    body: "I want to add real-time notifications to my Rails app. Should I use ActionCable or something else? Looking for a simple tutorial."
+  },
+  {
+    title: "RSpec vs Minitest - which is better?",
+    body: "Starting a new Rails project. Should I use RSpec or stick with Minitest? What are the pros and cons of each testing framework?"
+  },
+  {
+    title: "Optimizing database queries in Rails",
+    body: "My application is slow with N+1 queries. I've heard about includes, joins, and eager loading. What's the difference and when should I use each?"
+  },
+  {
+    title: "Authentication with Devise: setup guide",
+    body: "New to Devise gem. How do I set it up properly? Need basic authentication with email confirmation and password reset functionality."
   }
 ]
 
 # Create questions and answers
 created_questions = []
-questions.each do |question_data|
-  random_user = [ test_user, second_user ].sample
+answers_data = {
+  0 => [ # Kamal deployment
+    "First, install Kamal: `gem install kamal`. Then run `kamal init` in your project. Configure deploy.yml with your server details and run `kamal setup` followed by `kamal deploy`.",
+    "Check out the official Kamal documentation. You'll need Docker on your VPS. Basic steps: 1) Setup SSH keys 2) Configure deploy.yml 3) Run kamal setup 4) Deploy with kamal deploy. Make sure ports 80/443 are open."
+  ],
+  1 => [ # Sidekiq not processing
+    "Check if Sidekiq is listening to the correct queue. Your jobs might be in 'mailers' queue but Sidekiq only processes 'default'. Add the queue to config/sidekiq.yml under :queues section.",
+    "Also verify that Sidekiq container has access to the same Redis instance as your app. Use `Sidekiq::Queue.new('default').size` to check queue size."
+  ],
+  2 => [ # Email sending
+    "Use SendGrid or Mailgun API instead of SMTP. They provide HTTP APIs that bypass port restrictions. SendGrid free tier gives 100 emails/day. Just add their gem and configure with API key.",
+    "Another option is Amazon SES. It's cheap and reliable. You can also try port 2525 which some providers don't block."
+  ],
+  3 => [ # Active Record associations
+    "belongs_to: child model has foreign key. has_many: parent can have multiple children. Example: User has_many :posts, Post belongs_to :user. Use has_many :through for many-to-many like User has_many :groups, through: :memberships.",
+    "Think of it like parent-child. belongs_to = this record belongs to another. has_many = this record owns many others. Through adds a join table in between for complex relationships."
+  ],
+  4 => [ # Docker permissions
+    "Add volumes with proper permissions in your docker-compose or Kamal config. Make sure the app user inside container matches the volume owner. You can also run `chown -R rails:rails /rails/storage` in your Dockerfile.",
+    "Check your Dockerfile USER directive. SQLite needs write access to the directory. Mount volumes with correct user:group mapping."
+  ],
+  5 => [ # TailwindCSS production
+    "Run `rails assets:precompile` before deployment. Make sure your build:css npm script runs during Docker build. Check if RAILS_SERVE_STATIC_FILES=true is set in production.",
+    "Verify that application.css imports your tailwind css file. Also check that NODE_ENV=production during build so Tailwind purges unused styles correctly."
+  ],
+  6 => [ # ActionCable real-time
+    "ActionCable is built into Rails! Create a channel: `rails g channel Notifications`. Subscribe in JavaScript with `consumer.subscriptions.create`. Broadcast from server with `ActionCable.server.broadcast`.",
+    "For simple notifications, ActionCable is perfect. For complex real-time features, consider AnyCable for better performance. Check Rails guides for complete ActionCable tutorial."
+  ],
+  7 => [ # RSpec vs Minitest
+    "RSpec has more readable syntax and powerful matchers. Minitest is simpler and included with Rails. For beginners, Minitest is easier. For large teams, RSpec's expressiveness helps. Both are excellent choices.",
+    "I prefer RSpec for its describe/context/it syntax. It makes tests read like documentation. But Minitest is faster and has less magic. Choose based on team preference."
+  ],
+  8 => [ # Query optimization
+    "Use `includes` for eager loading to prevent N+1: `User.includes(:posts)`. Use `joins` for filtering: `User.joins(:posts).where(posts: {status: 'published'})`. Install bullet gem to detect N+1 queries in development.",
+    "The key difference: includes loads associated records (2 queries), joins just filters (1 query but doesn't load). Use select to limit columns: `User.select(:id, :email)` for better performance."
+  ],
+  9 => [ # Devise setup
+    "Add gem 'devise' to Gemfile, run bundle install, then `rails generate devise:install`. Follow the instructions, then `rails generate devise User`. Run migrations. Configure mailer settings in config/environments.",
+    "Devise is great for quick auth setup. After generation, customize views with `rails generate devise:views`. Enable confirmable module in your User model for email confirmation."
+  ]
+}
+
+questions.each_with_index do |question_data, index|
+  random_user = users.sample
 
   question = Question.create!(
     title: question_data[:title],
@@ -60,20 +129,29 @@ questions.each do |question_data|
     created_at: rand(1..30).days.ago
   )
   created_questions << question
-  puts "Created question: #{question.title} by #{random_user.email}"
+  puts "Created question: #{question.title}"
 
-  # Create 1-3 answers for each question
-  rand(1..3).times do |i|
-    answer_user = [ test_user, second_user ].sample
-
+  # Create answers for this question
+  question_answers = answers_data[index] || []
+  question_answers.each_with_index do |answer_body, answer_index|
+    answer_user = users.sample
+    
     answer = question.answers.create!(
-      body: "Answer #{i+1} to the question about #{question.title.downcase}. This contains a detailed explanation with code examples and recommendations.",
+      body: answer_body,
       user: answer_user,
-      created_at: rand(1..question.created_at.to_i).seconds.ago
+      created_at: question.created_at + rand(1..48).hours,
+      best: answer_index == 0 && rand < 0.5 # 50% chance first answer is marked as best
     )
-    puts "  - Created answer #{i+1} by #{answer_user.email} for question: #{question.title}"
+    puts "  ✓ Created answer by #{answer_user.email}"
   end
 end
 
+puts "\n" + "="*50
 puts "Seed data created successfully!"
-puts "Created #{Question.count} questions and #{Answer.count} answers."
+puts "="*50
+puts "Users: #{User.count}"
+puts "Questions: #{Question.count}"
+puts "Answers: #{Answer.count}"
+puts "\nLogin credentials for all users:"
+puts "Password: password123"
+puts "="*50
