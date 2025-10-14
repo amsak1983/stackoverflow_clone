@@ -19,6 +19,9 @@ env:
     - GOOGLE_CLIENT_SECRET
     - SIDEKIQ_USERNAME
     - SIDEKIQ_PASSWORD
+    - SMTP_ADDRESS
+    - SMTP_USERNAME
+    - SMTP_PASSWORD
  
   clear:
     RAILS_ENV: production
@@ -30,6 +33,8 @@ env:
     ELASTICSEARCH_URL: http://elasticsearch:9200
     APP_HOST: "90.156.228.95"
     MAILER_FROM_EMAIL: "noreply@stackoverflow-clone.com"
+    SMTP_PORT: "587"
+    SMTP_DOMAIN: "90.156.228.95"
 
 aliases:
   console: app exec --interactive --reuse "bin/rails console"
@@ -85,8 +90,15 @@ accessories:
     env:
       secret:
         - SECRET_KEY_BASE
+        - SMTP_ADDRESS
+        - SMTP_USERNAME
+        - SMTP_PASSWORD
       clear:
         RAILS_ENV: production
         REDIS_URL: redis://redis:6379/0
         ELASTICSEARCH_URL: http://elasticsearch:9200
+        APP_HOST: "90.156.228.95"
+        MAILER_FROM_EMAIL: "noreply@stackoverflow-clone.com"
+        SMTP_PORT: "587"
+        SMTP_DOMAIN: "90.156.228.95"
 

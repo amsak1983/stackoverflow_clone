@@ -56,6 +56,8 @@ Rails.application.configure do
 
   # Mailer configuration
   config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.deliver_later_queue_name = :mailers
   
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { 
@@ -102,7 +104,9 @@ Rails.application.configure do
       user_name: ENV["SMTP_USERNAME"] || smtp_credentials[:user_name],
       password: ENV["SMTP_PASSWORD"] || smtp_credentials[:password],
       authentication: :plain,
-      enable_starttls_auto: true
+      enable_starttls_auto: true,
+      open_timeout: 10,
+      read_timeout: 10
     }
   else
     # SMTP not configured - disable email delivery (dev mode)
