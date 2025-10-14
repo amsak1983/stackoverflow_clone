@@ -5,7 +5,7 @@
 # If you don't have a local CA certificate handy, you can disable SSL verification in development only.
 
 # Skip Elasticsearch initialization during asset precompilation
-unless ENV['SECRET_KEY_BASE_DUMMY'] == '1' || defined?(::Rails::Console)
+unless ENV["SECRET_KEY_BASE_DUMMY"] == "1" || defined?(::Rails::Console)
   require "elasticsearch/model"
 
   Elasticsearch::Model.client = Elasticsearch::Client.new(

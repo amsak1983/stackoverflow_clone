@@ -24,7 +24,7 @@ Devise.setup do |config|
       # This will be regenerated on each boot, so sessions will be invalidated
       puts "⚠ WARNING: Using temporary secret key. Sessions will not persist across restarts."
       config.secret_key = ENV.fetch("SECRET_KEY_BASE") do
-        require 'securerandom'
+        require "securerandom"
         SecureRandom.hex(64)
       end
     end
@@ -290,7 +290,7 @@ Devise.setup do |config|
   # Google OAuth2 configuration - using environment variables for production
   google_client_id = ENV["GOOGLE_CLIENT_ID"]
   google_client_secret = ENV["GOOGLE_CLIENT_SECRET"]
-  
+
   if google_client_id.present? && google_client_secret.present?
     config.omniauth :google_oauth2, google_client_id, google_client_secret, {
       scope: "email,profile",
