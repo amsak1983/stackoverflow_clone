@@ -58,14 +58,14 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_deliveries = true
   config.action_mailer.deliver_later_queue_name = :default
-  
+
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { 
+  config.action_mailer.default_url_options = {
     host: ENV.fetch("APP_HOST", "90.156.228.95"),
     protocol: "http"  # Use http for IP-based deployment without SSL
   }
 
-  smtp_credentials = if ENV['RAILS_MASTER_KEY'].present? && ENV['RAILS_MASTER_KEY'].length == 32
+  smtp_credentials = if ENV["RAILS_MASTER_KEY"].present? && ENV["RAILS_MASTER_KEY"].length == 32
     begin
       {
         address: Rails.application.credentials.dig(:smtp, :address),
@@ -85,9 +85,9 @@ Rails.application.configure do
     puts "⚠ RAILS_MASTER_KEY not configured, using ENV variables only"
     {}
   end
-  
+
   smtp_address = ENV["SMTP_ADDRESS"] || smtp_credentials[:address]
-  
+
   if smtp_address.present?
     config.action_mailer.perform_deliveries = true
     config.action_mailer.delivery_method = :smtp
@@ -121,12 +121,12 @@ Rails.application.configure do
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   config.hosts = [
-    "90.156.228.95",     # Allow requests from server IP
+    "90.156.228.95"     # Allow requests from server IP
     # Add your domain here when you have one:
     # "yourdomain.com",
     # /.*\.yourdomain\.com/
   ]
-  
+
   # Skip DNS rebinding protection for the default health check endpoint.
   config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end

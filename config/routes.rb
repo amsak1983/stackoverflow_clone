@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   require "sidekiq/web"
-  
+
   # Protect Sidekiq Web UI with basic authentication
   Sidekiq::Web.use Rack::Auth::Basic do |username, password|
     ActiveSupport::SecurityUtils.secure_compare(
@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       ::Digest::SHA256.hexdigest(ENV.fetch("SIDEKIQ_PASSWORD", "changeme"))
     )
   end
-  
+
   use_doorkeeper
   devise_for :users, controllers: {
     omniauth_callbacks: "users/omniauth_callbacks"
