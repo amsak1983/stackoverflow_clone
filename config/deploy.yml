@@ -46,6 +46,7 @@ volumes:
   - "stackoverflow_clone_storage:/rails/storage"
   - "stackoverflow_clone_log:/rails/log"
   - "stackoverflow_clone_tmp:/rails/tmp"
+  - "stackoverflow_clone_backups:/backups"
 
 asset_path: /rails/public/assets
 
@@ -55,7 +56,6 @@ builder:
 
 proxy:
   host: 90.156.228.95
-
 
 accessories:
   redis:
@@ -99,3 +99,30 @@ accessories:
         MAILER_FROM_EMAIL: "noreply@stackoverflow-clone.com"
         SMTP_PORT: "587"
         SMTP_DOMAIN: "90.156.228.95"
+
+  prometheus:
+    image: prom/prometheus:latest
+    host: 90.156.228.95
+    port: "9090:9090"
+    cmd: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time=30d
+    files:
+      - config/prometheus.yml:/etc/prometheus/prometheus.yml
+    directories:
+      - prometheus-data:/prometheus
+    options:
+      network: "host"
+
+  grafana:
+    image: grafana/grafana:latest
+    host: 90.156.228.95
+    port: "3001:3000"
+    env:
+      clear:
+        GF_SECURITY_ADMIN_USER: admin
+        GF_SECURITY_ADMIN_PASSWORD: admin
+        GF_INSTALL_PLUGINS: ""
+        GF_SERVER_ROOT_URL: "http://90.156.228.95:3001"
+    directories:
+      - grafana-data:/var/lib/grafana
+    options:
+      network: "host"
