@@ -9,8 +9,9 @@ Sidekiq.configure_server do |config|
     require "prometheus_exporter/instrumentation"
 
     # Setup Prometheus client to connect to exporter
+    # Use 127.0.0.1 instead of localhost to avoid DNS resolution issues
     PrometheusExporter::Client.default = PrometheusExporter::Client.new(
-      host: "localhost",
+      host: "127.0.0.1",
       port: 9394
     )
 

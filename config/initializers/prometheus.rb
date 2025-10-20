@@ -8,8 +8,9 @@ unless Rails.env.test? || ENV["SECRET_KEY_BASE_DUMMY"]
 
   # Start Prometheus exporter server on port 9394
   # This runs in a separate process and collects metrics
+  # Use 127.0.0.1 instead of localhost to avoid DNS resolution issues
   PrometheusExporter::Client.default = PrometheusExporter::Client.new(
-    host: "localhost",
+    host: "127.0.0.1",
     port: 9394
   )
 
