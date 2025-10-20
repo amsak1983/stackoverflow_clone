@@ -7,15 +7,6 @@ scrape_configs:
   - job_name: 'prometheus'
     static_configs:
       - targets: ['localhost:9090']
-
-  # Rails application metrics (web container)
-  - job_name: 'rails'
-    static_configs:
-      - targets: ['stackoverflow_clone-web:9394']
-        labels:
-          service: 'stackoverflow_clone'
-          role: 'web'
-          environment: 'production'
     
   # Sidekiq metrics (sidekiq accessory container)
   - job_name: 'sidekiq'
@@ -24,4 +15,14 @@ scrape_configs:
         labels:
           service: 'stackoverflow_clone'
           role: 'sidekiq'
+          environment: 'production'
+  
+  # Rails web metrics (web container - using IP address)
+  # Note: IP address may change after redeployment, update manually if needed
+  - job_name: 'rails'
+    static_configs:
+      - targets: ['172.18.0.10:9394']
+        labels:
+          service: 'stackoverflow_clone'
+          role: 'web'
           environment: 'production'
