@@ -51,6 +51,9 @@ gem "sidekiq"
 gem "redis"
 gem "sidekiq-cron"
 
+# Prometheus metrics for monitoring
+gem "prometheus_exporter"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

@@ -31,5 +31,10 @@ module StackoverflowClone
     # Use Sidekiq for background jobs
     config.active_job.queue_adapter = :sidekiq
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Prometheus middleware for request metrics
+    unless Rails.env.test?
+      config.middleware.use PrometheusExporter::Middleware
+    end
   end
 end

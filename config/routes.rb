@@ -27,6 +27,11 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # Prometheus metrics endpoint
+  unless Rails.env.test?
+    mount PrometheusExporter::Server::WebServer.new, at: "/metrics"
+  end
+
   root "questions#index"
 
 

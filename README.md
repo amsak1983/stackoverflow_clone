@@ -1,55 +1,83 @@
 # StackOverflow Clone
 
-A functional clone of StackOverflow built with Ruby on Rails 8. This application allows users to ask questions, provide answers, vote on content, and earn reputation points.
+> Современный клон StackOverflow на Rails 8 с OAuth, поиском, API и production-ready инфраструктурой
 
-## Features
+## ✨ Возможности
 
-* User authentication and profiles
-* Question asking and answering
-* Voting system for questions and answers
-* Comment functionality
-* Tags and categories
-* User reputation system
-* Search functionality
+- 🔐 **Аутентификация** - Devise + OAuth (Google, Telegram)
+- 💬 **Q&A система** - вопросы, ответы, комментарии
+- 👍 **Голосование** - upvote/downvote с репутацией
+- 🏆 **Награды** - система достижений за лучшие ответы
+- 🔍 **Поиск** - полнотекстовый поиск через Elasticsearch
+- 📡 **Real-time** - WebSocket обновления через Action Cable
+- 🔌 **API** - OAuth2 provider + JSON API
+- 📊 **Мониторинг** - Prometheus + Grafana
+- 💾 **Бэкапы** - автоматические резервные копии
 
-## Technical Stack
+## 🛠 Технологии
 
-* Ruby on Rails 8
-* Ruby version: 3.x
-* Database: PostgreSQL
-* Frontend: ERB templates, JavaScript, CSS
+**Backend**
+- Rails 8.0.2 + Ruby 3.2.6
+- SQLite3 (Solid Cache/Queue/Cable)
+- Sidekiq + Redis (фоновые задачи)
+- Elasticsearch (поиск)
 
-## Setup and Installation
+**Frontend**
+- Hotwire (Turbo + Stimulus)
+- TailwindCSS (Flowbite)
+- ERB templates
 
-### Prerequisites
+**Infrastructure**
+- Kamal (deployment)
+- Prometheus + Grafana (мониторинг)
+- Docker
 
-* Ruby 3.x
-* Rails 8.1
-* PostgreSQL
-
-### Installation Steps
+## 🚀 Быстрый старт
 
 ```bash
-# Clone the repository
+# Клонировать репозиторий
 git clone https://github.com/amsak1983/stackoverflow_clone
 cd stackoverflow_clone
 
-# Install dependencies
+# Установить зависимости
 bundle install
+npm install
 
-# Setup database
-rails db:create
-rails db:migrate
-rails db:seed # Optional: adds sample data
+# Настроить базу данных
+bin/rails db:setup
 
-# Start the server
-rails server
+# Запустить dev сервер (Rails + Sidekiq + TailwindCSS)
+bin/dev
 ```
 
-Visit `http://localhost:3000` in your browser to access the application.
+Откройте http://localhost:3000
 
-## Testing
+## 🧪 Тестирование
 
 ```bash
-rails test
+# RSpec тесты
+bundle exec rspec
+
+# Проверка безопасности
+bundle exec brakeman
+
+# Линтер
+bundle exec rubocop
 ```
+
+## 📦 Production
+
+```bash
+# Деплой через Kamal
+kamal setup
+kamal deploy
+
+# Мониторинг
+kamal accessory boot prometheus grafana
+```
+
+**Документация:** [docs/](docs/README.md)
+
+## 📝 Лицензия
+
+MIT

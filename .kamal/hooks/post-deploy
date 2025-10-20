@@ -1,0 +1,22 @@
+#!/bin/bash
+# Post-deploy hook to setup cron job for backups
+
+set -e
+
+echo "Setting up backup cron job..."
+
+CRON_JOB="0 2 * * * /usr/bin/docker exec stackoverflow_clone-web-1 /rails/bin/backup-sqlite.sh >> /var/log/sqlite-backup.log 2>&1"
+
+# Check if cron job already exists
+if ! crontab -l 2>/dev/null | grep -q "backup-sqlite.sh"; then
+  (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+  echo "✓ Backup cron job installed successfully"
+else
+  echo "✓ Backup cron job already exists"
+fi
+
+# Create log file if it doesn't exist
+touch /var/log/sqlite-backup.log
+chmod 644 /var/log/sqlite-backup.log
+
+echo "✓ Post-deploy setup completed"
