@@ -2,7 +2,8 @@ namespace :backup do
   desc "Run database backup using Backup gem"
   task run: :environment do
     puts "Starting database backup..."
-    system("backup perform --trigger stackoverflow_clone_db --config-file #{Rails.root.join('config', 'backup.rb')}")
+    config_file = Rails.root.join("config", "backup.rb").to_s
+    system("backup", "perform", "--trigger", "stackoverflow_clone_db", "--config-file", config_file)
     puts "Backup completed!"
   end
 

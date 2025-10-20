@@ -11,10 +11,8 @@ class DatabaseBackupJob < ApplicationJob
       raise "Backup configuration file not found"
     end
 
-    # Run backup command
-    command = "backup perform --trigger stackoverflow_clone_db --config-file #{config_file}"
-
-    result = system(command)
+    # Run backup command with safe argument passing to prevent command injection
+    result = system("backup", "perform", "--trigger", "stackoverflow_clone_db", "--config-file", config_file.to_s)
 
     if result
       Rails.logger.info "Database backup completed successfully"
