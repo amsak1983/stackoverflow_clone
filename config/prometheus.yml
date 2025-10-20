@@ -17,11 +17,11 @@ scrape_configs:
           role: 'sidekiq'
           environment: 'production'
   
-  # Rails web metrics (web container - using IP address)
-  # Note: IP address may change after redeployment, update manually if needed
+  # Rails web metrics (web container - using container name)
+  # Container name remains stable across redeployments
   - job_name: 'rails'
     static_configs:
-      - targets: ['172.18.0.10:9394']
+      - targets: ['stackoverflow_clone-web:9394']
         labels:
           service: 'stackoverflow_clone'
           role: 'web'
