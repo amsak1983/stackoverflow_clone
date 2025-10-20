@@ -57,13 +57,6 @@ builder:
 proxy:
   host: 90.156.228.95
 
-# Network alias for service discovery
-network: kamal
-
-# Docker options for web containers
-options:
-  network-alias: stackoverflow_clone-web
-
 accessories:
   redis:
     image: redis:7-alpine
