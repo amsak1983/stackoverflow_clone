@@ -57,6 +57,13 @@ builder:
 proxy:
   host: 90.156.228.95
 
+# Network alias for service discovery
+network: kamal
+
+# Docker options for web containers
+options:
+  network-alias: stackoverflow_clone-web
+
 accessories:
   redis:
     image: redis:7-alpine
@@ -104,10 +111,10 @@ accessories:
     image: prom/prometheus:latest
     host: 90.156.228.95
     port: "9090:9090"
-    cmd: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time=30d
+    cmd: --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time=30d --storage.tsdb.wal-compression
     files:
       - config/prometheus.yml:/etc/prometheus/prometheus.yml
-    directories:
+    volumes:
       - prometheus-data:/prometheus
 
   grafana:
@@ -120,5 +127,9 @@ accessories:
         GF_SECURITY_ADMIN_PASSWORD: admin
         GF_INSTALL_PLUGINS: ""
         GF_SERVER_ROOT_URL: "http://90.156.228.95:3001"
-    directories:
+        GF_PATHS_DATA: /var/lib/grafana
+        GF_PATHS_LOGS: /var/log/grafana
+        GF_PATHS_PLUGINS: /var/lib/grafana/plugins
+        GF_PATHS_PROVISIONING: /etc/grafana/provisioning
+    volumes:
       - grafana-data:/var/lib/grafana
