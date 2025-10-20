@@ -523,7 +523,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_model_serializers (~> 0.10.0)
-  backup
+  backup (~> 3.4.0)
   bcrypt (~> 3.1.7)
   bootsnap
   brakeman
