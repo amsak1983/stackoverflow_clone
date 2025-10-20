@@ -27,10 +27,8 @@ Rails.application.routes.draw do
 
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Prometheus metrics endpoint
-  unless Rails.env.test?
-    mount PrometheusExporter::Server::WebServer.new, at: "/metrics"
-  end
+  # Prometheus metrics endpoint (handled by separate exporter process on port 9394)
+  # No need to mount in routes - metrics available at http://host:9394/metrics
 
   root "questions#index"
 
