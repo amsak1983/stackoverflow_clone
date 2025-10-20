@@ -33,7 +33,8 @@ module StackoverflowClone
     # config.eager_load_paths << Rails.root.join("extras")
 
     # Prometheus middleware for request metrics
-    unless Rails.env.test?
+    # Skip during assets:precompile
+    if !Rails.env.test? && defined?(PrometheusExporter::Middleware)
       config.middleware.use PrometheusExporter::Middleware
     end
   end

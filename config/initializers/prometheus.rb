@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # Prometheus metrics configuration
-unless Rails.env.test?
+# Skip during assets:precompile and in test environment
+unless Rails.env.test? || ENV["SECRET_KEY_BASE_DUMMY"]
   require "prometheus_exporter/middleware"
   require "prometheus_exporter/instrumentation"
 
