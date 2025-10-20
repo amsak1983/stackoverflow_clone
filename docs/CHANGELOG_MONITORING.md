@@ -36,7 +36,7 @@
 
 #### Доступ:
 - **Prometheus:** http://90.156.228.95:9090
-- **Grafana:** http://90.156.228.95:3001 (admin/admin)
+- **Grafana:** http://90.156.228.95:3001
 - **Metrics endpoint:** http://90.156.228.95:9394/metrics
 
 ---
