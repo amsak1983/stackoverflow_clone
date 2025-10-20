@@ -8,3 +8,8 @@
     cron: "0 8 * * *"
     class: "DailyDigestJob"
     queue: default
+  
+  database_backup:
+    cron: "0 2 * * *"  # Every day at 2:00 AM
+    class: "DatabaseBackupJob"
+    queue: default
