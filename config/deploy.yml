@@ -109,8 +109,6 @@ accessories:
       - config/prometheus.yml:/etc/prometheus/prometheus.yml
     directories:
       - prometheus-data:/prometheus
-    options:
-      network: "host"
 
   grafana:
     image: grafana/grafana:latest
@@ -124,5 +122,3 @@ accessories:
         GF_SERVER_ROOT_URL: "http://90.156.228.95:3001"
     directories:
       - grafana-data:/var/lib/grafana
-    options:
-      network: "host"

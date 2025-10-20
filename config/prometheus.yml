@@ -6,7 +6,7 @@ scrape_configs:
   # Rails application metrics
   - job_name: 'rails'
     static_configs:
-      - targets: ['host.docker.internal:9394']
+      - targets: ['90.156.228.95:9394']
         labels:
           service: 'stackoverflow_clone'
           environment: 'production'
@@ -19,7 +19,7 @@ scrape_configs:
   # Sidekiq metrics (через prometheus_exporter)
   - job_name: 'sidekiq'
     static_configs:
-      - targets: ['host.docker.internal:9394']
+      - targets: ['90.156.228.95:9394']
         labels:
           service: 'stackoverflow_clone_sidekiq'
           environment: 'production'
