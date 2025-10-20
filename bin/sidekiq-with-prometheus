@@ -1,0 +1,6 @@
+#!/bin/bash
+# Start Prometheus exporter in background for Sidekiq
+bundle exec prometheus_exporter -p 9394 -b 0.0.0.0 &
+
+# Start Sidekiq
+exec bundle exec sidekiq -C config/sidekiq.yml
