@@ -4,6 +4,17 @@ require "sidekiq-cron"
 Sidekiq.configure_server do |config|
   config.redis = { url: ENV.fetch("REDIS_URL", "redis://localhost:6379/0") }
 
+  # Prometheus instrumentation for Sidekiq server
+  unless Rails.env.test?
+    require "prometheus_exporter/instrumentation"
+    
+    config.server_middleware do |chain|
+      chain.add PrometheusExporter::Instrumentation::Sidekiq
+    end
+    
+    config.death_handlers << PrometheusExporter::Instrumentation::Sidekiq.death_handler
+  end
+
   schedule_file = Rails.root.join("config", "sidekiq.yml")
   if File.exist?(schedule_file)
     yaml = YAML.load_file(schedule_file)

@@ -22,8 +22,10 @@ unless Rails.env.test? || ENV["SECRET_KEY_BASE_DUMMY"]
     config_labels: [ :database, :host ]
   )
 
-  # Instrument Sidekiq jobs
+  # Instrument Sidekiq jobs - setup collector for Sidekiq metrics
+  # Note: Sidekiq server-side instrumentation is configured in sidekiq.yml or sidekiq initializer
   if defined?(Sidekiq)
-    PrometheusExporter::Instrumentation::Sidekiq.start
+    PrometheusExporter::Instrumentation::SidekiqProcess.start
+    PrometheusExporter::Instrumentation::SidekiqQueue.start
   end
 end
