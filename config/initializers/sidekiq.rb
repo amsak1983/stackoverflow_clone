@@ -8,11 +8,23 @@ Sidekiq.configure_server do |config|
   unless Rails.env.test?
     require "prometheus_exporter/instrumentation"
     
+    # Setup Prometheus client to connect to exporter
+    PrometheusExporter::Client.default = PrometheusExporter::Client.new(
+      host: "localhost",
+      port: 9394
+    )
+    
+    # Add Sidekiq middleware for job metrics
     config.server_middleware do |chain|
       chain.add PrometheusExporter::Instrumentation::Sidekiq
     end
     
+    # Track failed jobs
     config.death_handlers << PrometheusExporter::Instrumentation::Sidekiq.death_handler
+    
+    # Track Sidekiq process and queue stats
+    PrometheusExporter::Instrumentation::SidekiqProcess.start
+    PrometheusExporter::Instrumentation::SidekiqQueue.start
   end
 
   schedule_file = Rails.root.join("config", "sidekiq.yml")

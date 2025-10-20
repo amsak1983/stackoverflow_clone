@@ -80,7 +80,7 @@ accessories:
   sidekiq:
     image: amsak701/stclone
     host: 90.156.228.95
-    cmd: bundle exec sidekiq -C config/sidekiq.yml
+    cmd: ./bin/sidekiq-with-prometheus
     volumes:
       - "stackoverflow_clone_storage:/rails/storage"
       - "stackoverflow_clone_log:/rails/log"
