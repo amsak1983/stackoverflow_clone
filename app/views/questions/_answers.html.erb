@@ -1,5 +1,7 @@
 <div id="answers">
   <% answers.each do |answer| %>
-    <%= render "answers/answer", answer: answer %>
+    <%= cache [answer, cacheable_user_id] do %>
+      <%= render "answers/answer", answer: answer %>
+    <% end %>
   <% end %>
 </div>
