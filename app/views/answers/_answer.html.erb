@@ -126,10 +126,12 @@
     <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Comments</h4>
     <div id="<%= dom_id(answer) %>_comments" class="space-y-2">
       <% answer.comments.order(created_at: :asc).each do |comment| %>
-        <% begin %>
-          <%= render "comments/comment", comment: comment, show_controls: policy(comment).destroy? %>
-        <% rescue Devise::MissingWarden %>
-          <%= render "comments/comment", comment: comment, show_controls: false %>
+        <%= cache [comment, cacheable_user_id] do %>
+          <% begin %>
+            <%= render "comments/comment", comment: comment, show_controls: policy(comment).destroy? %>
+          <% rescue Devise::MissingWarden %>
+            <%= render "comments/comment", comment: comment, show_controls: false %>
+          <% end %>
         <% end %>
       <% end %>
     </div>

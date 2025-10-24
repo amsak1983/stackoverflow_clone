@@ -14,4 +14,10 @@ module ApplicationHelper
   def time_ago(date)
     time_ago_in_words(date) + " ago"
   end
+
+  def cacheable_user_id
+    current_user&.id
+  rescue Devise::MissingWarden
+    nil
+  end
 end
